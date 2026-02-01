@@ -5,7 +5,8 @@ import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import { getProducts, getCategories } from "@/lib/storage";
 import { Product, Category } from "@/types/store";
-import { Filter, X } from "lucide-react";
+import { Filter, X, Search, Package } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const ProductsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,6 +15,7 @@ const ProductsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>(
     searchParams.get("category") || ""
   );
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
@@ -23,23 +25,44 @@ const ProductsPage = () => {
 
   useEffect(() => {
     const category = searchParams.get("category");
+    const search = searchParams.get("search");
     if (category) {
       setSelectedCategory(category);
     }
+    if (search) {
+      setSearchQuery(search);
+    }
   }, [searchParams]);
 
-  const filteredProducts = selectedCategory
-    ? products.filter((p) => p.category === selectedCategory)
-    : products;
+  const filteredProducts = products.filter((p) => {
+    const matchesCategory = !selectedCategory || p.category === selectedCategory;
+    const matchesSearch = !searchQuery || 
+      p.name.includes(searchQuery) || 
+      p.description.includes(searchQuery);
+    return matchesCategory && matchesSearch;
+  });
 
   const handleCategoryChange = (slug: string) => {
     setSelectedCategory(slug);
-    if (slug) {
-      setSearchParams({ category: slug });
-    } else {
-      setSearchParams({});
-    }
+    const newParams: Record<string, string> = {};
+    if (slug) newParams.category = slug;
+    if (searchQuery) newParams.search = searchQuery;
+    setSearchParams(newParams);
     setShowFilters(false);
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    const newParams: Record<string, string> = {};
+    if (selectedCategory) newParams.category = selectedCategory;
+    if (query) newParams.search = query;
+    setSearchParams(newParams);
+  };
+
+  const clearFilters = () => {
+    setSelectedCategory("");
+    setSearchQuery("");
+    setSearchParams({});
   };
 
   return (
@@ -58,11 +81,43 @@ const ProductsPage = () => {
             </p>
           </div>
 
+          {/* Search Bar */}
+          <div className="mb-6">
+            <div className="relative max-w-md">
+              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="ابحث عن منتج..."
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="pr-10 py-6 text-base"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => handleSearch("")}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          </div>
+
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Filters - Desktop */}
             <aside className="hidden lg:block w-64 shrink-0">
               <div className="bg-card rounded-xl p-6 shadow-card sticky top-24">
-                <h3 className="font-bold text-foreground mb-4">الأقسام</h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-foreground">الأقسام</h3>
+                  {(selectedCategory || searchQuery) && (
+                    <button
+                      onClick={clearFilters}
+                      className="text-xs text-destructive hover:underline"
+                    >
+                      مسح الكل
+                    </button>
+                  )}
+                </div>
                 <ul className="space-y-2">
                   <li>
                     <button
@@ -74,22 +129,31 @@ const ProductsPage = () => {
                       }`}
                     >
                       جميع المنتجات
+                      <span className="text-sm text-muted-foreground mr-2">
+                        ({products.length})
+                      </span>
                     </button>
                   </li>
-                  {categories.map((category) => (
-                    <li key={category.id}>
-                      <button
-                        onClick={() => handleCategoryChange(category.slug)}
-                        className={`w-full text-right px-3 py-2 rounded-lg transition-colors ${
-                          selectedCategory === category.slug
-                            ? "bg-accent text-accent-foreground font-medium"
-                            : "hover:bg-muted text-foreground"
-                        }`}
-                      >
-                        {category.name}
-                      </button>
-                    </li>
-                  ))}
+                  {categories.map((category) => {
+                    const count = products.filter(p => p.category === category.slug).length;
+                    return (
+                      <li key={category.id}>
+                        <button
+                          onClick={() => handleCategoryChange(category.slug)}
+                          className={`w-full text-right px-3 py-2 rounded-lg transition-colors ${
+                            selectedCategory === category.slug
+                              ? "bg-accent text-accent-foreground font-medium"
+                              : "hover:bg-muted text-foreground"
+                          }`}
+                        >
+                          {category.name}
+                          <span className="text-sm text-muted-foreground mr-2">
+                            ({count})
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </aside>
@@ -152,6 +216,17 @@ const ProductsPage = () => {
 
             {/* Products Grid */}
             <div className="flex-1">
+              {/* Results count */}
+              <div className="mb-4 text-muted-foreground text-sm">
+                {filteredProducts.length} منتج
+                {selectedCategory && (
+                  <span> في {categories.find(c => c.slug === selectedCategory)?.name}</span>
+                )}
+                {searchQuery && (
+                  <span> يطابق "{searchQuery}"</span>
+                )}
+              </div>
+
               {filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                   {filteredProducts.map((product) => (
@@ -160,9 +235,21 @@ const ProductsPage = () => {
                 </div>
               ) : (
                 <div className="text-center py-16">
-                  <p className="text-muted-foreground text-lg">
-                    لا توجد منتجات في هذا القسم حالياً
+                  <Package className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
+                  <p className="text-muted-foreground text-lg mb-4">
+                    {searchQuery 
+                      ? `لا توجد نتائج للبحث "${searchQuery}"`
+                      : "لا توجد منتجات في هذا القسم حالياً"
+                    }
                   </p>
+                  {(searchQuery || selectedCategory) && (
+                    <button
+                      onClick={clearFilters}
+                      className="text-accent hover:underline"
+                    >
+                      عرض جميع المنتجات
+                    </button>
+                  )}
                 </div>
               )}
             </div>

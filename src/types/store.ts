@@ -23,6 +23,8 @@ export interface StoreConfig {
   whatsappNumber: string;
   logo?: string;
   description?: string;
+  address?: string;
+  phones?: string[];
 }
 
 export interface Banner {

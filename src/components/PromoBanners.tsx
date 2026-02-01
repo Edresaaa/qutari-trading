@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 const promoBanners = [
   {
     id: "1",
-    image: "https://cdn.salla.sa/form-builder/MPRcQZcZbmooZcy02ULTvRz2nIqMaYiNOr0rQUHe.png",
+    image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80",
     title: "شيلان كشميري باشمينا VIP",
     subtitle: "خصم يصل إلى 30%",
     link: "/products?category=pashmina-vip",
@@ -12,7 +12,7 @@ const promoBanners = [
   },
   {
     id: "2",
-    image: "https://cdn.files.salla.network/homepage/1501369604/6ea3c300-3f8c-43c8-9e68-7bae960d3e00.webp",
+    image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&q=80",
     title: "شيلان كشميري ترمه",
     subtitle: "تشكيلة حصرية",
     link: "/products?category=termeh-shawls",
@@ -20,7 +20,7 @@ const promoBanners = [
   },
   {
     id: "3",
-    image: "https://cdn.files.salla.network/homepage/1501369604/d15db3cf-2ca8-4876-b245-10c23c7b5cc4.webp",
+    image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80",
     title: "شيلان صوف شتوية",
     subtitle: "دفء وأناقة",
     link: "/products?category=wool-half-termeh",
