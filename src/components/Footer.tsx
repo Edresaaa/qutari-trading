@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { storeConfig } from "@/config/store";
-import { MapPin, Phone, Mail, Facebook, Instagram, Twitter, MessageCircle } from "lucide-react";
+import { MapPin, Phone, MessageCircle, Facebook, Instagram, Twitter } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -93,15 +93,24 @@ const Footer = () => {
           <div>
             <h4 className="font-bold text-lg mb-6 text-gold">تواصل معنا</h4>
             <ul className="space-y-4">
-              <li className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center">
+              <li className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center flex-shrink-0">
                   <Phone className="w-5 h-5 text-gold" />
                 </div>
                 <div>
-                  <p className="text-sm text-primary-foreground/60">اتصل بنا</p>
-                  <a href={`tel:${storeConfig.whatsappNumber}`} className="text-primary-foreground hover:text-gold transition-colors" dir="ltr">
-                    {storeConfig.whatsappNumber}
-                  </a>
+                  <p className="text-sm text-primary-foreground/60 mb-1">أرقام الهاتف</p>
+                  <div className="flex flex-col gap-1">
+                    {storeConfig.phones?.map((phone, index) => (
+                      <a 
+                        key={index}
+                        href={`tel:${phone}`} 
+                        className="text-primary-foreground hover:text-gold transition-colors text-sm" 
+                        dir="ltr"
+                      >
+                        {phone}
+                      </a>
+                    ))}
+                  </div>
                 </div>
               </li>
               <li className="flex items-center gap-3">
@@ -126,7 +135,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <p className="text-sm text-primary-foreground/60">الموقع</p>
-                  <span className="text-primary-foreground">اليمن - صنعاء</span>
+                  <span className="text-primary-foreground">{storeConfig.address || "اليمن - صنعاء"}</span>
                 </div>
               </li>
             </ul>
@@ -144,10 +153,10 @@ const Footer = () => {
             <span className="text-primary-foreground/60 text-sm">طرق الدفع:</span>
             <div className="flex gap-2">
               <div className="w-10 h-6 bg-primary-foreground/10 rounded flex items-center justify-center text-xs font-bold">
-                VISA
+                نقداً
               </div>
               <div className="w-10 h-6 bg-primary-foreground/10 rounded flex items-center justify-center text-xs font-bold">
-                MC
+                تحويل
               </div>
             </div>
           </div>

@@ -4,6 +4,8 @@ export const storeConfig: StoreConfig = {
   name: "القوطاري للتجارة",
   whatsappNumber: "+967736700034",
   description: "متجر متخصص في الشيلان والأزياء التقليدية الفاخرة",
+  address: "صنعاء - باب اليمن - سوق النظارة",
+  phones: ["+967736700034", "+967770475574", "+96701289731"],
 };
 
 export const formatWhatsAppLink = (

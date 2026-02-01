@@ -5,23 +5,23 @@ import { Link } from "react-router-dom";
 const banners = [
   {
     id: "1",
-    image: "https://cdn.files.salla.network/homepage/1501369604/4390b400-8034-405d-9020-51b91ef1b22a.webp",
+    image: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=1920&q=80",
     title: "تفاصيل تعبّر عنك",
-    subtitle: "اكتشف أفخر الشيلان والبشوت الملكية بجودة استثنائية",
+    subtitle: "اكتشف أفخر الشيلان والبشوت بجودة استثنائية",
     link: "/products",
   },
   {
     id: "2",
-    image: "https://cdn.salla.sa/form-builder/JmMh4V59REKFPLODSrNb2hlzURssdx2OBfqjN7dT.png",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80",
     title: "شيلان كشميري فاخرة",
     subtitle: "من أجود أنواع الكشمير الطبيعي",
     link: "/products?category=termeh-shawls",
   },
   {
     id: "3",
-    image: "https://cdn.salla.sa/form-builder/JcIVxdGcg79xRQlHh9GSxsgskZvOiuggyK2Rqrge.png",
-    title: "بشوت ملكية",
-    subtitle: "أناقة تليق بمقامك",
+    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=1920&q=80",
+    title: "أناقة يمنية أصيلة",
+    subtitle: "تصاميم تقليدية بلمسة عصرية",
     link: "/products?category=royal-bisht",
   },
 ];

@@ -1,5 +1,5 @@
 import { Product, Category } from "@/types/store";
-import { sampleProducts, categories } from "@/data/products";
+import { sampleProducts, categories as defaultCategories } from "@/data/products";
 
 const PRODUCTS_KEY = "alqotari_products";
 const CATEGORIES_KEY = "alqotari_categories";
@@ -53,8 +53,42 @@ export const getCategories = (): Category[] => {
   if (stored) {
     return JSON.parse(stored);
   }
+  localStorage.setItem(CATEGORIES_KEY, JSON.stringify(defaultCategories));
+  return defaultCategories;
+};
+
+export const saveCategories = (categories: Category[]): void => {
   localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
-  return categories;
+};
+
+export const addCategory = (category: Omit<Category, "id">): Category => {
+  const categories = getCategories();
+  const newCategory: Category = {
+    ...category,
+    id: Date.now().toString(),
+  };
+  categories.push(newCategory);
+  saveCategories(categories);
+  return newCategory;
+};
+
+export const updateCategory = (id: string, updates: Partial<Category>): Category | null => {
+  const categories = getCategories();
+  const index = categories.findIndex((c) => c.id === id);
+  if (index === -1) return null;
+  
+  categories[index] = { ...categories[index], ...updates };
+  saveCategories(categories);
+  return categories[index];
+};
+
+export const deleteCategory = (id: string): boolean => {
+  const categories = getCategories();
+  const filtered = categories.filter((c) => c.id !== id);
+  if (filtered.length === categories.length) return false;
+  
+  saveCategories(filtered);
+  return true;
 };
 
 export const getProductsByCategory = (categorySlug: string): Product[] => {
@@ -65,4 +99,19 @@ export const getProductsByCategory = (categorySlug: string): Product[] => {
 export const getFeaturedProducts = (): Product[] => {
   const products = getProducts();
   return products.filter((p) => p.featured);
+};
+
+export const getProductById = (id: string): Product | null => {
+  const products = getProducts();
+  return products.find((p) => p.id === id) || null;
+};
+
+export const searchProducts = (query: string): Product[] => {
+  const products = getProducts();
+  const lowerQuery = query.toLowerCase();
+  return products.filter(
+    (p) =>
+      p.name.toLowerCase().includes(lowerQuery) ||
+      p.description.toLowerCase().includes(lowerQuery)
+  );
 };

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
@@ -8,9 +8,16 @@ import {
   addProduct,
   updateProduct,
   deleteProduct,
+  saveCategories,
+  addCategory,
+  updateCategory,
+  deleteCategory,
 } from "@/lib/storage";
 import { Product, Category } from "@/types/store";
-import { Plus, Pencil, Trash2, X, ArrowRight, Package } from "lucide-react";
+import { 
+  Plus, Pencil, Trash2, ArrowRight, Package, Lock, Eye, EyeOff,
+  FolderOpen, ShoppingBag, Search
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -40,6 +47,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+const ADMIN_PASSWORD = "admin123";
 
 interface ProductFormData {
   name: string;
@@ -52,7 +62,14 @@ interface ProductFormData {
   featured: boolean;
 }
 
-const initialFormData: ProductFormData = {
+interface CategoryFormData {
+  name: string;
+  slug: string;
+  image: string;
+  description: string;
+}
+
+const initialProductFormData: ProductFormData = {
   name: "",
   description: "",
   price: "",
@@ -63,17 +80,43 @@ const initialFormData: ProductFormData = {
   featured: false,
 };
 
+const initialCategoryFormData: CategoryFormData = {
+  name: "",
+  slug: "",
+  image: "",
+  description: "",
+};
+
 const AdminPage = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginError, setLoginError] = useState("");
+
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Product form state
+  const [isProductFormOpen, setIsProductFormOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [formData, setFormData] = useState<ProductFormData>(initialFormData);
+  const [deleteProductConfirm, setDeleteProductConfirm] = useState<string | null>(null);
+  const [productFormData, setProductFormData] = useState<ProductFormData>(initialProductFormData);
+
+  // Category form state
+  const [isCategoryFormOpen, setIsCategoryFormOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [deleteCategoryConfirm, setDeleteCategoryConfirm] = useState<string | null>(null);
+  const [categoryFormData, setCategoryFormData] = useState<CategoryFormData>(initialCategoryFormData);
 
   useEffect(() => {
-    loadData();
+    const isLoggedIn = sessionStorage.getItem("admin_authenticated");
+    if (isLoggedIn === "true") {
+      setIsAuthenticated(true);
+      loadData();
+    }
   }, []);
 
   const loadData = () => {
@@ -81,10 +124,29 @@ const AdminPage = () => {
     setCategories(getCategories());
   };
 
-  const handleOpenForm = (product?: Product) => {
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+      sessionStorage.setItem("admin_authenticated", "true");
+      setLoginError("");
+      loadData();
+    } else {
+      setLoginError("كلمة المرور غير صحيحة");
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem("admin_authenticated");
+    setPassword("");
+  };
+
+  // Product functions
+  const handleOpenProductForm = (product?: Product) => {
     if (product) {
       setEditingProduct(product);
-      setFormData({
+      setProductFormData({
         name: product.name,
         description: product.description,
         price: product.price.toString(),
@@ -96,31 +158,31 @@ const AdminPage = () => {
       });
     } else {
       setEditingProduct(null);
-      setFormData(initialFormData);
+      setProductFormData(initialProductFormData);
     }
-    setIsFormOpen(true);
+    setIsProductFormOpen(true);
   };
 
-  const handleCloseForm = () => {
-    setIsFormOpen(false);
+  const handleCloseProductForm = () => {
+    setIsProductFormOpen(false);
     setEditingProduct(null);
-    setFormData(initialFormData);
+    setProductFormData(initialProductFormData);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmitProduct = (e: React.FormEvent) => {
     e.preventDefault();
 
     const productData = {
-      name: formData.name,
-      description: formData.description,
-      price: parseFloat(formData.price),
-      originalPrice: formData.originalPrice
-        ? parseFloat(formData.originalPrice)
+      name: productFormData.name,
+      description: productFormData.description,
+      price: parseFloat(productFormData.price),
+      originalPrice: productFormData.originalPrice
+        ? parseFloat(productFormData.originalPrice)
         : undefined,
-      image: formData.image,
-      category: formData.category,
-      inStock: formData.inStock,
-      featured: formData.featured,
+      image: productFormData.image,
+      category: productFormData.category,
+      inStock: productFormData.inStock,
+      featured: productFormData.featured,
     };
 
     if (editingProduct) {
@@ -138,19 +200,142 @@ const AdminPage = () => {
     }
 
     loadData();
-    handleCloseForm();
+    handleCloseProductForm();
   };
 
-  const handleDelete = (id: string) => {
+  const handleDeleteProduct = (id: string) => {
     deleteProduct(id);
     loadData();
-    setDeleteConfirm(null);
+    setDeleteProductConfirm(null);
     toast({
       title: "تم الحذف",
       description: "تم حذف المنتج بنجاح",
       variant: "destructive",
     });
   };
+
+  // Category functions
+  const handleOpenCategoryForm = (category?: Category) => {
+    if (category) {
+      setEditingCategory(category);
+      setCategoryFormData({
+        name: category.name,
+        slug: category.slug,
+        image: category.image,
+        description: category.description || "",
+      });
+    } else {
+      setEditingCategory(null);
+      setCategoryFormData(initialCategoryFormData);
+    }
+    setIsCategoryFormOpen(true);
+  };
+
+  const handleCloseCategoryForm = () => {
+    setIsCategoryFormOpen(false);
+    setEditingCategory(null);
+    setCategoryFormData(initialCategoryFormData);
+  };
+
+  const handleSubmitCategory = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const categoryData = {
+      name: categoryFormData.name,
+      slug: categoryFormData.slug || categoryFormData.name.toLowerCase().replace(/\s+/g, '-'),
+      image: categoryFormData.image,
+      description: categoryFormData.description,
+    };
+
+    if (editingCategory) {
+      updateCategory(editingCategory.id, categoryData);
+      toast({
+        title: "تم التحديث",
+        description: "تم تحديث القسم بنجاح",
+      });
+    } else {
+      addCategory(categoryData);
+      toast({
+        title: "تمت الإضافة",
+        description: "تم إضافة القسم بنجاح",
+      });
+    }
+
+    loadData();
+    handleCloseCategoryForm();
+  };
+
+  const handleDeleteCategory = (id: string) => {
+    deleteCategory(id);
+    loadData();
+    setDeleteCategoryConfirm(null);
+    toast({
+      title: "تم الحذف",
+      description: "تم حذف القسم بنجاح",
+      variant: "destructive",
+    });
+  };
+
+  // Filter products by search
+  const filteredProducts = products.filter(product =>
+    product.name.includes(searchQuery) || 
+    product.description.includes(searchQuery)
+  );
+
+  // Login screen
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex flex-col bg-cream">
+        <Header />
+        <main className="flex-1 flex items-center justify-center py-16">
+          <div className="w-full max-w-md px-4">
+            <div className="bg-card rounded-2xl shadow-card p-8">
+              <div className="text-center mb-8">
+                <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-gold to-accent flex items-center justify-center mb-4">
+                  <Lock className="w-10 h-10 text-chocolate" />
+                </div>
+                <h1 className="text-2xl font-bold text-foreground">لوحة التحكم</h1>
+                <p className="text-muted-foreground mt-2">أدخل كلمة المرور للوصول</p>
+              </div>
+
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="كلمة المرور"
+                    className="pl-12"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+
+                {loginError && (
+                  <p className="text-destructive text-sm text-center">{loginError}</p>
+                )}
+
+                <Button type="submit" className="btn-gold w-full">
+                  دخول
+                </Button>
+              </form>
+
+              <p className="text-center text-muted-foreground text-sm mt-6">
+                كلمة المرور الافتراضية: admin123
+              </p>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-cream">
@@ -168,117 +353,224 @@ const AdminPage = () => {
                 <ArrowRight className="w-4 h-4" />
                 <span>لوحة التحكم</span>
               </div>
-              <h1 className="text-3xl font-bold text-foreground">إدارة المنتجات</h1>
+              <h1 className="text-3xl font-bold text-foreground">لوحة التحكم</h1>
             </div>
-            <Button onClick={() => handleOpenForm()} className="btn-gold">
-              <Plus className="w-5 h-5 ml-2" />
-              إضافة منتج جديد
+            <Button 
+              variant="outline" 
+              onClick={handleLogout}
+              className="text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground"
+            >
+              تسجيل الخروج
             </Button>
           </div>
 
-          {/* Products Table */}
-          <div className="bg-card rounded-xl shadow-card overflow-hidden">
-            {products.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-muted">
-                    <tr>
-                      <th className="text-right px-6 py-4 font-bold text-foreground">
-                        المنتج
-                      </th>
-                      <th className="text-right px-6 py-4 font-bold text-foreground hidden md:table-cell">
-                        القسم
-                      </th>
-                      <th className="text-right px-6 py-4 font-bold text-foreground">
-                        السعر
-                      </th>
-                      <th className="text-right px-6 py-4 font-bold text-foreground hidden sm:table-cell">
-                        الحالة
-                      </th>
-                      <th className="text-right px-6 py-4 font-bold text-foreground">
-                        إجراءات
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {products.map((product) => (
-                      <tr key={product.id} className="hover:bg-muted/50 transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <img
-                              src={product.image}
-                              alt={product.name}
-                              className="w-12 h-12 rounded-lg object-cover"
-                            />
-                            <div>
-                              <p className="font-medium text-foreground line-clamp-1">
-                                {product.name}
-                              </p>
-                              {product.featured && (
-                                <span className="text-xs text-gold">مميز</span>
-                              )}
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 hidden md:table-cell">
-                          <span className="text-muted-foreground">
-                            {categories.find((c) => c.slug === product.category)?.name ||
-                              product.category}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="font-bold text-accent">
-                            {product.price} ر.ي
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 hidden sm:table-cell">
-                          <span
-                            className={`text-xs font-medium px-2 py-1 rounded ${
-                              product.inStock
-                                ? "bg-green-100 text-green-700"
-                                : "bg-red-100 text-red-700"
-                            }`}
+          {/* Tabs */}
+          <Tabs defaultValue="products" className="space-y-6">
+            <TabsList className="grid w-full max-w-md grid-cols-2">
+              <TabsTrigger value="products" className="flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4" />
+                المنتجات
+              </TabsTrigger>
+              <TabsTrigger value="categories" className="flex items-center gap-2">
+                <FolderOpen className="w-4 h-4" />
+                الأقسام
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Products Tab */}
+            <TabsContent value="products">
+              <div className="bg-card rounded-xl shadow-card overflow-hidden">
+                {/* Header */}
+                <div className="p-4 border-b border-border flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                  <div className="relative w-full sm:w-64">
+                    <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      placeholder="بحث في المنتجات..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pr-10"
+                    />
+                  </div>
+                  <Button onClick={() => handleOpenProductForm()} className="btn-gold">
+                    <Plus className="w-5 h-5 ml-2" />
+                    إضافة منتج جديد
+                  </Button>
+                </div>
+
+                {filteredProducts.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead className="bg-muted">
+                        <tr>
+                          <th className="text-right px-6 py-4 font-bold text-foreground">
+                            المنتج
+                          </th>
+                          <th className="text-right px-6 py-4 font-bold text-foreground hidden md:table-cell">
+                            القسم
+                          </th>
+                          <th className="text-right px-6 py-4 font-bold text-foreground">
+                            السعر
+                          </th>
+                          <th className="text-right px-6 py-4 font-bold text-foreground hidden sm:table-cell">
+                            الحالة
+                          </th>
+                          <th className="text-right px-6 py-4 font-bold text-foreground">
+                            إجراءات
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border">
+                        {filteredProducts.map((product) => (
+                          <tr key={product.id} className="hover:bg-muted/50 transition-colors">
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-3">
+                                <img
+                                  src={product.image}
+                                  alt={product.name}
+                                  className="w-12 h-12 rounded-lg object-cover"
+                                />
+                                <div>
+                                  <p className="font-medium text-foreground line-clamp-1">
+                                    {product.name}
+                                  </p>
+                                  {product.featured && (
+                                    <span className="text-xs text-gold">مميز</span>
+                                  )}
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 hidden md:table-cell">
+                              <span className="text-muted-foreground">
+                                {categories.find((c) => c.slug === product.category)?.name ||
+                                  product.category}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4">
+                              <span className="font-bold text-accent">
+                                {product.price} ر.ي
+                              </span>
+                            </td>
+                            <td className="px-6 py-4 hidden sm:table-cell">
+                              <span
+                                className={`text-xs font-medium px-2 py-1 rounded ${
+                                  product.inStock
+                                    ? "bg-green-100 text-green-700"
+                                    : "bg-red-100 text-red-700"
+                                }`}
+                              >
+                                {product.inStock ? "متوفر" : "نفذ"}
+                              </span>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() => handleOpenProductForm(product)}
+                                  className="p-2 text-muted-foreground hover:text-accent hover:bg-accent/10 rounded-lg transition-colors"
+                                >
+                                  <Pencil className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => setDeleteProductConfirm(product.id)}
+                                  className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="text-center py-16">
+                    <Package className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
+                    <p className="text-muted-foreground mb-4">
+                      {searchQuery ? "لا توجد نتائج للبحث" : "لا توجد منتجات حالياً"}
+                    </p>
+                    {!searchQuery && (
+                      <Button onClick={() => handleOpenProductForm()} className="btn-gold">
+                        <Plus className="w-5 h-5 ml-2" />
+                        أضف أول منتج
+                      </Button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+
+            {/* Categories Tab */}
+            <TabsContent value="categories">
+              <div className="bg-card rounded-xl shadow-card overflow-hidden">
+                {/* Header */}
+                <div className="p-4 border-b border-border flex items-center justify-between">
+                  <h3 className="font-bold text-foreground">إدارة الأقسام</h3>
+                  <Button onClick={() => handleOpenCategoryForm()} className="btn-gold">
+                    <Plus className="w-5 h-5 ml-2" />
+                    إضافة قسم جديد
+                  </Button>
+                </div>
+
+                {categories.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                    {categories.map((category) => (
+                      <div 
+                        key={category.id} 
+                        className="relative group rounded-xl overflow-hidden border border-border"
+                      >
+                        <div className="aspect-video">
+                          <img
+                            src={category.image}
+                            alt={category.name}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-chocolate/80 to-transparent" />
+                        </div>
+                        <div className="absolute bottom-0 left-0 right-0 p-4">
+                          <h4 className="text-lg font-bold text-primary-foreground">
+                            {category.name}
+                          </h4>
+                          {category.description && (
+                            <p className="text-primary-foreground/70 text-sm line-clamp-1">
+                              {category.description}
+                            </p>
+                          )}
+                        </div>
+                        <div className="absolute top-2 left-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => handleOpenCategoryForm(category)}
+                            className="p-2 bg-card rounded-lg text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
                           >
-                            {product.inStock ? "متوفر" : "نفذ"}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => handleOpenForm(product)}
-                              className="p-2 text-muted-foreground hover:text-accent hover:bg-accent/10 rounded-lg transition-colors"
-                            >
-                              <Pencil className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => setDeleteConfirm(product.id)}
-                              className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
+                            <Pencil className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => setDeleteCategoryConfirm(category.id)}
+                            className="p-2 bg-card rounded-lg text-foreground hover:bg-destructive hover:text-destructive-foreground transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
                     ))}
-                  </tbody>
-                </table>
+                  </div>
+                ) : (
+                  <div className="text-center py-16">
+                    <FolderOpen className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
+                    <p className="text-muted-foreground mb-4">لا توجد أقسام حالياً</p>
+                    <Button onClick={() => handleOpenCategoryForm()} className="btn-gold">
+                      <Plus className="w-5 h-5 ml-2" />
+                      أضف أول قسم
+                    </Button>
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="text-center py-16">
-                <Package className="w-16 h-16 text-muted-foreground/50 mx-auto mb-4" />
-                <p className="text-muted-foreground mb-4">لا توجد منتجات حالياً</p>
-                <Button onClick={() => handleOpenForm()} className="btn-gold">
-                  <Plus className="w-5 h-5 ml-2" />
-                  أضف أول منتج
-                </Button>
-              </div>
-            )}
-          </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
 
       {/* Product Form Dialog */}
-      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+      <Dialog open={isProductFormOpen} onOpenChange={setIsProductFormOpen}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
@@ -286,14 +578,14 @@ const AdminPage = () => {
             </DialogTitle>
           </DialogHeader>
 
-          <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+          <form onSubmit={handleSubmitProduct} className="space-y-4 mt-4">
             <div>
               <Label htmlFor="name">اسم المنتج *</Label>
               <Input
                 id="name"
-                value={formData.name}
+                value={productFormData.name}
                 onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
+                  setProductFormData({ ...productFormData, name: e.target.value })
                 }
                 placeholder="مثال: شال كشميري فاخر"
                 required
@@ -305,9 +597,9 @@ const AdminPage = () => {
               <Label htmlFor="description">الوصف *</Label>
               <Textarea
                 id="description"
-                value={formData.description}
+                value={productFormData.description}
                 onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
+                  setProductFormData({ ...productFormData, description: e.target.value })
                 }
                 placeholder="وصف المنتج..."
                 required
@@ -322,9 +614,9 @@ const AdminPage = () => {
                 <Input
                   id="price"
                   type="number"
-                  value={formData.price}
+                  value={productFormData.price}
                   onChange={(e) =>
-                    setFormData({ ...formData, price: e.target.value })
+                    setProductFormData({ ...productFormData, price: e.target.value })
                   }
                   placeholder="299"
                   required
@@ -336,9 +628,9 @@ const AdminPage = () => {
                 <Input
                   id="originalPrice"
                   type="number"
-                  value={formData.originalPrice}
+                  value={productFormData.originalPrice}
                   onChange={(e) =>
-                    setFormData({ ...formData, originalPrice: e.target.value })
+                    setProductFormData({ ...productFormData, originalPrice: e.target.value })
                   }
                   placeholder="399"
                   className="mt-1"
@@ -350,17 +642,17 @@ const AdminPage = () => {
               <Label htmlFor="image">رابط الصورة *</Label>
               <Input
                 id="image"
-                value={formData.image}
+                value={productFormData.image}
                 onChange={(e) =>
-                  setFormData({ ...formData, image: e.target.value })
+                  setProductFormData({ ...productFormData, image: e.target.value })
                 }
                 placeholder="https://example.com/image.jpg"
                 required
                 className="mt-1"
               />
-              {formData.image && (
+              {productFormData.image && (
                 <img
-                  src={formData.image}
+                  src={productFormData.image}
                   alt="معاينة"
                   className="mt-2 w-20 h-20 object-cover rounded-lg"
                   onError={(e) => (e.currentTarget.style.display = "none")}
@@ -371,9 +663,9 @@ const AdminPage = () => {
             <div>
               <Label htmlFor="category">القسم *</Label>
               <Select
-                value={formData.category}
+                value={productFormData.category}
                 onValueChange={(value) =>
-                  setFormData({ ...formData, category: value })
+                  setProductFormData({ ...productFormData, category: value })
                 }
               >
                 <SelectTrigger className="mt-1">
@@ -393,9 +685,9 @@ const AdminPage = () => {
               <Label htmlFor="inStock">متوفر في المخزون</Label>
               <Switch
                 id="inStock"
-                checked={formData.inStock}
+                checked={productFormData.inStock}
                 onCheckedChange={(checked) =>
-                  setFormData({ ...formData, inStock: checked })
+                  setProductFormData({ ...productFormData, inStock: checked })
                 }
               />
             </div>
@@ -404,9 +696,9 @@ const AdminPage = () => {
               <Label htmlFor="featured">منتج مميز</Label>
               <Switch
                 id="featured"
-                checked={formData.featured}
+                checked={productFormData.featured}
                 onCheckedChange={(checked) =>
-                  setFormData({ ...formData, featured: checked })
+                  setProductFormData({ ...productFormData, featured: checked })
                 }
               />
             </div>
@@ -418,7 +710,7 @@ const AdminPage = () => {
               <Button
                 type="button"
                 variant="outline"
-                onClick={handleCloseForm}
+                onClick={handleCloseProductForm}
               >
                 إلغاء
               </Button>
@@ -427,10 +719,100 @@ const AdminPage = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
+      {/* Category Form Dialog */}
+      <Dialog open={isCategoryFormOpen} onOpenChange={setIsCategoryFormOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>
+              {editingCategory ? "تعديل القسم" : "إضافة قسم جديد"}
+            </DialogTitle>
+          </DialogHeader>
+
+          <form onSubmit={handleSubmitCategory} className="space-y-4 mt-4">
+            <div>
+              <Label htmlFor="catName">اسم القسم *</Label>
+              <Input
+                id="catName"
+                value={categoryFormData.name}
+                onChange={(e) =>
+                  setCategoryFormData({ ...categoryFormData, name: e.target.value })
+                }
+                placeholder="مثال: شيلان كشميري"
+                required
+                className="mt-1"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="catSlug">الرابط (اختياري)</Label>
+              <Input
+                id="catSlug"
+                value={categoryFormData.slug}
+                onChange={(e) =>
+                  setCategoryFormData({ ...categoryFormData, slug: e.target.value })
+                }
+                placeholder="mثال: kashmiri-shawls"
+                className="mt-1"
+                dir="ltr"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="catImage">رابط الصورة *</Label>
+              <Input
+                id="catImage"
+                value={categoryFormData.image}
+                onChange={(e) =>
+                  setCategoryFormData({ ...categoryFormData, image: e.target.value })
+                }
+                placeholder="https://example.com/image.jpg"
+                required
+                className="mt-1"
+              />
+              {categoryFormData.image && (
+                <img
+                  src={categoryFormData.image}
+                  alt="معاينة"
+                  className="mt-2 w-full h-32 object-cover rounded-lg"
+                  onError={(e) => (e.currentTarget.style.display = "none")}
+                />
+              )}
+            </div>
+
+            <div>
+              <Label htmlFor="catDescription">الوصف</Label>
+              <Textarea
+                id="catDescription"
+                value={categoryFormData.description}
+                onChange={(e) =>
+                  setCategoryFormData({ ...categoryFormData, description: e.target.value })
+                }
+                placeholder="وصف القسم..."
+                className="mt-1"
+                rows={2}
+              />
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              <Button type="submit" className="btn-gold flex-1">
+                {editingCategory ? "حفظ التغييرات" : "إضافة القسم"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCloseCategoryForm}
+              >
+                إلغاء
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Product Confirmation Dialog */}
       <AlertDialog
-        open={!!deleteConfirm}
-        onOpenChange={() => setDeleteConfirm(null)}
+        open={!!deleteProductConfirm}
+        onOpenChange={() => setDeleteProductConfirm(null)}
       >
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -442,7 +824,31 @@ const AdminPage = () => {
           <AlertDialogFooter className="gap-2">
             <AlertDialogCancel>إلغاء</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
+              onClick={() => deleteProductConfirm && handleDeleteProduct(deleteProductConfirm)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              حذف
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Category Confirmation Dialog */}
+      <AlertDialog
+        open={!!deleteCategoryConfirm}
+        onOpenChange={() => setDeleteCategoryConfirm(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>تأكيد الحذف</AlertDialogTitle>
+            <AlertDialogDescription>
+              هل أنت متأكد من حذف هذا القسم؟ لا يمكن التراجع عن هذا الإجراء.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="gap-2">
+            <AlertDialogCancel>إلغاء</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => deleteCategoryConfirm && handleDeleteCategory(deleteCategoryConfirm)}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               حذف

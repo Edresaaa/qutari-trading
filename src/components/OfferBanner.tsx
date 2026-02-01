@@ -8,7 +8,7 @@ const OfferBanner = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('https://cdn.files.salla.network/homepage/1501369604/c4a9153b-7507-4c00-953c-3fb9020c4505.webp')"
+          backgroundImage: "url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80')"
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-l from-chocolate/95 via-chocolate/80 to-chocolate/60" />
