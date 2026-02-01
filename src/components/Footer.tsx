@@ -1,37 +1,89 @@
 import { Link } from "react-router-dom";
 import { storeConfig } from "@/config/store";
-import { MessageCircle, Phone, MapPin } from "lucide-react";
+import { MapPin, Phone, Mail, Facebook, Instagram, Twitter, MessageCircle } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-chocolate text-primary-foreground mt-16">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Store Info */}
+    <footer className="bg-primary text-primary-foreground">
+      {/* Main Footer */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          {/* About */}
           <div>
-            <h3 className="text-xl font-bold mb-4 text-gold">{storeConfig.name}</h3>
-            <p className="text-primary-foreground/70 mb-4">
-              {storeConfig.description}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gold to-accent flex items-center justify-center shadow-lg">
+                <span className="text-chocolate font-bold text-2xl">ق</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-xl">{storeConfig.name}</h3>
+                <p className="text-primary-foreground/70 text-sm">أناقة تعبّر عنك</p>
+              </div>
+            </div>
+            <p className="text-primary-foreground/80 leading-relaxed mb-6">
+              متجر متخصص في بيع أفخر أنواع الشيلان الكشميرية والبشوت الملكية بجودة عالية وأسعار مناسبة.
             </p>
+            <div className="flex gap-3">
+              <a href="#" className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-gold hover:text-chocolate flex items-center justify-center transition-all duration-300">
+                <Facebook className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-gold hover:text-chocolate flex items-center justify-center transition-all duration-300">
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-gold hover:text-chocolate flex items-center justify-center transition-all duration-300">
+                <Twitter className="w-5 h-5" />
+              </a>
+            </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-bold mb-4 text-gold">روابط سريعة</h4>
-            <ul className="space-y-2">
+            <h4 className="font-bold text-lg mb-6 text-gold">روابط سريعة</h4>
+            <ul className="space-y-4">
               <li>
-                <Link to="/" className="text-primary-foreground/70 hover:text-gold transition-colors">
+                <Link to="/" className="text-primary-foreground/80 hover:text-gold transition-colors">
                   الرئيسية
                 </Link>
               </li>
               <li>
-                <Link to="/products" className="text-primary-foreground/70 hover:text-gold transition-colors">
+                <Link to="/products" className="text-primary-foreground/80 hover:text-gold transition-colors">
                   المنتجات
                 </Link>
               </li>
               <li>
-                <Link to="/categories" className="text-primary-foreground/70 hover:text-gold transition-colors">
+                <Link to="/categories" className="text-primary-foreground/80 hover:text-gold transition-colors">
                   الأقسام
+                </Link>
+              </li>
+              <li>
+                <Link to="/admin" className="text-primary-foreground/80 hover:text-gold transition-colors">
+                  لوحة التحكم
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Categories */}
+          <div>
+            <h4 className="font-bold text-lg mb-6 text-gold">الأقسام</h4>
+            <ul className="space-y-4">
+              <li>
+                <Link to="/products?category=termeh-shawls" className="text-primary-foreground/80 hover:text-gold transition-colors">
+                  شيلان كشميري ترمه
+                </Link>
+              </li>
+              <li>
+                <Link to="/products?category=pashmina-vip" className="text-primary-foreground/80 hover:text-gold transition-colors">
+                  شيلان باشمينا VIP
+                </Link>
+              </li>
+              <li>
+                <Link to="/products?category=wool-half-termeh" className="text-primary-foreground/80 hover:text-gold transition-colors">
+                  شيلان صوف نص ترمه
+                </Link>
+              </li>
+              <li>
+                <Link to="/products?category=royal-bisht" className="text-primary-foreground/80 hover:text-gold transition-colors">
+                  بشوت ملكية
                 </Link>
               </li>
             </ul>
@@ -39,27 +91,66 @@ const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h4 className="text-lg font-bold mb-4 text-gold">تواصل معنا</h4>
-            <div className="space-y-3">
-              <a
-                href={`https://wa.me/${storeConfig.whatsappNumber.replace(/[^0-9]/g, "")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 text-primary-foreground/70 hover:text-gold transition-colors"
-              >
-                <MessageCircle className="w-5 h-5 text-gold" />
-                <span dir="ltr">{storeConfig.whatsappNumber}</span>
-              </a>
-              <div className="flex items-center gap-3 text-primary-foreground/70">
-                <MapPin className="w-5 h-5 text-gold" />
-                <span>اليمن</span>
+            <h4 className="font-bold text-lg mb-6 text-gold">تواصل معنا</h4>
+            <ul className="space-y-4">
+              <li className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center">
+                  <Phone className="w-5 h-5 text-gold" />
+                </div>
+                <div>
+                  <p className="text-sm text-primary-foreground/60">اتصل بنا</p>
+                  <a href={`tel:${storeConfig.whatsappNumber}`} className="text-primary-foreground hover:text-gold transition-colors" dir="ltr">
+                    {storeConfig.whatsappNumber}
+                  </a>
+                </div>
+              </li>
+              <li className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center">
+                  <MessageCircle className="w-5 h-5 text-gold" />
+                </div>
+                <div>
+                  <p className="text-sm text-primary-foreground/60">واتساب</p>
+                  <a 
+                    href={`https://wa.me/${storeConfig.whatsappNumber.replace(/\D/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary-foreground hover:text-gold transition-colors"
+                  >
+                    تواصل معنا
+                  </a>
+                </div>
+              </li>
+              <li className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center">
+                  <MapPin className="w-5 h-5 text-gold" />
+                </div>
+                <div>
+                  <p className="text-sm text-primary-foreground/60">الموقع</p>
+                  <span className="text-primary-foreground">اليمن - صنعاء</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Copyright */}
+      <div className="border-t border-primary-foreground/10">
+        <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-primary-foreground/60 text-sm text-center md:text-right">
+            جميع الحقوق محفوظة © {new Date().getFullYear()} {storeConfig.name}
+          </p>
+          <div className="flex items-center gap-2">
+            <span className="text-primary-foreground/60 text-sm">طرق الدفع:</span>
+            <div className="flex gap-2">
+              <div className="w-10 h-6 bg-primary-foreground/10 rounded flex items-center justify-center text-xs font-bold">
+                VISA
+              </div>
+              <div className="w-10 h-6 bg-primary-foreground/10 rounded flex items-center justify-center text-xs font-bold">
+                MC
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="border-t border-chocolate-light mt-8 pt-8 text-center text-primary-foreground/50">
-          <p>جميع الحقوق محفوظة © {new Date().getFullYear()} {storeConfig.name}</p>
         </div>
       </div>
     </footer>

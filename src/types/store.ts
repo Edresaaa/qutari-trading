@@ -15,6 +15,7 @@ export interface Category {
   name: string;
   slug: string;
   image: string;
+  description?: string;
 }
 
 export interface StoreConfig {
@@ -22,4 +23,13 @@ export interface StoreConfig {
   whatsappNumber: string;
   logo?: string;
   description?: string;
+}
+
+export interface Banner {
+  id: string;
+  image: string;
+  title: string;
+  subtitle?: string;
+  link: string;
+  isActive: boolean;
 }
