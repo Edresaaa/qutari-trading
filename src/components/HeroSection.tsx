@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getBanners, getActiveBanners, Banner } from "@/lib/storage";
 import { motion, AnimatePresence } from "framer-motion";
@@ -38,14 +38,6 @@ const HeroSection = () => {
     return () => clearInterval(timer);
   }, [banners.length]);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % banners.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
-  };
-
   if (banners.length === 0) {
     return null;
   }
@@ -65,39 +57,15 @@ const HeroSection = () => {
                 transition={{ duration: 0.7 }}
                 className="absolute inset-0"
               >
-                {/* Background with leather texture */}
-                <div className="absolute inset-0 hero-gradient leather-bg">
-                  {/* Subtle grid pattern overlay */}
-                  <div 
-                    className="absolute inset-0 opacity-[0.03]"
-                    style={{
-                      backgroundImage: `linear-gradient(hsl(38 50% 52% / 0.15) 1px, transparent 1px),
-                                       linear-gradient(90deg, hsl(38 50% 52% / 0.15) 1px, transparent 1px)`,
-                      backgroundSize: '60px 60px'
-                    }}
+                {/* Full Banner Image Background */}
+                <div className="absolute inset-0">
+                  <img 
+                    src={banner.image} 
+                    alt={banner.title}
+                    className="w-full h-full object-cover"
                   />
-                  
-                  {/* Large product image with glow */}
-                  <motion.div 
-                    className="absolute right-0 top-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[450px] md:h-[450px] lg:w-[550px] lg:h-[550px]"
-                    initial={{ opacity: 0, x: 100, scale: 0.9 }}
-                    animate={{ opacity: 0.5, x: 0, scale: 1 }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
-                  >
-                    <div className="absolute inset-0 bg-gradient-radial from-accent/25 via-transparent to-transparent blur-3xl" />
-                    <img 
-                      src={banner.image} 
-                      alt="" 
-                      className="w-full h-full object-contain drop-shadow-2xl"
-                    />
-                  </motion.div>
-                  
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-l from-transparent via-background/60 to-background" />
-                  
-                  {/* Decorative elements */}
-                  <div className="absolute top-12 right-12 w-32 h-32 border border-accent/25 rounded-full opacity-40" />
-                  <div className="absolute bottom-24 left-24 w-24 h-24 border border-accent/20 rounded-full opacity-30" />
+                  {/* Dark overlay for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-l from-transparent via-background/70 to-background/90" />
                   
                   {/* Corner accents */}
                   <div className="absolute top-8 right-8 w-24 h-24">
@@ -158,20 +126,6 @@ const HeroSection = () => {
             )
           ))}
         </AnimatePresence>
-
-        {/* Navigation Arrows */}
-        <button
-          onClick={nextSlide}
-          className="absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full card-glass flex items-center justify-center text-accent hover:bg-accent hover:text-accent-foreground transition-all duration-300 z-10"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <button
-          onClick={prevSlide}
-          className="absolute right-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full card-glass flex items-center justify-center text-accent hover:bg-accent hover:text-accent-foreground transition-all duration-300 z-10"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
 
         {/* Dots */}
         <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-10">
