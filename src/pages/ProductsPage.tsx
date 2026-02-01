@@ -3,9 +3,11 @@ import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
+import SizeFilter from "@/components/filters/SizeFilter";
 import { getProducts, getCategories } from "@/lib/storage";
 import { Product, Category } from "@/types/store";
-import { Filter, X, Search, Package, ArrowUpDown } from "lucide-react";
+import { ProductSizeType } from "@/types/sizes";
+import { Filter, X, Search, Package, ArrowUpDown, Ruler } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -28,6 +30,12 @@ const ProductsPage = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>("default");
 
+  // حالة فلتر المقاسات
+  const [selectedSizeType, setSelectedSizeType] = useState<ProductSizeType | "">("");
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedLength, setSelectedLength] = useState("");
+  const [selectedWidth, setSelectedWidth] = useState("");
+
   useEffect(() => {
     const loadData = () => {
       setProducts(getProducts());
@@ -36,14 +44,11 @@ const ProductsPage = () => {
     
     loadData();
     
-    // Listen for storage changes (from admin panel updates)
     const handleStorageChange = () => {
       loadData();
     };
     
     window.addEventListener('storage', handleStorageChange);
-    
-    // Also listen for custom event for same-tab updates
     window.addEventListener('productsUpdated', handleStorageChange);
     
     return () => {
@@ -63,13 +68,42 @@ const ProductsPage = () => {
     }
   }, [searchParams]);
 
+  // فلترة المنتجات مع المقاسات
   const filteredProducts = products
     .filter((p) => {
+      // فلترة حسب الظهور
+      if (p.isVisible === false) return false;
+      
+      // فلترة حسب القسم
       const matchesCategory = !selectedCategory || p.category === selectedCategory;
+      
+      // فلترة حسب البحث
       const matchesSearch = !searchQuery || 
         p.name.includes(searchQuery) || 
         p.description.includes(searchQuery);
-      return matchesCategory && matchesSearch;
+      
+      // فلترة حسب نوع المقاس
+      const matchesSizeType = !selectedSizeType || p.sizeType === selectedSizeType;
+      
+      // فلترة حسب المقاس المحدد
+      let matchesSize = true;
+      if (selectedSize && p.sizeType !== "thobe") {
+        matchesSize = p.availableSizes?.includes(selectedSize) || false;
+      }
+      
+      // فلترة حسب الطول والعرض للأثواب
+      let matchesLength = true;
+      let matchesWidth = true;
+      if (selectedSizeType === "thobe") {
+        if (selectedLength) {
+          matchesLength = p.availableLengths?.includes(selectedLength) || false;
+        }
+        if (selectedWidth) {
+          matchesWidth = p.availableWidths?.includes(selectedWidth) || false;
+        }
+      }
+      
+      return matchesCategory && matchesSearch && matchesSizeType && matchesSize && matchesLength && matchesWidth;
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -106,8 +140,28 @@ const ProductsPage = () => {
   const clearFilters = () => {
     setSelectedCategory("");
     setSearchQuery("");
+    setSelectedSizeType("");
+    setSelectedSize("");
+    setSelectedLength("");
+    setSelectedWidth("");
     setSearchParams({});
   };
+
+  const clearSizeFilter = () => {
+    setSelectedSizeType("");
+    setSelectedSize("");
+    setSelectedLength("");
+    setSelectedWidth("");
+  };
+
+  const hasSizeFilter = selectedSizeType || selectedSize || selectedLength || selectedWidth;
+
+  // المنتجات المفلترة حسب القسم فقط (للفلتر الجانبي)
+  const productsForSizeFilter = products.filter(p => {
+    if (p.isVisible === false) return false;
+    if (!selectedCategory) return true;
+    return p.category === selectedCategory;
+  });
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -166,11 +220,12 @@ const ProductsPage = () => {
 
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Filters - Desktop */}
-            <aside className="hidden lg:block w-64 shrink-0">
+            <aside className="hidden lg:block w-64 shrink-0 space-y-4">
+              {/* فلتر الأقسام */}
               <div className="bg-card rounded-xl p-6 shadow-card sticky top-24">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-foreground">الأقسام</h3>
-                  {(selectedCategory || searchQuery) && (
+                  {(selectedCategory || searchQuery || hasSizeFilter) && (
                     <button
                       onClick={clearFilters}
                       className="text-xs text-destructive hover:underline"
@@ -191,12 +246,12 @@ const ProductsPage = () => {
                     >
                       جميع المنتجات
                       <span className="text-sm text-muted-foreground mr-2">
-                        ({products.length})
+                        ({products.filter(p => p.isVisible !== false).length})
                       </span>
                     </button>
                   </li>
                   {categories.map((category) => {
-                    const count = products.filter(p => p.category === category.slug).length;
+                    const count = products.filter(p => p.category === category.slug && p.isVisible !== false).length;
                     return (
                       <li key={category.id}>
                         <button
@@ -217,21 +272,62 @@ const ProductsPage = () => {
                   })}
                 </ul>
               </div>
+
+              {/* فلتر المقاسات */}
+              <SizeFilter
+                products={productsForSizeFilter}
+                selectedSizeType={selectedSizeType}
+                selectedSize={selectedSize}
+                selectedLength={selectedLength}
+                selectedWidth={selectedWidth}
+                onSizeTypeChange={setSelectedSizeType}
+                onSizeChange={setSelectedSize}
+                onLengthChange={setSelectedLength}
+                onWidthChange={setSelectedWidth}
+                onClearSizeFilter={clearSizeFilter}
+              />
             </aside>
 
             {/* Mobile Filter Button */}
-            <button
-              onClick={() => setShowFilters(true)}
-              className="lg:hidden flex items-center gap-2 bg-card px-4 py-3 rounded-lg shadow-card mb-4"
-            >
-              <Filter className="w-5 h-5" />
-              <span>تصفية حسب القسم</span>
-              {selectedCategory && (
-                <span className="bg-accent text-accent-foreground text-xs px-2 py-1 rounded">
-                  {categories.find((c) => c.slug === selectedCategory)?.name}
-                </span>
+            <div className="lg:hidden flex gap-2 mb-4">
+              <button
+                onClick={() => setShowFilters(true)}
+                className="flex-1 flex items-center justify-center gap-2 bg-card px-4 py-3 rounded-lg shadow-card"
+              >
+                <Filter className="w-5 h-5" />
+                <span>الأقسام</span>
+                {selectedCategory && (
+                  <span className="bg-accent text-accent-foreground text-xs px-2 py-1 rounded">
+                    {categories.find((c) => c.slug === selectedCategory)?.name}
+                  </span>
+                )}
+              </button>
+              {hasSizeFilter && (
+                <button
+                  onClick={clearSizeFilter}
+                  className="flex items-center gap-2 bg-accent/10 text-accent px-4 py-3 rounded-lg"
+                >
+                  <Ruler className="w-4 h-4" />
+                  <X className="w-4 h-4" />
+                </button>
               )}
-            </button>
+            </div>
+
+            {/* Mobile: Size filter pills */}
+            <div className="lg:hidden">
+              <SizeFilter
+                products={productsForSizeFilter}
+                selectedSizeType={selectedSizeType}
+                selectedSize={selectedSize}
+                selectedLength={selectedLength}
+                selectedWidth={selectedWidth}
+                onSizeTypeChange={setSelectedSizeType}
+                onSizeChange={setSelectedSize}
+                onLengthChange={setSelectedLength}
+                onWidthChange={setSelectedWidth}
+                onClearSizeFilter={clearSizeFilter}
+              />
+            </div>
 
             {/* Mobile Filters Drawer */}
             {showFilters && (
@@ -278,13 +374,23 @@ const ProductsPage = () => {
             {/* Products Grid */}
             <div className="flex-1">
               {/* Results count */}
-              <div className="mb-4 text-muted-foreground text-sm">
-                {filteredProducts.length} منتج
+              <div className="mb-4 text-muted-foreground text-sm flex flex-wrap items-center gap-2">
+                <span>{filteredProducts.length} منتج</span>
                 {selectedCategory && (
-                  <span> في {categories.find(c => c.slug === selectedCategory)?.name}</span>
+                  <span className="bg-muted px-2 py-1 rounded text-xs">
+                    {categories.find(c => c.slug === selectedCategory)?.name}
+                  </span>
                 )}
                 {searchQuery && (
-                  <span> يطابق "{searchQuery}"</span>
+                  <span className="bg-muted px-2 py-1 rounded text-xs">
+                    "{searchQuery}"
+                  </span>
+                )}
+                {selectedSizeType && (
+                  <span className="bg-accent/10 text-accent px-2 py-1 rounded text-xs flex items-center gap-1">
+                    <Ruler className="w-3 h-3" />
+                    {selectedSize || selectedLength || selectedWidth || "مقاس محدد"}
+                  </span>
                 )}
               </div>
 
@@ -300,10 +406,12 @@ const ProductsPage = () => {
                   <p className="text-muted-foreground text-lg mb-4">
                     {searchQuery 
                       ? `لا توجد نتائج للبحث "${searchQuery}"`
+                      : hasSizeFilter
+                      ? "لا توجد منتجات بهذا المقاس"
                       : "لا توجد منتجات في هذا القسم حالياً"
                     }
                   </p>
-                  {(searchQuery || selectedCategory) && (
+                  {(searchQuery || selectedCategory || hasSizeFilter) && (
                     <button
                       onClick={clearFilters}
                       className="text-accent hover:underline"
