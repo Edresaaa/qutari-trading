@@ -4,7 +4,6 @@ import { storeConfig } from "@/config/store";
 import { Menu, X, Phone, Settings } from "lucide-react";
 import { NavLink } from "./NavLink";
 import Logo from "./Logo";
-import ThemeToggle from "./ThemeToggle";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -69,9 +68,6 @@ const Header = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            {/* Theme Toggle */}
-            <ThemeToggle />
-
             {/* WhatsApp Button */}
             <a
               href={`https://wa.me/${storeConfig.whatsappNumber.replace(/\D/g, '')}`}
