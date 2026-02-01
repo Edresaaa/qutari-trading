@@ -69,6 +69,8 @@ interface ProductFormData {
   category: string;
   inStock: boolean;
   featured: boolean;
+  quantity: string;
+  isVisible: boolean;
 }
 
 interface CategoryFormData {
@@ -95,6 +97,8 @@ const initialProductFormData: ProductFormData = {
   category: "",
   inStock: true,
   featured: false,
+  quantity: "",
+  isVisible: true,
 };
 
 const initialCategoryFormData: CategoryFormData = {
@@ -247,6 +251,8 @@ const AdminPage = () => {
         category: product.category,
         inStock: product.inStock,
         featured: product.featured || false,
+        quantity: product.quantity?.toString() || "",
+        isVisible: product.isVisible !== false,
       });
     } else {
       setEditingProduct(null);
@@ -263,6 +269,7 @@ const AdminPage = () => {
 
   const handleSubmitProduct = (e: React.FormEvent) => {
     e.preventDefault();
+    const quantity = productFormData.quantity ? parseInt(productFormData.quantity) : undefined;
     const productData = {
       name: productFormData.name,
       description: productFormData.description,
@@ -270,8 +277,10 @@ const AdminPage = () => {
       originalPrice: productFormData.originalPrice ? parseFloat(productFormData.originalPrice) : undefined,
       image: productFormData.image,
       category: productFormData.category,
-      inStock: productFormData.inStock,
+      inStock: quantity !== undefined ? quantity > 0 : productFormData.inStock,
       featured: productFormData.featured,
+      quantity: quantity,
+      isVisible: productFormData.isVisible,
     };
 
     if (editingProduct) {
@@ -842,7 +851,18 @@ const AdminPage = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center gap-4">
+              <div>
+                <Label>الكمية</Label>
+                <Input 
+                  type="number" 
+                  min="0"
+                  value={productFormData.quantity} 
+                  onChange={(e) => setProductFormData({ ...productFormData, quantity: e.target.value })} 
+                  placeholder="اتركه فارغاً للكمية غير المحدودة"
+                />
+                <p className="text-xs text-muted-foreground mt-1">عند الكمية = 0 سيظهر "غير متوفر" للعميل</p>
+              </div>
+              <div className="md:col-span-2 flex flex-wrap items-center gap-6">
                 <div className="flex items-center gap-2">
                   <Switch checked={productFormData.inStock} onCheckedChange={(c) => setProductFormData({ ...productFormData, inStock: c })} />
                   <Label>متوفر</Label>
@@ -850,6 +870,10 @@ const AdminPage = () => {
                 <div className="flex items-center gap-2">
                   <Switch checked={productFormData.featured} onCheckedChange={(c) => setProductFormData({ ...productFormData, featured: c })} />
                   <Label>مميز</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Switch checked={productFormData.isVisible} onCheckedChange={(c) => setProductFormData({ ...productFormData, isVisible: c })} />
+                  <Label>ظاهر للعملاء</Label>
                 </div>
               </div>
             </div>

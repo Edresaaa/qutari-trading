@@ -20,19 +20,19 @@ const Logo = ({ size = "md", variant = "full" }: LogoProps) => {
           <defs>
             {/* Muted gold gradient */}
             <linearGradient id="mutedGoldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="hsl(38, 45%, 50%)" />
-              <stop offset="50%" stopColor="hsl(40, 40%, 58%)" />
-              <stop offset="100%" stopColor="hsl(35, 50%, 40%)" />
+              <stop offset="0%" stopColor="hsl(38, 50%, 55%)" />
+              <stop offset="50%" stopColor="hsl(40, 45%, 62%)" />
+              <stop offset="100%" stopColor="hsl(35, 55%, 45%)" />
             </linearGradient>
-            {/* Dark background gradient */}
-            <linearGradient id="darkBgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="hsl(180, 12%, 12%)" />
-              <stop offset="100%" stopColor="hsl(180, 10%, 8%)" />
+            {/* Hermes green background gradient */}
+            <linearGradient id="hermesBgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="hsl(155, 28%, 18%)" />
+              <stop offset="100%" stopColor="hsl(155, 25%, 14%)" />
             </linearGradient>
             {/* Subtle texture pattern */}
             <pattern id="subtleTexture" patternUnits="userSpaceOnUse" width="6" height="6">
-              <rect width="6" height="6" fill="hsl(180, 10%, 10%)" />
-              <circle cx="3" cy="3" r="2" fill="hsl(180, 8%, 14%)" opacity="0.4" />
+              <rect width="6" height="6" fill="hsl(155, 25%, 16%)" />
+              <circle cx="3" cy="3" r="2" fill="hsl(155, 22%, 20%)" opacity="0.4" />
             </pattern>
           </defs>
           
@@ -44,10 +44,10 @@ const Logo = ({ size = "md", variant = "full" }: LogoProps) => {
             strokeWidth="1.5"
           />
           
-          {/* Inner hexagon with dark fill */}
+          {/* Inner hexagon with hermes green fill */}
           <polygon 
             points="28,6 48,18 48,46 28,58 8,46 8,18" 
-            fill="url(#darkBgGradient)"
+            fill="url(#hermesBgGradient)"
           />
           
           {/* Subtle texture overlay */}

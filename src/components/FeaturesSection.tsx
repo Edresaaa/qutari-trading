@@ -1,4 +1,4 @@
-import { Truck, Shield, Headphones, CreditCard, Gift, RefreshCw } from "lucide-react";
+import { Truck, Shield, Headphones, CreditCard, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 
 const features = [
@@ -23,11 +23,6 @@ const features = [
     description: "طرق دفع متعددة وآمنة",
   },
   {
-    icon: Gift,
-    title: "تغليف فاخر",
-    description: "تغليف هدايا مجاني",
-  },
-  {
     icon: RefreshCw,
     title: "استبدال سهل",
     description: "سياسة استبدال مرنة",
@@ -38,7 +33,7 @@ const FeaturesSection = () => {
   return (
     <section className="py-16 bg-card border-y border-border">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {features.map((feature, index) => (
             <motion.div
               key={index}

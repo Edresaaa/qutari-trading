@@ -18,6 +18,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
     ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
     : 0;
 
+  // Check if product is out of stock based on quantity
+  const isOutOfStock = !product.inStock || (product.quantity !== undefined && product.quantity === 0);
+
   return (
     <motion.div 
       className="group card-premium"
@@ -29,7 +32,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${isOutOfStock ? 'opacity-60' : ''}`}
         />
         
         {/* Overlay on hover */}
@@ -45,14 +48,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
         
         {/* Badges */}
         <div className="absolute top-4 right-4 flex flex-col gap-2">
-          {hasDiscount && (
+          {hasDiscount && !isOutOfStock && (
             <span className="bg-destructive text-destructive-foreground text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
               خصم {discountPercentage}%
             </span>
           )}
-          {!product.inStock && (
+          {isOutOfStock && (
             <span className="bg-muted text-muted-foreground text-xs font-bold px-3 py-1.5 rounded-full">
-              نفذت الكمية
+              غير متوفر
             </span>
           )}
         </div>
@@ -70,7 +73,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
         {/* Price */}
         <div className="flex items-center gap-3 mb-5">
-          <span className="text-2xl font-bold gold-text">{product.price}</span>
+          <span className={`text-2xl font-bold ${isOutOfStock ? 'text-muted-foreground' : 'gold-text'}`}>{product.price}</span>
           <span className="text-sm text-muted-foreground">ر.ي</span>
           {hasDiscount && (
             <span className="text-sm text-muted-foreground line-through mr-auto">
@@ -85,14 +88,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
           target="_blank"
           rel="noopener noreferrer"
           className={`w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-bold transition-all duration-300 ${
-            product.inStock
+            !isOutOfStock
               ? "btn-gold"
               : "bg-muted text-muted-foreground cursor-not-allowed"
           }`}
-          onClick={(e) => !product.inStock && e.preventDefault()}
+          onClick={(e) => isOutOfStock && e.preventDefault()}
         >
           <MessageCircle className="w-5 h-5" />
-          <span>{product.inStock ? "اشتري الآن" : "غير متوفر"}</span>
+          <span>{!isOutOfStock ? "اشتري الآن" : "غير متوفر"}</span>
         </a>
       </div>
     </motion.div>

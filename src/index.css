@@ -6,70 +6,71 @@
 
 @layer base {
   :root {
-    /* Dark Luxury Theme - Muted Gold Accents */
-    --background: 180 8% 8%;
-    --foreground: 45 15% 92%;
+    /* Hermes Green Luxury Theme - Snake Leather */
+    --background: 155 25% 12%;
+    --foreground: 45 20% 92%;
 
-    --card: 180 10% 12%;
-    --card-foreground: 45 15% 92%;
+    --card: 155 22% 16%;
+    --card-foreground: 45 20% 92%;
 
-    --popover: 180 10% 10%;
-    --popover-foreground: 45 15% 92%;
+    --popover: 155 22% 14%;
+    --popover-foreground: 45 20% 92%;
 
-    --primary: 180 12% 15%;
-    --primary-foreground: 45 20% 90%;
+    --primary: 155 28% 20%;
+    --primary-foreground: 45 25% 92%;
 
-    --secondary: 180 8% 18%;
-    --secondary-foreground: 45 15% 88%;
+    --secondary: 155 20% 22%;
+    --secondary-foreground: 45 20% 90%;
 
-    --muted: 180 6% 20%;
-    --muted-foreground: 180 5% 55%;
+    --muted: 155 15% 26%;
+    --muted-foreground: 155 10% 60%;
 
-    --accent: 38 45% 45%;
-    --accent-foreground: 180 10% 8%;
+    --accent: 38 50% 52%;
+    --accent-foreground: 155 25% 10%;
 
     --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 180 8% 18%;
-    --input: 180 8% 18%;
-    --ring: 38 45% 45%;
+    --border: 155 18% 24%;
+    --input: 155 18% 24%;
+    --ring: 38 50% 52%;
 
     --radius: 0.75rem;
 
-    /* Custom tokens - Muted Gold */
-    --gold: 38 45% 45%;
-    --gold-light: 40 40% 55%;
-    --gold-dark: 35 50% 35%;
-    --royal-dark: 180 12% 10%;
-    --royal-darker: 180 15% 6%;
-    --ivory: 45 30% 95%;
-    --ivory-dark: 45 20% 88%;
+    /* Custom tokens - Muted Gold & Hermes Green */
+    --gold: 38 50% 52%;
+    --gold-light: 40 45% 62%;
+    --gold-dark: 35 55% 42%;
+    --hermes-green: 155 30% 18%;
+    --hermes-green-light: 155 25% 28%;
+    --hermes-green-dark: 155 35% 12%;
+    --ivory: 45 35% 95%;
+    --ivory-dark: 45 25% 88%;
 
     /* Glass effect colors */
-    --glass-bg: 180 10% 12% / 0.8;
-    --glass-border: 45 20% 90% / 0.1;
+    --glass-bg: 155 22% 18% / 0.85;
+    --glass-border: 45 25% 92% / 0.12;
 
     /* Gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(38 45% 45%), hsl(40 40% 55%));
-    --gradient-dark: linear-gradient(180deg, hsl(180 12% 8%), hsl(180 10% 14%));
-    --gradient-hero: linear-gradient(135deg, hsl(180 15% 6%) 0%, hsl(180 10% 12%) 50%, hsl(180 8% 16%) 100%);
-    --gradient-glass: linear-gradient(135deg, hsl(180 10% 15% / 0.9), hsl(180 10% 10% / 0.95));
+    --gradient-gold: linear-gradient(135deg, hsl(38 50% 52%), hsl(40 45% 62%));
+    --gradient-green: linear-gradient(180deg, hsl(155 28% 16%), hsl(155 25% 22%));
+    --gradient-hero: linear-gradient(135deg, hsl(155 32% 10%) 0%, hsl(155 28% 18%) 50%, hsl(155 24% 22%) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(155 22% 20% / 0.9), hsl(155 22% 16% / 0.95));
 
     /* Shadows */
-    --shadow-elegant: 0 8px 32px -8px hsl(0 0% 0% / 0.4);
-    --shadow-card: 0 4px 16px -4px hsl(0 0% 0% / 0.3);
-    --shadow-gold: 0 4px 24px -4px hsl(38 45% 45% / 0.25);
-    --shadow-glow: 0 0 40px -10px hsl(38 45% 45% / 0.3);
+    --shadow-elegant: 0 8px 32px -8px hsl(155 30% 8% / 0.5);
+    --shadow-card: 0 4px 16px -4px hsl(155 30% 8% / 0.4);
+    --shadow-gold: 0 4px 24px -4px hsl(38 50% 52% / 0.3);
+    --shadow-glow: 0 0 40px -10px hsl(38 50% 52% / 0.35);
 
-    --sidebar-background: 180 10% 10%;
-    --sidebar-foreground: 45 15% 92%;
-    --sidebar-primary: 38 45% 45%;
-    --sidebar-primary-foreground: 180 10% 8%;
-    --sidebar-accent: 180 8% 18%;
-    --sidebar-accent-foreground: 45 15% 92%;
-    --sidebar-border: 180 8% 20%;
-    --sidebar-ring: 38 45% 45%;
+    --sidebar-background: 155 22% 14%;
+    --sidebar-foreground: 45 20% 92%;
+    --sidebar-primary: 38 50% 52%;
+    --sidebar-primary-foreground: 155 25% 10%;
+    --sidebar-accent: 155 20% 22%;
+    --sidebar-accent-foreground: 45 20% 92%;
+    --sidebar-border: 155 18% 26%;
+    --sidebar-ring: 38 50% 52%;
   }
 }
 
@@ -91,38 +92,38 @@
   /* Premium Gold Button */
   .btn-gold {
     @apply font-bold px-8 py-3 rounded-xl transition-all duration-300;
-    background: linear-gradient(135deg, hsl(38 45% 45%), hsl(40 40% 55%));
-    color: hsl(180 10% 8%);
-    box-shadow: 0 4px 20px -4px hsl(38 45% 45% / 0.3);
+    background: linear-gradient(135deg, hsl(38 50% 52%), hsl(40 45% 62%));
+    color: hsl(155 25% 10%);
+    box-shadow: 0 4px 20px -4px hsl(38 50% 52% / 0.35);
   }
 
   .btn-gold:hover {
-    box-shadow: 0 8px 30px -4px hsl(38 45% 45% / 0.4);
+    box-shadow: 0 8px 30px -4px hsl(38 50% 52% / 0.45);
     transform: translateY(-2px);
   }
 
   .btn-gold-outline {
     @apply border-2 font-bold px-8 py-3 rounded-xl transition-all duration-300;
-    border-color: hsl(38 45% 45%);
-    color: hsl(38 45% 45%);
+    border-color: hsl(38 50% 52%);
+    color: hsl(38 50% 52%);
   }
 
   .btn-gold-outline:hover {
-    background: hsl(38 45% 45%);
-    color: hsl(180 10% 8%);
+    background: hsl(38 50% 52%);
+    color: hsl(155 25% 10%);
   }
 
   /* Glass Card Effect */
   .card-glass {
     @apply rounded-2xl backdrop-blur-xl transition-all duration-300;
-    background: linear-gradient(135deg, hsl(180 10% 15% / 0.6), hsl(180 10% 10% / 0.8));
-    border: 1px solid hsl(45 20% 90% / 0.08);
-    box-shadow: 0 8px 32px -8px hsl(0 0% 0% / 0.3);
+    background: linear-gradient(135deg, hsl(155 22% 20% / 0.7), hsl(155 22% 16% / 0.85));
+    border: 1px solid hsl(45 25% 92% / 0.1);
+    box-shadow: 0 8px 32px -8px hsl(155 30% 8% / 0.4);
   }
 
   .card-glass:hover {
-    border-color: hsl(38 45% 45% / 0.3);
-    box-shadow: 0 12px 40px -8px hsl(0 0% 0% / 0.4);
+    border-color: hsl(38 50% 52% / 0.35);
+    box-shadow: 0 12px 40px -8px hsl(155 30% 8% / 0.5);
     transform: translateY(-4px);
   }
 
@@ -134,8 +135,8 @@
   }
 
   .card-premium:hover {
-    border-color: hsl(38 45% 45% / 0.4);
-    box-shadow: var(--shadow-elegant), 0 0 30px -10px hsl(38 45% 45% / 0.2);
+    border-color: hsl(38 50% 52% / 0.45);
+    box-shadow: var(--shadow-elegant), 0 0 30px -10px hsl(38 50% 52% / 0.25);
     transform: translateY(-6px);
   }
 
@@ -148,23 +149,23 @@
     content: '';
     @apply absolute -bottom-1 right-0 h-0.5 rounded-full;
     width: 60px;
-    background: linear-gradient(90deg, hsl(38 45% 45%), transparent);
+    background: linear-gradient(90deg, hsl(38 50% 52%), transparent);
   }
 
   /* Navigation Link */
   .nav-link {
     @apply relative font-medium transition-colors duration-300;
-    color: hsl(45 15% 75%);
+    color: hsl(45 20% 78%);
   }
 
   .nav-link:hover {
-    color: hsl(38 45% 55%);
+    color: hsl(38 50% 58%);
   }
 
   .nav-link::after {
     content: '';
     @apply absolute -bottom-1 right-0 w-0 h-0.5 transition-all duration-300 rounded-full;
-    background: hsl(38 45% 45%);
+    background: hsl(38 50% 52%);
   }
 
   .nav-link:hover::after {
@@ -176,7 +177,7 @@
     background: var(--gradient-hero);
   }
 
-  /* Subtle Leather Texture - Medium intensity */
+  /* Snake/Crocodile Leather Texture - Medium intensity */
   .leather-texture {
     position: relative;
   }
@@ -186,17 +187,17 @@
     position: absolute;
     inset: 0;
     background-image: 
-      radial-gradient(ellipse 20px 14px at 50% 50%, hsl(180 10% 18% / 0.4) 0%, transparent 70%),
-      radial-gradient(ellipse 16px 12px at 30% 40%, hsl(180 8% 20% / 0.3) 0%, transparent 70%),
-      radial-gradient(ellipse 24px 16px at 70% 60%, hsl(180 12% 14% / 0.35) 0%, transparent 70%);
-    background-size: 40px 36px, 48px 42px, 56px 48px;
-    background-position: 0 0, 20px 18px, 10px 24px;
+      radial-gradient(ellipse 22px 16px at 50% 50%, hsl(155 25% 22% / 0.5) 0%, transparent 70%),
+      radial-gradient(ellipse 18px 14px at 30% 40%, hsl(155 22% 26% / 0.4) 0%, transparent 70%),
+      radial-gradient(ellipse 26px 18px at 70% 60%, hsl(155 28% 18% / 0.45) 0%, transparent 70%);
+    background-size: 44px 40px, 52px 46px, 60px 52px;
+    background-position: 0 0, 22px 20px, 11px 26px;
     pointer-events: none;
-    opacity: 0.6;
+    opacity: 0.55;
   }
 
   .leather-bg {
-    background-color: hsl(180 12% 10%);
+    background-color: hsl(155 28% 14%);
     position: relative;
   }
 
@@ -205,19 +206,19 @@
     position: absolute;
     inset: 0;
     background-image: 
-      radial-gradient(ellipse 28px 20px at 50% 50%, hsl(180 10% 16% / 0.5) 0%, transparent 60%),
-      radial-gradient(ellipse 22px 16px at 25% 40%, hsl(180 8% 18% / 0.4) 0%, transparent 65%),
-      radial-gradient(ellipse 32px 22px at 75% 55%, hsl(180 12% 13% / 0.45) 0%, transparent 60%),
-      radial-gradient(ellipse 26px 18px at 40% 70%, hsl(180 10% 17% / 0.35) 0%, transparent 70%);
-    background-size: 50px 45px, 60px 54px, 70px 60px, 55px 48px;
-    background-position: 0 0, 25px 22px, 12px 30px, 38px 12px;
+      radial-gradient(ellipse 30px 22px at 50% 50%, hsl(155 24% 20% / 0.55) 0%, transparent 60%),
+      radial-gradient(ellipse 24px 18px at 25% 40%, hsl(155 20% 24% / 0.45) 0%, transparent 65%),
+      radial-gradient(ellipse 34px 24px at 75% 55%, hsl(155 28% 17% / 0.5) 0%, transparent 60%),
+      radial-gradient(ellipse 28px 20px at 40% 70%, hsl(155 24% 21% / 0.4) 0%, transparent 70%);
+    background-size: 54px 48px, 64px 58px, 74px 64px, 58px 52px;
+    background-position: 0 0, 27px 24px, 14px 32px, 40px 14px;
     pointer-events: none;
     opacity: 0.5;
   }
 
   /* Gold Text */
   .gold-text {
-    background: linear-gradient(135deg, hsl(38 45% 50%), hsl(40 40% 60%));
+    background: linear-gradient(135deg, hsl(38 50% 55%), hsl(40 45% 65%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -228,7 +229,7 @@
     border: 2px solid transparent;
     background: 
       linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
-      linear-gradient(135deg, hsl(38 45% 45%), hsl(40 40% 55%), hsl(35 50% 35%)) border-box;
+      linear-gradient(135deg, hsl(38 50% 52%), hsl(40 45% 62%), hsl(35 55% 42%)) border-box;
   }
 
   /* Input Styling */
@@ -238,7 +239,7 @@
 
   /* Glow Effect */
   .glow-gold {
-    box-shadow: 0 0 40px -10px hsl(38 45% 45% / 0.4);
+    box-shadow: 0 0 40px -10px hsl(38 50% 52% / 0.45);
   }
 }
 
@@ -279,9 +280,9 @@
   .shimmer {
     background: linear-gradient(
       90deg,
-      hsl(180 10% 15%) 0%,
-      hsl(180 10% 20%) 50%,
-      hsl(180 10% 15%) 100%
+      hsl(155 22% 18%) 0%,
+      hsl(155 22% 24%) 50%,
+      hsl(155 22% 18%) 100%
     );
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;

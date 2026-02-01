@@ -242,12 +242,17 @@ export const saveStoreSettings = (settings: StoreSettings): void => {
 // Helper functions
 export const getProductsByCategory = (categorySlug: string): Product[] => {
   const products = getProducts();
-  return products.filter((p) => p.category === categorySlug);
+  return products.filter((p) => p.category === categorySlug && p.isVisible !== false);
 };
 
 export const getFeaturedProducts = (): Product[] => {
   const products = getProducts();
-  return products.filter((p) => p.featured);
+  return products.filter((p) => p.featured && p.isVisible !== false);
+};
+
+export const getVisibleProducts = (): Product[] => {
+  const products = getProducts();
+  return products.filter((p) => p.isVisible !== false);
 };
 
 export const getProductById = (id: string): Product | null => {
@@ -260,7 +265,8 @@ export const searchProducts = (query: string): Product[] => {
   const lowerQuery = query.toLowerCase();
   return products.filter(
     (p) =>
-      p.name.toLowerCase().includes(lowerQuery) ||
-      p.description.toLowerCase().includes(lowerQuery)
+      p.isVisible !== false &&
+      (p.name.toLowerCase().includes(lowerQuery) ||
+      p.description.toLowerCase().includes(lowerQuery))
   );
 };
