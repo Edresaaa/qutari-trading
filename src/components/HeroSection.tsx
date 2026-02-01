@@ -58,7 +58,7 @@ const HeroSection = () => {
             }`}
           >
             {/* Background with product image */}
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-chocolate via-chocolate/95 to-chocolate/90">
+            <div className="absolute inset-0 flex items-center justify-center hero-gradient">
               {/* Large product image */}
               <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] opacity-30 md:opacity-50">
                 <img 
@@ -67,7 +67,7 @@ const HeroSection = () => {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-l from-transparent via-chocolate/60 to-chocolate" />
+              <div className="absolute inset-0 bg-gradient-to-l from-transparent via-primary/60 to-primary" />
             </div>
 
             {/* Content */}
@@ -102,13 +102,13 @@ const HeroSection = () => {
         {/* Navigation Arrows */}
         <button
           onClick={nextSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background/20 backdrop-blur-sm border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-chocolate transition-all duration-300 z-10"
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background/20 backdrop-blur-sm border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-primary transition-all duration-300 z-10"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
         <button
           onClick={prevSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background/20 backdrop-blur-sm border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-chocolate transition-all duration-300 z-10"
+          className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background/20 backdrop-blur-sm border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-primary transition-all duration-300 z-10"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
