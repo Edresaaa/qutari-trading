@@ -19,8 +19,27 @@ const ProductsPage = () => {
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
-    setProducts(getProducts());
-    setCategories(getCategories());
+    const loadData = () => {
+      setProducts(getProducts());
+      setCategories(getCategories());
+    };
+    
+    loadData();
+    
+    // Listen for storage changes (from admin panel updates)
+    const handleStorageChange = () => {
+      loadData();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also listen for custom event for same-tab updates
+    window.addEventListener('productsUpdated', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('productsUpdated', handleStorageChange);
+    };
   }, []);
 
   useEffect(() => {
