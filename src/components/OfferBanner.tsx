@@ -1,8 +1,13 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
+import CountdownTimer from "./CountdownTimer";
 
 const OfferBanner = () => {
+  // Set offer end date (7 days from now for demo)
+  const offerEndDate = new Date();
+  offerEndDate.setDate(offerEndDate.getDate() + 7);
+
   return (
     <section className="py-20 relative overflow-hidden">
       {/* Background with leather texture */}
@@ -47,9 +52,16 @@ const OfferBanner = () => {
           <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-5">
             خصم يصل إلى <span className="gold-text">50%</span>
           </h2>
-          <p className="text-muted-foreground text-lg mb-10 leading-relaxed">
+          <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
             على جميع الغتر الكشميرية والشيلان الباشمينا الملكي
           </p>
+          
+          {/* Countdown Timer */}
+          <div className="mb-10">
+            <p className="text-sm text-muted-foreground mb-4">ينتهي العرض خلال:</p>
+            <CountdownTimer targetDate={offerEndDate} />
+          </div>
+          
           <motion.div
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
