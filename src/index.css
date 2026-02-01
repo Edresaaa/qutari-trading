@@ -157,7 +157,7 @@
   }
 
   .category-card {
-    @apply relative overflow-hidden rounded-xl cursor-pointer group;
+    @apply relative overflow-hidden rounded-xl cursor-pointer;
   }
 
   .category-card::before {
