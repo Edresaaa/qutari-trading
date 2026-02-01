@@ -163,10 +163,10 @@ const Footer = () => {
             <div className="h-6 w-px bg-border hidden md:block" />
             <Link
               to="/admin"
-              className="flex items-center gap-2 text-muted-foreground hover:text-accent transition-colors text-sm"
+              className="w-8 h-8 rounded-lg bg-secondary hover:bg-accent hover:text-accent-foreground flex items-center justify-center transition-all duration-300 text-muted-foreground"
+              title="لوحة التحكم"
             >
               <Settings className="w-4 h-4" />
-              <span>لوحة التحكم</span>
             </Link>
           </div>
         </div>
