@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { storeConfig } from "@/config/store";
-import { MapPin, Phone, MessageCircle, Facebook, Instagram, Twitter } from "lucide-react";
+import { MapPin, Phone, MessageCircle, Facebook, Instagram, Twitter, Settings } from "lucide-react";
 import Logo from "./Logo";
 
 const Footer = () => {
@@ -50,11 +50,6 @@ const Footer = () => {
               <li>
                 <Link to="/categories" className="text-muted-foreground hover:text-accent hover:pr-2 transition-all duration-300">
                   الأقسام
-                </Link>
-              </li>
-              <li>
-                <Link to="/admin" className="text-muted-foreground hover:text-accent hover:pr-2 transition-all duration-300">
-                  لوحة التحكم
                 </Link>
               </li>
             </ul>
@@ -153,16 +148,26 @@ const Footer = () => {
           <p className="text-muted-foreground text-sm text-center md:text-right">
             جميع الحقوق محفوظة © {new Date().getFullYear()} {storeConfig.name}
           </p>
-          <div className="flex items-center gap-3">
-            <span className="text-muted-foreground text-sm">طرق الدفع:</span>
-            <div className="flex gap-2">
-              <div className="px-4 py-1.5 bg-secondary rounded-lg flex items-center justify-center text-xs font-medium text-foreground">
-                نقداً
-              </div>
-              <div className="px-4 py-1.5 bg-secondary rounded-lg flex items-center justify-center text-xs font-medium text-foreground">
-                تحويل
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-muted-foreground text-sm">طرق الدفع:</span>
+              <div className="flex gap-2">
+                <div className="px-4 py-1.5 bg-secondary rounded-lg flex items-center justify-center text-xs font-medium text-foreground">
+                  نقداً
+                </div>
+                <div className="px-4 py-1.5 bg-secondary rounded-lg flex items-center justify-center text-xs font-medium text-foreground">
+                  تحويل
+                </div>
               </div>
             </div>
+            <div className="h-6 w-px bg-border hidden md:block" />
+            <Link
+              to="/admin"
+              className="flex items-center gap-2 text-muted-foreground hover:text-accent transition-colors text-sm"
+            >
+              <Settings className="w-4 h-4" />
+              <span>لوحة التحكم</span>
+            </Link>
           </div>
         </div>
       </div>

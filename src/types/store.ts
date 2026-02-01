@@ -8,6 +8,8 @@ export interface Product {
   category: string;
   inStock: boolean;
   featured?: boolean;
+  quantity?: number;
+  isVisible?: boolean;
 }
 
 export interface Category {

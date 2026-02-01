@@ -55,9 +55,10 @@ export default {
           light: "hsl(var(--gold-light))",
           dark: "hsl(var(--gold-dark))",
         },
-        "royal-dark": {
-          DEFAULT: "hsl(var(--royal-dark))",
-          darker: "hsl(var(--royal-darker))",
+        hermes: {
+          DEFAULT: "hsl(var(--hermes-green))",
+          light: "hsl(var(--hermes-green-light))",
+          dark: "hsl(var(--hermes-green-dark))",
         },
         ivory: {
           DEFAULT: "hsl(var(--ivory))",
@@ -101,8 +102,8 @@ export default {
           to: { opacity: "1", transform: "scale(1)" },
         },
         "glow-pulse": {
-          "0%, 100%": { boxShadow: "0 0 20px -5px hsl(38 45% 45% / 0.3)" },
-          "50%": { boxShadow: "0 0 30px -5px hsl(38 45% 45% / 0.5)" },
+          "0%, 100%": { boxShadow: "0 0 20px -5px hsl(38 50% 52% / 0.35)" },
+          "50%": { boxShadow: "0 0 30px -5px hsl(38 50% 52% / 0.55)" },
         },
       },
       animation: {
@@ -114,15 +115,15 @@ export default {
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
       },
       boxShadow: {
-        elegant: "0 8px 32px -8px hsl(0 0% 0% / 0.4)",
-        card: "0 4px 16px -4px hsl(0 0% 0% / 0.3)",
-        gold: "0 4px 24px -4px hsl(38 45% 45% / 0.25)",
-        glow: "0 0 40px -10px hsl(38 45% 45% / 0.3)",
+        elegant: "0 8px 32px -8px hsl(155 30% 8% / 0.5)",
+        card: "0 4px 16px -4px hsl(155 30% 8% / 0.4)",
+        gold: "0 4px 24px -4px hsl(38 50% 52% / 0.3)",
+        glow: "0 0 40px -10px hsl(38 50% 52% / 0.35)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-gold": "linear-gradient(135deg, hsl(38 45% 45%), hsl(40 40% 55%))",
-        "gradient-dark": "linear-gradient(180deg, hsl(180 12% 8%), hsl(180 10% 14%))",
+        "gradient-gold": "linear-gradient(135deg, hsl(38 50% 52%), hsl(40 45% 62%))",
+        "gradient-hermes": "linear-gradient(180deg, hsl(155 28% 16%), hsl(155 25% 22%))",
       },
     },
   },

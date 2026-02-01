@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { storeConfig } from "@/config/store";
-import { Menu, X, Phone, Settings } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import { NavLink } from "./NavLink";
 import Logo from "./Logo";
 
@@ -57,13 +57,6 @@ const Header = () => {
             <NavLink to="/">الرئيسية</NavLink>
             <NavLink to="/products">المنتجات</NavLink>
             <NavLink to="/categories">الأقسام</NavLink>
-            <Link
-              to="/admin"
-              className="flex items-center gap-2 bg-accent/10 hover:bg-accent/20 text-accent px-4 py-2 rounded-xl transition-all duration-300"
-            >
-              <Settings className="w-4 h-4" />
-              <span>لوحة التحكم</span>
-            </Link>
           </nav>
 
           {/* Actions */}
@@ -106,13 +99,6 @@ const Header = () => {
           <NavLink to="/" className="py-3 px-4 rounded-xl hover:bg-secondary transition-colors">الرئيسية</NavLink>
           <NavLink to="/products" className="py-3 px-4 rounded-xl hover:bg-secondary transition-colors">المنتجات</NavLink>
           <NavLink to="/categories" className="py-3 px-4 rounded-xl hover:bg-secondary transition-colors">الأقسام</NavLink>
-          <Link
-            to="/admin"
-            className="flex items-center gap-2 py-3 px-4 rounded-xl bg-accent/10 text-accent"
-          >
-            <Settings className="w-4 h-4" />
-            <span>لوحة التحكم</span>
-          </Link>
           <a
             href={`https://wa.me/${storeConfig.whatsappNumber.replace(/\D/g, '')}`}
             target="_blank"

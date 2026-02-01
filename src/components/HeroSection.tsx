@@ -48,14 +48,14 @@ const HeroSection = () => {
                 transition={{ duration: 0.7 }}
                 className="absolute inset-0"
               >
-                {/* Background with glass effect */}
+                {/* Background with leather texture */}
                 <div className="absolute inset-0 hero-gradient leather-bg">
                   {/* Subtle grid pattern overlay */}
                   <div 
-                    className="absolute inset-0 opacity-5"
+                    className="absolute inset-0 opacity-[0.03]"
                     style={{
-                      backgroundImage: `linear-gradient(hsl(38 45% 45% / 0.1) 1px, transparent 1px),
-                                       linear-gradient(90deg, hsl(38 45% 45% / 0.1) 1px, transparent 1px)`,
+                      backgroundImage: `linear-gradient(hsl(38 50% 52% / 0.15) 1px, transparent 1px),
+                                       linear-gradient(90deg, hsl(38 50% 52% / 0.15) 1px, transparent 1px)`,
                       backgroundSize: '60px 60px'
                     }}
                   />
@@ -64,10 +64,10 @@ const HeroSection = () => {
                   <motion.div 
                     className="absolute right-0 top-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[450px] md:h-[450px] lg:w-[550px] lg:h-[550px]"
                     initial={{ opacity: 0, x: 100, scale: 0.9 }}
-                    animate={{ opacity: 0.4, x: 0, scale: 1 }}
+                    animate={{ opacity: 0.5, x: 0, scale: 1 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                   >
-                    <div className="absolute inset-0 bg-gradient-radial from-accent/20 via-transparent to-transparent blur-3xl" />
+                    <div className="absolute inset-0 bg-gradient-radial from-accent/25 via-transparent to-transparent blur-3xl" />
                     <img 
                       src={banner.image} 
                       alt="" 
@@ -76,20 +76,20 @@ const HeroSection = () => {
                   </motion.div>
                   
                   {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-l from-transparent via-background/70 to-background" />
+                  <div className="absolute inset-0 bg-gradient-to-l from-transparent via-background/60 to-background" />
                   
                   {/* Decorative elements */}
-                  <div className="absolute top-12 right-12 w-32 h-32 border border-accent/20 rounded-full opacity-30" />
-                  <div className="absolute bottom-24 left-24 w-24 h-24 border border-accent/15 rounded-full opacity-20" />
+                  <div className="absolute top-12 right-12 w-32 h-32 border border-accent/25 rounded-full opacity-40" />
+                  <div className="absolute bottom-24 left-24 w-24 h-24 border border-accent/20 rounded-full opacity-30" />
                   
                   {/* Corner accents */}
                   <div className="absolute top-8 right-8 w-24 h-24">
-                    <div className="absolute top-0 right-0 w-16 h-[2px] bg-gradient-to-l from-accent/50 to-transparent" />
-                    <div className="absolute top-0 right-0 w-[2px] h-16 bg-gradient-to-b from-accent/50 to-transparent" />
+                    <div className="absolute top-0 right-0 w-16 h-[2px] bg-gradient-to-l from-accent/60 to-transparent" />
+                    <div className="absolute top-0 right-0 w-[2px] h-16 bg-gradient-to-b from-accent/60 to-transparent" />
                   </div>
                   <div className="absolute bottom-8 left-8 w-24 h-24">
-                    <div className="absolute bottom-0 left-0 w-16 h-[2px] bg-gradient-to-r from-accent/50 to-transparent" />
-                    <div className="absolute bottom-0 left-0 w-[2px] h-16 bg-gradient-to-t from-accent/50 to-transparent" />
+                    <div className="absolute bottom-0 left-0 w-16 h-[2px] bg-gradient-to-r from-accent/60 to-transparent" />
+                    <div className="absolute bottom-0 left-0 w-[2px] h-16 bg-gradient-to-t from-accent/60 to-transparent" />
                   </div>
                 </div>
 
