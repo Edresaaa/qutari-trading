@@ -54,7 +54,8 @@ const ProductDetailPage = () => {
   const whatsappLink = formatWhatsAppLink(
     product.name,
     window.location.href,
-    product.price
+    product.price,
+    product.image
   );
 
   const discountPercentage = product.originalPrice

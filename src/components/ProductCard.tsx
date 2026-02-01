@@ -10,8 +10,8 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const currentUrl = typeof window !== "undefined" ? window.location.origin : "";
-  const productUrl = `${currentUrl}/products/${product.id}`;
-  const whatsappLink = formatWhatsAppLink(product.name, productUrl, product.price);
+  const productUrl = `${currentUrl}/product/${product.id}`;
+  const whatsappLink = formatWhatsAppLink(product.name, productUrl, product.price, product.image);
 
   const hasDiscount = product.originalPrice && product.originalPrice > product.price;
   const discountPercentage = hasDiscount
