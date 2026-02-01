@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getBanners, getActiveBanners, Banner } from "@/lib/storage";
+import { motion, AnimatePresence } from "framer-motion";
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -35,100 +36,144 @@ const HeroSection = () => {
   return (
     <section className="relative overflow-hidden">
       {/* Main Slider */}
-      <div className="relative h-[500px] md:h-[600px] lg:h-[700px]">
-        {banners.map((banner, index) => (
-          <div
-            key={banner.id}
-            className={`absolute inset-0 transition-all duration-700 ease-in-out ${
-              index === currentSlide
-                ? "opacity-100 scale-100"
-                : "opacity-0 scale-105"
-            }`}
-          >
-            {/* Background with leather texture and product image */}
-            <div className="absolute inset-0 flex items-center justify-center hero-gradient leather-bg">
-              {/* Large product image */}
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] opacity-30 md:opacity-50">
-                <img 
-                  src={banner.image} 
-                  alt="" 
-                  className="w-full h-full object-contain drop-shadow-2xl"
-                />
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-l from-transparent via-primary/60 to-primary" />
-              {/* Decorative golden corners */}
-              <div className="absolute top-8 right-8 w-20 h-20 border-t-2 border-r-2 border-gold/40 rounded-tr-3xl" />
-              <div className="absolute bottom-8 left-8 w-20 h-20 border-b-2 border-l-2 border-gold/40 rounded-bl-3xl" />
-            </div>
+      <div className="relative h-[550px] md:h-[650px] lg:h-[750px]">
+        <AnimatePresence mode="wait">
+          {banners.map((banner, index) => (
+            index === currentSlide && (
+              <motion.div
+                key={banner.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.7 }}
+                className="absolute inset-0"
+              >
+                {/* Background with glass effect */}
+                <div className="absolute inset-0 hero-gradient leather-bg">
+                  {/* Subtle grid pattern overlay */}
+                  <div 
+                    className="absolute inset-0 opacity-5"
+                    style={{
+                      backgroundImage: `linear-gradient(hsl(38 45% 45% / 0.1) 1px, transparent 1px),
+                                       linear-gradient(90deg, hsl(38 45% 45% / 0.1) 1px, transparent 1px)`,
+                      backgroundSize: '60px 60px'
+                    }}
+                  />
+                  
+                  {/* Large product image with glow */}
+                  <motion.div 
+                    className="absolute right-0 top-1/2 -translate-y-1/2 w-[350px] h-[350px] md:w-[450px] md:h-[450px] lg:w-[550px] lg:h-[550px]"
+                    initial={{ opacity: 0, x: 100, scale: 0.9 }}
+                    animate={{ opacity: 0.4, x: 0, scale: 1 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                  >
+                    <div className="absolute inset-0 bg-gradient-radial from-accent/20 via-transparent to-transparent blur-3xl" />
+                    <img 
+                      src={banner.image} 
+                      alt="" 
+                      className="w-full h-full object-contain drop-shadow-2xl"
+                    />
+                  </motion.div>
+                  
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-l from-transparent via-background/70 to-background" />
+                  
+                  {/* Decorative elements */}
+                  <div className="absolute top-12 right-12 w-32 h-32 border border-accent/20 rounded-full opacity-30" />
+                  <div className="absolute bottom-24 left-24 w-24 h-24 border border-accent/15 rounded-full opacity-20" />
+                  
+                  {/* Corner accents */}
+                  <div className="absolute top-8 right-8 w-24 h-24">
+                    <div className="absolute top-0 right-0 w-16 h-[2px] bg-gradient-to-l from-accent/50 to-transparent" />
+                    <div className="absolute top-0 right-0 w-[2px] h-16 bg-gradient-to-b from-accent/50 to-transparent" />
+                  </div>
+                  <div className="absolute bottom-8 left-8 w-24 h-24">
+                    <div className="absolute bottom-0 left-0 w-16 h-[2px] bg-gradient-to-r from-accent/50 to-transparent" />
+                    <div className="absolute bottom-0 left-0 w-[2px] h-16 bg-gradient-to-t from-accent/50 to-transparent" />
+                  </div>
+                </div>
 
-            {/* Content */}
-            <div className="relative h-full container mx-auto px-4 flex items-center">
-              <div className="max-w-2xl text-right mr-auto">
-                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 animate-fade-in">
-                  {banner.title.split(" ").map((word, i) => (
-                    <span key={i} className={i === 0 ? "block" : ""}>
-                      {i === 1 ? (
-                        <span className="text-gold">{word}</span>
-                      ) : (
-                        word
-                      )}{" "}
-                    </span>
-                  ))}
-                </h1>
-                <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 animate-slide-up">
-                  {banner.subtitle}
-                </p>
-                <Link
-                  to={banner.link}
-                  className="btn-gold inline-flex items-center justify-center gap-2 text-lg px-8 py-4 animate-slide-up"
-                >
-                  <span>تسوق الآن</span>
-                  <ArrowLeft className="w-5 h-5" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        ))}
+                {/* Content */}
+                <div className="relative h-full container mx-auto px-4 flex items-center">
+                  <motion.div 
+                    className="max-w-2xl text-right mr-auto"
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                  >
+                    <motion.span 
+                      className="inline-block text-sm font-medium text-accent mb-4 tracking-wider"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: 0.4 }}
+                    >
+                      مجموعة حصرية
+                    </motion.span>
+                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
+                      {banner.title.split(" ").map((word, i) => (
+                        <span key={i} className={i === 0 ? "block text-foreground" : ""}>
+                          {i === 1 ? (
+                            <span className="gold-text">{word}</span>
+                          ) : (
+                            <span className="text-foreground">{word}</span>
+                          )}{" "}
+                        </span>
+                      ))}
+                    </h1>
+                    <p className="text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed max-w-xl">
+                      {banner.subtitle}
+                    </p>
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Link
+                        to={banner.link}
+                        className="btn-gold inline-flex items-center justify-center gap-3 text-lg px-10 py-4"
+                      >
+                        <span>تسوق الآن</span>
+                        <ArrowLeft className="w-5 h-5" />
+                      </Link>
+                    </motion.div>
+                  </motion.div>
+                </div>
+              </motion.div>
+            )
+          ))}
+        </AnimatePresence>
 
         {/* Navigation Arrows */}
         <button
           onClick={nextSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background/20 backdrop-blur-sm border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-primary transition-all duration-300 z-10"
+          className="absolute left-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full card-glass flex items-center justify-center text-accent hover:bg-accent hover:text-accent-foreground transition-all duration-300 z-10"
         >
           <ChevronLeft className="w-6 h-6" />
         </button>
         <button
           onClick={prevSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background/20 backdrop-blur-sm border border-gold/30 flex items-center justify-center text-gold hover:bg-gold hover:text-primary transition-all duration-300 z-10"
+          className="absolute right-6 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full card-glass flex items-center justify-center text-accent hover:bg-accent hover:text-accent-foreground transition-all duration-300 z-10"
         >
           <ChevronRight className="w-6 h-6" />
         </button>
 
         {/* Dots */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 z-10">
           {banners.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`h-2 rounded-full transition-all duration-300 ${
                 index === currentSlide
-                  ? "bg-gold w-8"
-                  : "bg-primary-foreground/40 hover:bg-primary-foreground/60"
+                  ? "bg-accent w-10"
+                  : "bg-foreground/20 w-2 hover:bg-foreground/40"
               }`}
             />
           ))}
         </div>
       </div>
 
-      {/* Wave decoration */}
-      <div className="absolute bottom-0 left-0 right-0 z-10">
-        <svg viewBox="0 0 1440 100" fill="none" className="w-full h-auto">
-          <path
-            d="M0 50L48 45.7C96 41.3 192 32.7 288 35.8C384 38.8 480 53.7 576 58.3C672 63 768 57.3 864 50C960 42.7 1056 33.7 1152 35.8C1248 38 1344 51.3 1392 58L1440 64.7V100H1392C1344 100 1248 100 1152 100C1056 100 960 100 864 100C768 100 672 100 576 100C480 100 384 100 288 100C192 100 96 100 48 100H0V50Z"
-            fill="hsl(var(--background))"
-          />
-        </svg>
-      </div>
+      {/* Bottom fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-10" />
     </section>
   );
 };

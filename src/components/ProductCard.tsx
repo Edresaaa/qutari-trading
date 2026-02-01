@@ -2,6 +2,7 @@ import { Product } from "@/types/store";
 import { formatWhatsAppLink } from "@/config/store";
 import { MessageCircle, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface ProductCardProps {
   product: Product;
@@ -18,9 +19,13 @@ const ProductCard = ({ product }: ProductCardProps) => {
     : 0;
 
   return (
-    <div className="group bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-lg transition-all duration-300">
+    <motion.div 
+      className="group card-premium"
+      whileHover={{ y: -8 }}
+      transition={{ duration: 0.3 }}
+    >
       {/* Image */}
-      <div className="relative aspect-square overflow-hidden bg-cream">
+      <div className="relative aspect-square overflow-hidden bg-secondary">
         <img
           src={product.image}
           alt={product.name}
@@ -28,20 +33,20 @@ const ProductCard = ({ product }: ProductCardProps) => {
         />
         
         {/* Overlay on hover */}
-        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-all duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
         
         {/* Quick view button */}
         <Link
           to={`/product/${product.id}`}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-background/90 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-gold hover:text-chocolate text-foreground"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full card-glass flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 text-accent hover:bg-accent hover:text-accent-foreground"
         >
-          <Eye className="w-5 h-5" />
+          <Eye className="w-6 h-6" />
         </Link>
         
         {/* Badges */}
-        <div className="absolute top-3 right-3 flex flex-col gap-2">
+        <div className="absolute top-4 right-4 flex flex-col gap-2">
           {hasDiscount && (
-            <span className="bg-destructive text-destructive-foreground text-xs font-bold px-3 py-1.5 rounded-full">
+            <span className="bg-destructive text-destructive-foreground text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
               خصم {discountPercentage}%
             </span>
           )}
@@ -64,8 +69,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </p>
 
         {/* Price */}
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-2xl font-bold text-accent">{product.price}</span>
+        <div className="flex items-center gap-3 mb-5">
+          <span className="text-2xl font-bold gold-text">{product.price}</span>
           <span className="text-sm text-muted-foreground">ر.ي</span>
           {hasDiscount && (
             <span className="text-sm text-muted-foreground line-through mr-auto">
@@ -90,7 +95,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <span>{product.inStock ? "اشتري الآن" : "غير متوفر"}</span>
         </a>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
