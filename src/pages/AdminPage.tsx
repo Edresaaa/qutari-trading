@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
@@ -8,15 +8,15 @@ import {
   addProduct,
   updateProduct,
   deleteProduct,
-  saveCategories,
   addCategory,
   updateCategory,
   deleteCategory,
 } from "@/lib/storage";
+import { uploadProductImage, uploadCategoryImage } from "@/lib/imageUpload";
 import { Product, Category } from "@/types/store";
 import { 
   Plus, Pencil, Trash2, ArrowRight, Package, Lock, Eye, EyeOff,
-  FolderOpen, ShoppingBag, Search
+  FolderOpen, ShoppingBag, Search, Upload, Loader2, Image
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,7 +49,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const ADMIN_PASSWORD = "admin123";
+const ADMIN_PASSWORD = "QR@X512512x";
 
 interface ProductFormData {
   name: string;
@@ -89,7 +89,6 @@ const initialCategoryFormData: CategoryFormData = {
 
 const AdminPage = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -104,12 +103,16 @@ const AdminPage = () => {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deleteProductConfirm, setDeleteProductConfirm] = useState<string | null>(null);
   const [productFormData, setProductFormData] = useState<ProductFormData>(initialProductFormData);
+  const [isUploadingProductImage, setIsUploadingProductImage] = useState(false);
+  const productImageInputRef = useRef<HTMLInputElement>(null);
 
   // Category form state
   const [isCategoryFormOpen, setIsCategoryFormOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [deleteCategoryConfirm, setDeleteCategoryConfirm] = useState<string | null>(null);
   const [categoryFormData, setCategoryFormData] = useState<CategoryFormData>(initialCategoryFormData);
+  const [isUploadingCategoryImage, setIsUploadingCategoryImage] = useState(false);
+  const categoryImageInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const isLoggedIn = sessionStorage.getItem("admin_authenticated");
@@ -140,6 +143,70 @@ const AdminPage = () => {
     setIsAuthenticated(false);
     sessionStorage.removeItem("admin_authenticated");
     setPassword("");
+  };
+
+  // Product image upload
+  const handleProductImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingProductImage(true);
+    try {
+      const url = await uploadProductImage(file);
+      if (url) {
+        setProductFormData({ ...productFormData, image: url });
+        toast({
+          title: "تم الرفع",
+          description: "تم رفع الصورة بنجاح",
+        });
+      } else {
+        toast({
+          title: "خطأ",
+          description: "فشل في رفع الصورة",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "خطأ",
+        description: "حدث خطأ أثناء رفع الصورة",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploadingProductImage(false);
+    }
+  };
+
+  // Category image upload
+  const handleCategoryImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingCategoryImage(true);
+    try {
+      const url = await uploadCategoryImage(file);
+      if (url) {
+        setCategoryFormData({ ...categoryFormData, image: url });
+        toast({
+          title: "تم الرفع",
+          description: "تم رفع الصورة بنجاح",
+        });
+      } else {
+        toast({
+          title: "خطأ",
+          description: "فشل في رفع الصورة",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "خطأ",
+        description: "حدث خطأ أثناء رفع الصورة",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploadingCategoryImage(false);
+    }
   };
 
   // Product functions
@@ -325,10 +392,6 @@ const AdminPage = () => {
                   دخول
                 </Button>
               </form>
-
-              <p className="text-center text-muted-foreground text-sm mt-6">
-                كلمة المرور الافتراضية: admin123
-              </p>
             </div>
           </div>
         </main>
@@ -587,7 +650,7 @@ const AdminPage = () => {
                 onChange={(e) =>
                   setProductFormData({ ...productFormData, name: e.target.value })
                 }
-                placeholder="مثال: شال كشميري فاخر"
+                placeholder="مثال: غتره كشميري فاخرة"
                 required
                 className="mt-1"
               />
@@ -639,25 +702,57 @@ const AdminPage = () => {
             </div>
 
             <div>
-              <Label htmlFor="image">رابط الصورة *</Label>
-              <Input
-                id="image"
-                value={productFormData.image}
-                onChange={(e) =>
-                  setProductFormData({ ...productFormData, image: e.target.value })
-                }
-                placeholder="https://example.com/image.jpg"
-                required
-                className="mt-1"
-              />
-              {productFormData.image && (
-                <img
-                  src={productFormData.image}
-                  alt="معاينة"
-                  className="mt-2 w-20 h-20 object-cover rounded-lg"
-                  onError={(e) => (e.currentTarget.style.display = "none")}
+              <Label>صورة المنتج *</Label>
+              <div className="mt-1 space-y-3">
+                {/* Upload button */}
+                <div 
+                  className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-accent transition-colors"
+                  onClick={() => productImageInputRef.current?.click()}
+                >
+                  {isUploadingProductImage ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>جاري الرفع...</span>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2">
+                      <Upload className="w-8 h-8 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">اضغط لرفع صورة</span>
+                    </div>
+                  )}
+                </div>
+                <input
+                  ref={productImageInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProductImageUpload}
+                  className="hidden"
                 />
-              )}
+
+                {/* Or enter URL */}
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-px bg-border" />
+                  <span className="text-xs text-muted-foreground">أو أدخل رابط</span>
+                  <div className="flex-1 h-px bg-border" />
+                </div>
+
+                <Input
+                  value={productFormData.image}
+                  onChange={(e) =>
+                    setProductFormData({ ...productFormData, image: e.target.value })
+                  }
+                  placeholder="https://example.com/image.jpg"
+                />
+
+                {productFormData.image && (
+                  <img
+                    src={productFormData.image}
+                    alt="معاينة"
+                    className="w-24 h-24 object-cover rounded-lg mx-auto"
+                    onError={(e) => (e.currentTarget.style.display = "none")}
+                  />
+                )}
+              </div>
             </div>
 
             <div>
@@ -704,7 +799,7 @@ const AdminPage = () => {
             </div>
 
             <div className="flex gap-3 pt-4">
-              <Button type="submit" className="btn-gold flex-1">
+              <Button type="submit" className="btn-gold flex-1" disabled={isUploadingProductImage}>
                 {editingProduct ? "حفظ التغييرات" : "إضافة المنتج"}
               </Button>
               <Button
@@ -737,7 +832,7 @@ const AdminPage = () => {
                 onChange={(e) =>
                   setCategoryFormData({ ...categoryFormData, name: e.target.value })
                 }
-                placeholder="مثال: شيلان كشميري"
+                placeholder="مثال: غتر كشميري"
                 required
                 className="mt-1"
               />
@@ -751,32 +846,64 @@ const AdminPage = () => {
                 onChange={(e) =>
                   setCategoryFormData({ ...categoryFormData, slug: e.target.value })
                 }
-                placeholder="mثال: kashmiri-shawls"
+                placeholder="مثال: kashmiri-vip"
                 className="mt-1"
                 dir="ltr"
               />
             </div>
 
             <div>
-              <Label htmlFor="catImage">رابط الصورة *</Label>
-              <Input
-                id="catImage"
-                value={categoryFormData.image}
-                onChange={(e) =>
-                  setCategoryFormData({ ...categoryFormData, image: e.target.value })
-                }
-                placeholder="https://example.com/image.jpg"
-                required
-                className="mt-1"
-              />
-              {categoryFormData.image && (
-                <img
-                  src={categoryFormData.image}
-                  alt="معاينة"
-                  className="mt-2 w-full h-32 object-cover rounded-lg"
-                  onError={(e) => (e.currentTarget.style.display = "none")}
+              <Label>صورة القسم *</Label>
+              <div className="mt-1 space-y-3">
+                {/* Upload button */}
+                <div 
+                  className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-accent transition-colors"
+                  onClick={() => categoryImageInputRef.current?.click()}
+                >
+                  {isUploadingCategoryImage ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>جاري الرفع...</span>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2">
+                      <Image className="w-8 h-8 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">اضغط لرفع صورة</span>
+                    </div>
+                  )}
+                </div>
+                <input
+                  ref={categoryImageInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCategoryImageUpload}
+                  className="hidden"
                 />
-              )}
+
+                {/* Or enter URL */}
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 h-px bg-border" />
+                  <span className="text-xs text-muted-foreground">أو أدخل رابط</span>
+                  <div className="flex-1 h-px bg-border" />
+                </div>
+
+                <Input
+                  value={categoryFormData.image}
+                  onChange={(e) =>
+                    setCategoryFormData({ ...categoryFormData, image: e.target.value })
+                  }
+                  placeholder="https://example.com/image.jpg"
+                />
+
+                {categoryFormData.image && (
+                  <img
+                    src={categoryFormData.image}
+                    alt="معاينة"
+                    className="w-full h-32 object-cover rounded-lg"
+                    onError={(e) => (e.currentTarget.style.display = "none")}
+                  />
+                )}
+              </div>
             </div>
 
             <div>
@@ -794,7 +921,7 @@ const AdminPage = () => {
             </div>
 
             <div className="flex gap-3 pt-4">
-              <Button type="submit" className="btn-gold flex-1">
+              <Button type="submit" className="btn-gold flex-1" disabled={isUploadingCategoryImage}>
                 {editingCategory ? "حفظ التغييرات" : "إضافة القسم"}
               </Button>
               <Button

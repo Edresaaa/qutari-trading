@@ -4,26 +4,26 @@ import { ArrowLeft } from "lucide-react";
 const promoBanners = [
   {
     id: "1",
-    image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80",
-    title: "شيلان كشميري باشمينا VIP",
-    subtitle: "خصم يصل إلى 30%",
-    link: "/products?category=pashmina-vip",
+    image: "https://cdn.salla.sa/vygWG/a664a3a9-6907-48cf-925f-5de7e4fb802b-500x500-OvOjbabZREkBiRRRnQdUaqIyHGwcsl4iuqrQmcjy.jpg",
+    title: "شيلان باشمينا ملكي",
+    subtitle: "خصم يصل إلى 50%",
+    link: "/products?category=pashmina-royal",
     gradient: "from-chocolate/80 to-transparent",
   },
   {
     id: "2",
-    image: "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=800&q=80",
-    title: "شيلان كشميري ترمه",
+    image: "https://cdn.salla.sa/vygWG/feb756f8-612a-4cf0-ac82-2bc3eec6dc90-500x500-ieLUnl6TxXs3UcJ2Az2uOtaxLYhNAskIbNGJmGzg.jpg",
+    title: "غتر كشميري VIP",
     subtitle: "تشكيلة حصرية",
-    link: "/products?category=termeh-shawls",
+    link: "/products?category=kashmiri-vip",
     gradient: "from-chocolate/80 to-transparent",
   },
   {
     id: "3",
-    image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80",
-    title: "شيلان صوف شتوية",
+    image: "https://cdn.salla.sa/vygWG/484411d8-5c69-4dad-8be5-788a7344bc07-500x500-z1wRzrFzUeGbxT3HATxZWolfXHsvWaVRCSttso3g.jpg",
+    title: "أشمغة شتوية",
     subtitle: "دفء وأناقة",
-    link: "/products?category=wool-half-termeh",
+    link: "/products?category=winter-shemagh",
     gradient: "from-chocolate/80 to-transparent",
   },
 ];
@@ -37,7 +37,7 @@ const PromoBanners = () => {
             <Link
               key={banner.id}
               to={banner.link}
-              className="group relative overflow-hidden rounded-2xl aspect-[4/3] block"
+              className="group relative overflow-hidden rounded-2xl aspect-square block bg-muted"
             >
               <img
                 src={banner.image}

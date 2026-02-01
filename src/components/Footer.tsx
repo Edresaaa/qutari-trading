@@ -20,7 +20,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-primary-foreground/80 leading-relaxed mb-6">
-              متجر متخصص في بيع أفخر أنواع الشيلان الكشميرية والبشوت الملكية بجودة عالية وأسعار مناسبة.
+              متجر متخصص في بيع أفخر أنواع الغتر والأشمغة الكشميرية والشيلان الباشمينا بجودة عالية وأسعار مناسبة.
             </p>
             <div className="flex gap-3">
               <a href="#" className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-gold hover:text-chocolate flex items-center justify-center transition-all duration-300">
@@ -67,23 +67,23 @@ const Footer = () => {
             <h4 className="font-bold text-lg mb-6 text-gold">الأقسام</h4>
             <ul className="space-y-4">
               <li>
-                <Link to="/products?category=termeh-shawls" className="text-primary-foreground/80 hover:text-gold transition-colors">
-                  شيلان كشميري ترمه
+                <Link to="/products?category=kashmiri-vip" className="text-primary-foreground/80 hover:text-gold transition-colors">
+                  غتر كشميري VIP
                 </Link>
               </li>
               <li>
-                <Link to="/products?category=pashmina-vip" className="text-primary-foreground/80 hover:text-gold transition-colors">
-                  شيلان باشمينا VIP
+                <Link to="/products?category=pashmina-royal" className="text-primary-foreground/80 hover:text-gold transition-colors">
+                  شيلان باشمينا ملكي
                 </Link>
               </li>
               <li>
-                <Link to="/products?category=wool-half-termeh" className="text-primary-foreground/80 hover:text-gold transition-colors">
-                  شيلان صوف نص ترمه
+                <Link to="/products?category=winter-shemagh" className="text-primary-foreground/80 hover:text-gold transition-colors">
+                  أشمغة شتوية
                 </Link>
               </li>
               <li>
-                <Link to="/products?category=royal-bisht" className="text-primary-foreground/80 hover:text-gold transition-colors">
-                  بشوت ملكية
+                <Link to="/products?category=classic-shemagh" className="text-primary-foreground/80 hover:text-gold transition-colors">
+                  أشمغة كلاسيكية
                 </Link>
               </li>
             </ul>
