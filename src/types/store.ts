@@ -1,3 +1,5 @@
+import { ProductSizeType } from "./sizes";
+
 export interface Product {
   id: string;
   name: string;
@@ -10,6 +12,11 @@ export interface Product {
   featured?: boolean;
   quantity?: number;
   isVisible?: boolean;
+  // حقول المقاسات الجديدة
+  sizeType?: ProductSizeType;
+  availableSizes?: string[];
+  availableLengths?: string[];  // للأثواب فقط
+  availableWidths?: string[];   // للأثواب فقط
 }
 
 export interface Category {

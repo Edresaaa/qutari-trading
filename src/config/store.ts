@@ -11,15 +11,21 @@ export const storeConfig: StoreConfig = {
 export const formatWhatsAppLink = (
   productName: string,
   productUrl: string,
-  productPrice: number
+  productPrice: number,
+  sizeText?: string
 ): string => {
-  const message = encodeURIComponent(
+  let message = 
     `مرحباً، أرغب في الاستفسار عن المنتج التالي:\n\n` +
     `📦 المنتج: ${productName}\n` +
-    `💰 السعر: ${productPrice} ر.ي\n` +
-    `🔗 رابط المنتج: ${productUrl}\n` +
-    `\nأرجو التواصل معي لإتمام الطلب. شكراً لكم.`
-  );
+    `💰 السعر: ${productPrice} ر.ي\n`;
   
-  return `https://wa.me/${storeConfig.whatsappNumber.replace(/[^0-9]/g, "")}?text=${message}`;
+  if (sizeText) {
+    message += `📏 ${sizeText}\n`;
+  }
+  
+  message += 
+    `🔗 رابط المنتج: ${productUrl}\n` +
+    `\nأرجو التواصل معي لإتمام الطلب. شكراً لكم.`;
+  
+  return `https://wa.me/${storeConfig.whatsappNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(message)}`;
 };
