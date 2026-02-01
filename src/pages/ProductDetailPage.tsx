@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
+import ProductSizeDisplay from "@/components/product/ProductSizeDisplay";
 import { getProductById, getProductsByCategory, getCategories } from "@/lib/storage";
 import { formatWhatsAppLink } from "@/config/store";
 import { Product, Category } from "@/types/store";
-import { ArrowRight, ShoppingBag, Check, Truck, Shield, Package } from "lucide-react";
+import { ArrowRight, ShoppingBag, Check, Truck, Shield, Package, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const ProductDetailPage = () => {
@@ -15,12 +16,24 @@ const ProductDetailPage = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [category, setCategory] = useState<Category | null>(null);
+  
+  // حالة المقاسات المختارة
+  const [selectedSize, setSelectedSize] = useState("");
+  const [selectedLength, setSelectedLength] = useState("");
+  const [selectedWidth, setSelectedWidth] = useState("");
+  const [sizeError, setSizeError] = useState(false);
 
   useEffect(() => {
     if (id) {
       const foundProduct = getProductById(id);
       if (foundProduct) {
         setProduct(foundProduct);
+        
+        // إعادة تعيين المقاسات المختارة عند تغيير المنتج
+        setSelectedSize("");
+        setSelectedLength("");
+        setSelectedWidth("");
+        setSizeError(false);
         
         // Get category
         const categories = getCategories();
@@ -35,6 +48,56 @@ const ProductDetailPage = () => {
       }
     }
   }, [id, navigate]);
+
+  // التحقق من أن المنتج يتطلب اختيار مقاس
+  const requiresSize = product?.sizeType && product.sizeType !== "none" && (
+    (product.availableSizes && product.availableSizes.length > 0) ||
+    (product.availableLengths && product.availableLengths.length > 0)
+  );
+
+  // التحقق من أن المقاس المطلوب تم اختياره
+  const isSizeSelected = () => {
+    if (!requiresSize) return true;
+    
+    if (product?.sizeType === "thobe") {
+      const needsLength = product.availableLengths && product.availableLengths.length > 0;
+      const needsWidth = product.availableWidths && product.availableWidths.length > 0;
+      return (!needsLength || selectedLength) && (!needsWidth || selectedWidth);
+    }
+    
+    return selectedSize !== "";
+  };
+
+  const handleSizeSelect = (size: string, length?: string, width?: string) => {
+    setSelectedSize(size);
+    if (length !== undefined) setSelectedLength(length);
+    if (width !== undefined) setSelectedWidth(width);
+    setSizeError(false);
+  };
+
+  const handleOrderClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (requiresSize && !isSizeSelected()) {
+      e.preventDefault();
+      setSizeError(true);
+      // التمرير إلى قسم المقاسات
+      document.getElementById('size-section')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+  };
+
+  // إنشاء نص المقاس للرسالة
+  const getSizeText = () => {
+    if (!requiresSize) return "";
+    
+    if (product?.sizeType === "thobe") {
+      const parts = [];
+      if (selectedLength) parts.push(`الطول: ${selectedLength} انش`);
+      if (selectedWidth) parts.push(`العرض: ${selectedWidth}`);
+      return parts.join(" - ");
+    }
+    
+    return selectedSize ? `المقاس: ${selectedSize}` : "";
+  };
 
   if (!product) {
     return (
@@ -54,7 +117,8 @@ const ProductDetailPage = () => {
   const whatsappLink = formatWhatsAppLink(
     product.name,
     window.location.href,
-    product.price
+    product.price,
+    getSizeText()
   );
 
   const discountPercentage = product.originalPrice
@@ -148,12 +212,37 @@ const ProductDetailPage = () => {
               </div>
 
               {/* Description */}
-              <div className="mb-8">
+              <div className="mb-6">
                 <h3 className="font-bold text-foreground mb-2">الوصف</h3>
                 <p className="text-muted-foreground leading-relaxed">
                   {product.description}
                 </p>
               </div>
+
+              {/* Size Selection */}
+              {requiresSize && (
+                <div id="size-section" className="mb-6">
+                  <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                    اختر المقاس
+                    {sizeError && (
+                      <span className="text-destructive text-sm flex items-center gap-1">
+                        <AlertCircle className="w-4 h-4" />
+                        يرجى اختيار المقاس
+                      </span>
+                    )}
+                  </h3>
+                  <ProductSizeDisplay
+                    sizeType={product.sizeType!}
+                    availableSizes={product.availableSizes}
+                    availableLengths={product.availableLengths}
+                    availableWidths={product.availableWidths}
+                    onSizeSelect={handleSizeSelect}
+                    selectedSize={selectedSize}
+                    selectedLength={selectedLength}
+                    selectedWidth={selectedWidth}
+                  />
+                </div>
+              )}
 
               {/* Stock Status */}
               <div className="flex items-center gap-2 mb-6">
@@ -176,7 +265,10 @@ const ProductDetailPage = () => {
                   href={whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-gold flex items-center justify-center gap-3 text-lg py-4 mb-8"
+                  onClick={handleOrderClick}
+                  className={`btn-gold flex items-center justify-center gap-3 text-lg py-4 mb-8 ${
+                    requiresSize && !isSizeSelected() ? "opacity-80" : ""
+                  }`}
                 >
                   <ShoppingBag className="w-6 h-6" />
                   <span>اطلب الآن عبر واتساب</span>

@@ -27,10 +27,12 @@ import {
 } from "@/lib/storage";
 import { uploadProductImage, uploadCategoryImage, uploadBannerImage } from "@/lib/imageUpload";
 import { Product, Category } from "@/types/store";
+import { ProductSizeType } from "@/types/sizes";
+import ProductSizesSelector from "@/components/admin/ProductSizesSelector";
 import { 
   Plus, Pencil, Trash2, ArrowRight, Package, Lock, Eye, EyeOff,
   FolderOpen, ShoppingBag, Search, Upload, Loader2, Image, 
-  Layout, Settings, X, Check, Tag, CalendarIcon
+  Layout, Settings, X, Check, Tag, CalendarIcon, Ruler
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -83,6 +85,10 @@ interface ProductFormData {
   featured: boolean;
   quantity: string;
   isVisible: boolean;
+  sizeType: ProductSizeType;
+  availableSizes: string[];
+  availableLengths: string[];
+  availableWidths: string[];
 }
 
 interface CategoryFormData {
@@ -111,6 +117,10 @@ const initialProductFormData: ProductFormData = {
   featured: false,
   quantity: "",
   isVisible: true,
+  sizeType: "none",
+  availableSizes: [],
+  availableLengths: [],
+  availableWidths: [],
 };
 
 const initialCategoryFormData: CategoryFormData = {
@@ -267,6 +277,10 @@ const AdminPage = () => {
         featured: product.featured || false,
         quantity: product.quantity?.toString() || "",
         isVisible: product.isVisible !== false,
+        sizeType: product.sizeType || "none",
+        availableSizes: product.availableSizes || [],
+        availableLengths: product.availableLengths || [],
+        availableWidths: product.availableWidths || [],
       });
     } else {
       setEditingProduct(null);
@@ -295,6 +309,10 @@ const AdminPage = () => {
       featured: productFormData.featured,
       quantity: quantity,
       isVisible: productFormData.isVisible,
+      sizeType: productFormData.sizeType,
+      availableSizes: productFormData.availableSizes,
+      availableLengths: productFormData.availableLengths,
+      availableWidths: productFormData.availableWidths,
     };
 
     if (editingProduct) {
@@ -992,6 +1010,25 @@ const AdminPage = () => {
                 />
                 <p className="text-xs text-muted-foreground mt-1">عند الكمية = 0 سيظهر "غير متوفر" للعميل</p>
               </div>
+              
+              {/* قسم المقاسات */}
+              <div className="md:col-span-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <Ruler className="w-4 h-4 text-accent" />
+                  <Label className="font-bold">المقاسات</Label>
+                </div>
+                <ProductSizesSelector
+                  sizeType={productFormData.sizeType}
+                  availableSizes={productFormData.availableSizes}
+                  availableLengths={productFormData.availableLengths}
+                  availableWidths={productFormData.availableWidths}
+                  onSizeTypeChange={(type) => setProductFormData({ ...productFormData, sizeType: type })}
+                  onAvailableSizesChange={(sizes) => setProductFormData({ ...productFormData, availableSizes: sizes })}
+                  onAvailableLengthsChange={(lengths) => setProductFormData({ ...productFormData, availableLengths: lengths })}
+                  onAvailableWidthsChange={(widths) => setProductFormData({ ...productFormData, availableWidths: widths })}
+                />
+              </div>
+
               <div className="md:col-span-2 flex flex-wrap items-center gap-6">
                 <div className="flex items-center gap-2">
                   <Switch checked={productFormData.inStock} onCheckedChange={(c) => setProductFormData({ ...productFormData, inStock: c })} />
