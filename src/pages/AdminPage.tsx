@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
+import { ar } from "date-fns/locale";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import {
@@ -17,15 +19,18 @@ import {
   deleteBanner,
   getStoreSettings,
   saveStoreSettings,
+  getOfferSettings,
+  saveOfferSettings,
   Banner,
   StoreSettings,
+  OfferSettings,
 } from "@/lib/storage";
-import { uploadProductImage, uploadCategoryImage } from "@/lib/imageUpload";
+import { uploadProductImage, uploadCategoryImage, uploadBannerImage } from "@/lib/imageUpload";
 import { Product, Category } from "@/types/store";
 import { 
   Plus, Pencil, Trash2, ArrowRight, Package, Lock, Eye, EyeOff,
   FolderOpen, ShoppingBag, Search, Upload, Loader2, Image, 
-  Layout, Settings, X, Check
+  Layout, Settings, X, Check, Tag, CalendarIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,6 +62,13 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 const ADMIN_PASSWORD = "QR@X512512x";
 
@@ -127,6 +139,7 @@ const AdminPage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [banners, setBanners] = useState<Banner[]>([]);
   const [storeSettings, setStoreSettings] = useState<StoreSettings | null>(null);
+  const [offerSettings, setOfferSettings] = useState<OfferSettings | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Product form state
@@ -166,6 +179,7 @@ const AdminPage = () => {
     setCategories(getCategories());
     setBanners(getBanners());
     setStoreSettings(getStoreSettings());
+    setOfferSettings(getOfferSettings());
   };
 
   const handleLogin = (e: React.FormEvent) => {
@@ -226,7 +240,7 @@ const AdminPage = () => {
     if (!file) return;
     setIsUploadingBannerImage(true);
     try {
-      const url = await uploadProductImage(file);
+      const url = await uploadBannerImage(file);
       if (url) {
         setBannerFormData({ ...bannerFormData, image: url });
         toast({ title: "تم الرفع", description: "تم رفع الصورة بنجاح" });
@@ -543,7 +557,7 @@ const AdminPage = () => {
 
           {/* Tabs */}
           <Tabs defaultValue="products" className="space-y-6">
-            <TabsList className="grid w-full max-w-2xl grid-cols-4">
+            <TabsList className="grid w-full max-w-3xl grid-cols-5">
               <TabsTrigger value="products" className="flex items-center gap-2">
                 <ShoppingBag className="w-4 h-4" />
                 <span className="hidden sm:inline">المنتجات</span>
@@ -555,6 +569,10 @@ const AdminPage = () => {
               <TabsTrigger value="banners" className="flex items-center gap-2">
                 <Layout className="w-4 h-4" />
                 <span className="hidden sm:inline">البنرات</span>
+              </TabsTrigger>
+              <TabsTrigger value="offers" className="flex items-center gap-2">
+                <Tag className="w-4 h-4" />
+                <span className="hidden sm:inline">العروض</span>
               </TabsTrigger>
               <TabsTrigger value="settings" className="flex items-center gap-2">
                 <Settings className="w-4 h-4" />
@@ -714,6 +732,118 @@ const AdminPage = () => {
                   ))}
                 </div>
               </div>
+            </TabsContent>
+
+            {/* Offers Tab */}
+            <TabsContent value="offers">
+              {offerSettings && (
+                <div className="bg-card rounded-xl shadow-card p-6">
+                  <div className="flex items-center justify-between mb-6 border-b border-border pb-4">
+                    <h3 className="font-bold text-xl">إعدادات العرض الخاص</h3>
+                    <div className="flex items-center gap-2">
+                      <Switch 
+                        checked={offerSettings.isActive} 
+                        onCheckedChange={(c) => setOfferSettings({ ...offerSettings, isActive: c })} 
+                      />
+                      <Label>{offerSettings.isActive ? 'مفعّل' : 'معطّل'}</Label>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div>
+                        <Label>نسبة الخصم (%)</Label>
+                        <Input
+                          type="number"
+                          min="1"
+                          max="100"
+                          value={offerSettings.discountPercentage}
+                          onChange={(e) => setOfferSettings({ ...offerSettings, discountPercentage: parseInt(e.target.value) || 0 })}
+                        />
+                      </div>
+                      <div>
+                        <Label>وصف العرض</Label>
+                        <Textarea
+                          value={offerSettings.subtitle}
+                          onChange={(e) => setOfferSettings({ ...offerSettings, subtitle: e.target.value })}
+                          rows={3}
+                          placeholder="على جميع الغتر الكشميرية..."
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div>
+                        <Label>تاريخ انتهاء العرض</Label>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full justify-start text-left font-normal",
+                                !offerSettings.endDate && "text-muted-foreground"
+                              )}
+                            >
+                              <CalendarIcon className="ml-2 h-4 w-4" />
+                              {offerSettings.endDate ? (
+                                format(new Date(offerSettings.endDate), "PPP", { locale: ar })
+                              ) : (
+                                <span>اختر تاريخ</span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={offerSettings.endDate ? new Date(offerSettings.endDate) : undefined}
+                              onSelect={(date) => {
+                                if (date) {
+                                  setOfferSettings({ ...offerSettings, endDate: date.toISOString() });
+                                }
+                              }}
+                              disabled={(date) => date < new Date()}
+                              initialFocus
+                              className={cn("p-3 pointer-events-auto")}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          العرض سينتهي تلقائياً في هذا التاريخ
+                        </p>
+                      </div>
+                      
+                      {offerSettings.endDate && (
+                        <div className="p-4 rounded-lg bg-muted">
+                          <p className="text-sm text-muted-foreground">
+                            الوقت المتبقي للعرض:
+                          </p>
+                          <p className="text-lg font-bold text-accent mt-1">
+                            {(() => {
+                              const diff = new Date(offerSettings.endDate).getTime() - new Date().getTime();
+                              if (diff <= 0) return "انتهى العرض";
+                              const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                              const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                              return `${days} يوم و ${hours} ساعة`;
+                            })()}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 pt-4 border-t border-border">
+                    <Button 
+                      onClick={() => {
+                        saveOfferSettings(offerSettings);
+                        toast({ title: "تم الحفظ", description: "تم حفظ إعدادات العرض بنجاح" });
+                      }} 
+                      className="btn-gold"
+                    >
+                      <Check className="w-5 h-5 ml-2" />
+                      حفظ إعدادات العرض
+                    </Button>
+                  </div>
+                </div>
+              )}
             </TabsContent>
 
             {/* Settings Tab */}

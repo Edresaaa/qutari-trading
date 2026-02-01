@@ -5,8 +5,9 @@ const PRODUCTS_KEY = "alqotari_products";
 const CATEGORIES_KEY = "alqotari_categories";
 const BANNERS_KEY = "alqotari_banners";
 const STORE_SETTINGS_KEY = "alqotari_store_settings";
+const OFFER_SETTINGS_KEY = "alqotari_offer_settings";
 const DATA_VERSION_KEY = "alqotari_data_version";
-const CURRENT_VERSION = "2.2"; // Increment this to force data refresh
+const CURRENT_VERSION = "2.3"; // Increment this to force data refresh
 
 export interface Banner {
   id: string;
@@ -28,6 +29,14 @@ export interface StoreSettings {
     instagram?: string;
     twitter?: string;
   };
+}
+
+export interface OfferSettings {
+  title: string;
+  subtitle: string;
+  discountPercentage: number;
+  endDate: string; // ISO date string
+  isActive: boolean;
 }
 
 const defaultBanners: Banner[] = [
@@ -68,6 +77,20 @@ const defaultStoreSettings: StoreSettings = {
     instagram: "",
     twitter: "",
   },
+};
+
+const getDefaultOfferEndDate = (): string => {
+  const date = new Date();
+  date.setDate(date.getDate() + 7);
+  return date.toISOString();
+};
+
+const defaultOfferSettings: OfferSettings = {
+  title: "خصم يصل إلى 50%",
+  subtitle: "على جميع الغتر الكشميرية والشيلان الباشمينا الملكي",
+  discountPercentage: 50,
+  endDate: getDefaultOfferEndDate(),
+  isActive: true,
 };
 
 // Products functions
@@ -240,6 +263,22 @@ export const getStoreSettings = (): StoreSettings => {
 
 export const saveStoreSettings = (settings: StoreSettings): void => {
   localStorage.setItem(STORE_SETTINGS_KEY, JSON.stringify(settings));
+  window.dispatchEvent(new Event('productsUpdated'));
+};
+
+// Offer Settings functions
+export const getOfferSettings = (): OfferSettings => {
+  const stored = localStorage.getItem(OFFER_SETTINGS_KEY);
+  if (stored) {
+    return JSON.parse(stored);
+  }
+  localStorage.setItem(OFFER_SETTINGS_KEY, JSON.stringify(defaultOfferSettings));
+  return defaultOfferSettings;
+};
+
+export const saveOfferSettings = (settings: OfferSettings): void => {
+  localStorage.setItem(OFFER_SETTINGS_KEY, JSON.stringify(settings));
+  window.dispatchEvent(new Event('productsUpdated'));
 };
 
 // Helper functions
