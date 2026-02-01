@@ -93,6 +93,7 @@ export const getProducts = (): Product[] => {
 
 export const saveProducts = (products: Product[]): void => {
   localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+  window.dispatchEvent(new Event('productsUpdated'));
 };
 
 export const addProduct = (product: Omit<Product, "id">): Product => {
@@ -145,6 +146,7 @@ export const getCategories = (): Category[] => {
 
 export const saveCategories = (categories: Category[]): void => {
   localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
+  window.dispatchEvent(new Event('productsUpdated'));
 };
 
 export const addCategory = (category: Omit<Category, "id">): Category => {
@@ -189,6 +191,7 @@ export const getBanners = (): Banner[] => {
 
 export const saveBanners = (banners: Banner[]): void => {
   localStorage.setItem(BANNERS_KEY, JSON.stringify(banners));
+  window.dispatchEvent(new Event('productsUpdated'));
 };
 
 export const addBanner = (banner: Omit<Banner, "id">): Banner => {

@@ -9,8 +9,25 @@ const HeroSection = () => {
   const [banners, setBanners] = useState<Banner[]>([]);
 
   useEffect(() => {
-    const activeBanners = getActiveBanners();
-    setBanners(activeBanners.length > 0 ? activeBanners : getBanners());
+    const loadBanners = () => {
+      const activeBanners = getActiveBanners();
+      setBanners(activeBanners.length > 0 ? activeBanners : getBanners());
+    };
+    
+    loadBanners();
+    
+    // Listen for updates
+    const handleUpdate = () => {
+      loadBanners();
+    };
+    
+    window.addEventListener('productsUpdated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    
+    return () => {
+      window.removeEventListener('productsUpdated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
   }, []);
 
   useEffect(() => {

@@ -19,8 +19,25 @@ const Index = () => {
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    setFeaturedProducts(getFeaturedProducts());
-    setCategories(getCategories());
+    const loadData = () => {
+      setFeaturedProducts(getFeaturedProducts());
+      setCategories(getCategories());
+    };
+    
+    loadData();
+    
+    // Listen for storage changes
+    const handleStorageChange = () => {
+      loadData();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('productsUpdated', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('productsUpdated', handleStorageChange);
+    };
   }, []);
 
   return (
