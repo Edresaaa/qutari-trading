@@ -1,7 +1,7 @@
 import { StoreConfig } from "@/types/store";
 
 export const storeConfig: StoreConfig = {
-  name: "القوطاري للتجارة",
+  name: "القوطاري للتجاره",
   whatsappNumber: "+967770475574",
   description: "متجر متخصص في الشيلان والأزياء التقليدية الفاخرة",
   address: "صنعاء - باب اليمن - سوق النظارة",
@@ -11,15 +11,13 @@ export const storeConfig: StoreConfig = {
 export const formatWhatsAppLink = (
   productName: string,
   productUrl: string,
-  productPrice: number,
-  productImage?: string
+  productPrice: number
 ): string => {
   const message = encodeURIComponent(
     `مرحباً، أرغب في الاستفسار عن المنتج التالي:\n\n` +
     `📦 المنتج: ${productName}\n` +
     `💰 السعر: ${productPrice} ر.ي\n` +
     `🔗 رابط المنتج: ${productUrl}\n` +
-    (productImage ? `🖼️ صورة المنتج: ${productImage}\n` : "") +
     `\nأرجو التواصل معي لإتمام الطلب. شكراً لكم.`
   );
   
