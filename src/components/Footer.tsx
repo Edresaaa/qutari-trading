@@ -12,7 +12,7 @@ const Footer = () => {
           {/* About */}
           <div>
             <div className="mb-6">
-              <Logo size="md" showText={true} />
+              <Logo size="md" variant="full" />
             </div>
             <p className="text-primary-foreground/80 leading-relaxed mb-6">
               متجر متخصص في بيع أفخر أنواع الغتر والأشمغة الكشميرية والشيلان الباشمينا بجودة عالية وأسعار مناسبة.

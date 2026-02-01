@@ -46,6 +46,11 @@
     --cream: 50 40% 96%;
     --cream-dark: 45 30% 90%;
 
+    /* Leather texture colors */
+    --leather-base: 150 30% 22%;
+    --leather-highlight: 150 25% 28%;
+    --leather-shadow: 150 35% 15%;
+
     /* Gradients */
     --gradient-gold: linear-gradient(135deg, hsl(45 90% 50%), hsl(48 85% 60%));
     --gradient-royal: linear-gradient(180deg, hsl(150 35% 15%), hsl(150 30% 25%));
@@ -140,17 +145,6 @@
 
   .section-title::after {
     content: '';
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 60px;
-    height: 4px;
-    background: linear-gradient(to left, hsl(var(--gold)), hsl(var(--accent)));
-    border-radius: 2px;
-  }
-
-  .section-title::after {
-    content: '';
     @apply absolute -bottom-2 right-0 w-16 h-1 bg-accent rounded-full;
   }
 
@@ -186,6 +180,62 @@
 
   .input-styled {
     @apply bg-cream border-border focus:border-accent focus:ring-accent/20;
+  }
+
+  /* Luxury Leather Texture - Crocodile/Snake Pattern */
+  .leather-texture {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .leather-texture::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(ellipse 12px 8px at 50% 50%, hsl(150 30% 22% / 0.4) 0%, transparent 70%),
+      radial-gradient(ellipse 10px 6px at 30% 30%, hsl(150 25% 25% / 0.3) 0%, transparent 70%),
+      radial-gradient(ellipse 14px 9px at 70% 60%, hsl(150 35% 20% / 0.35) 0%, transparent 70%);
+    background-size: 24px 20px, 28px 24px, 32px 28px;
+    background-position: 0 0, 12px 10px, 6px 14px;
+    pointer-events: none;
+  }
+
+  .leather-bg {
+    background-color: hsl(var(--primary));
+    background-image: 
+      radial-gradient(ellipse 18px 12px at 50% 50%, hsl(150 30% 24% / 0.5) 0%, transparent 60%),
+      radial-gradient(ellipse 14px 10px at 25% 40%, hsl(150 28% 26% / 0.4) 0%, transparent 65%),
+      radial-gradient(ellipse 20px 14px at 75% 55%, hsl(150 32% 22% / 0.45) 0%, transparent 60%),
+      radial-gradient(ellipse 16px 11px at 40% 70%, hsl(150 30% 25% / 0.35) 0%, transparent 70%);
+    background-size: 36px 32px, 42px 38px, 48px 42px, 38px 34px;
+    background-position: 0 0, 18px 16px, 9px 21px, 27px 8px;
+  }
+
+  /* Premium Card with subtle texture */
+  .card-luxury {
+    @apply bg-card rounded-2xl overflow-hidden transition-all duration-300;
+    box-shadow: 
+      0 4px 6px -1px hsl(150 35% 15% / 0.1),
+      0 2px 4px -2px hsl(150 35% 15% / 0.1),
+      inset 0 1px 0 0 hsl(45 90% 50% / 0.1);
+    border: 1px solid hsl(var(--border));
+  }
+
+  .card-luxury:hover {
+    box-shadow: 
+      0 20px 25px -5px hsl(150 35% 15% / 0.15),
+      0 8px 10px -6px hsl(150 35% 15% / 0.1),
+      inset 0 1px 0 0 hsl(45 90% 50% / 0.2);
+    transform: translateY(-4px);
+  }
+
+  /* Golden accent border */
+  .border-gold-accent {
+    border: 2px solid transparent;
+    background: 
+      linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+      linear-gradient(135deg, hsl(45 90% 50%), hsl(48 85% 65%), hsl(42 75% 45%)) border-box;
   }
 }
 

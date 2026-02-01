@@ -4,6 +4,7 @@ import { storeConfig } from "@/config/store";
 import { Menu, X, Phone, Settings } from "lucide-react";
 import { NavLink } from "./NavLink";
 import Logo from "./Logo";
+import ThemeToggle from "./ThemeToggle";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,8 +31,8 @@ const Header = () => {
           : "bg-card"
       }`}
     >
-      {/* Top bar */}
-      <div className="bg-primary py-2 hidden md:block">
+      {/* Top bar with leather texture */}
+      <div className="bg-primary leather-texture py-2 hidden md:block">
         <div className="container mx-auto px-4 flex items-center justify-between text-primary-foreground text-sm">
           <span>أهلاً بك في متجر القوطاري للتجارة</span>
           <a 
@@ -49,7 +50,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/">
-            <Logo size="md" showText={true} />
+            <Logo size="md" variant="full" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -67,7 +68,10 @@ const Header = () => {
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            {/* Theme Toggle */}
+            <ThemeToggle />
+
             {/* WhatsApp Button */}
             <a
               href={`https://wa.me/${storeConfig.whatsappNumber.replace(/\D/g, '')}`}

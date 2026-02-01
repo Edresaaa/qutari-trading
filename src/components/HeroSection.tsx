@@ -57,17 +57,20 @@ const HeroSection = () => {
                 : "opacity-0 scale-105"
             }`}
           >
-            {/* Background with product image */}
-            <div className="absolute inset-0 flex items-center justify-center hero-gradient">
+            {/* Background with leather texture and product image */}
+            <div className="absolute inset-0 flex items-center justify-center hero-gradient leather-bg">
               {/* Large product image */}
               <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] opacity-30 md:opacity-50">
                 <img 
                   src={banner.image} 
                   alt="" 
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain drop-shadow-2xl"
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-l from-transparent via-primary/60 to-primary" />
+              {/* Decorative golden corners */}
+              <div className="absolute top-8 right-8 w-20 h-20 border-t-2 border-r-2 border-gold/40 rounded-tr-3xl" />
+              <div className="absolute bottom-8 left-8 w-20 h-20 border-b-2 border-l-2 border-gold/40 rounded-bl-3xl" />
             </div>
 
             {/* Content */}
