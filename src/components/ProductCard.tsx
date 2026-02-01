@@ -28,7 +28,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         />
         
         {/* Overlay on hover */}
-        <div className="absolute inset-0 bg-chocolate/0 group-hover:bg-chocolate/20 transition-all duration-300" />
+        <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-all duration-300" />
         
         {/* Quick view button */}
         <Link
