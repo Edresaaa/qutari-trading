@@ -1,40 +1,24 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-
-const banners = [
-  {
-    id: "1",
-    image: "https://cdn.salla.sa/vygWG/fc857e5a-15b1-4f48-a8a0-eef08200f007-500x500-wKiTygOIxKOUotrIB2usaw4SCg0fqXsv3FHojQ3F.jpg",
-    title: "غتر كشميري VIP",
-    subtitle: "أجود أنواع الغتر الكشميرية الشتوية",
-    link: "/products?category=kashmiri-vip",
-  },
-  {
-    id: "2",
-    image: "https://cdn.salla.sa/vygWG/dd6c4672-2221-4d1f-81df-2905eb278dc4-500x500-NvuOunZPRjErJDSCu7Kn0tGmt4Rz5FdpkGaHkBjf.jpg",
-    title: "شيلان باشمينا ملكي",
-    subtitle: "صوف كشميري 100% بجودة استثنائية",
-    link: "/products?category=pashmina-royal",
-  },
-  {
-    id: "3",
-    image: "https://cdn.salla.sa/vygWG/fcb6c396-c90b-4466-86d6-355e5baad27f-500x500-jIccBxG0LWqHG5iE6qnTglkEyy9P3QyeKR2VPPDz.jpg",
-    title: "أشمغة شتوية دافئة",
-    subtitle: "تشكيلة متنوعة من الأشمغة الشتوية",
-    link: "/products?category=winter-shemagh",
-  },
-];
+import { getBanners, getActiveBanners, Banner } from "@/lib/storage";
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [banners, setBanners] = useState<Banner[]>([]);
 
   useEffect(() => {
+    const activeBanners = getActiveBanners();
+    setBanners(activeBanners.length > 0 ? activeBanners : getBanners());
+  }, []);
+
+  useEffect(() => {
+    if (banners.length === 0) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % banners.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [banners.length]);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % banners.length);
@@ -43,6 +27,10 @@ const HeroSection = () => {
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
   };
+
+  if (banners.length === 0) {
+    return null;
+  }
 
   return (
     <section className="relative overflow-hidden">
