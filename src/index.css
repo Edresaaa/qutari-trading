@@ -135,7 +135,18 @@
   }
 
   .section-title {
-    @apply text-2xl md:text-3xl font-bold text-foreground relative inline-block;
+    @apply text-2xl md:text-3xl font-bold text-foreground relative inline-block pb-3;
+  }
+
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(to left, hsl(var(--gold)), hsl(var(--accent)));
+    border-radius: 2px;
   }
 
   .section-title::after {
