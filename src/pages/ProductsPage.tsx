@@ -5,8 +5,17 @@ import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import { getProducts, getCategories } from "@/lib/storage";
 import { Product, Category } from "@/types/store";
-import { Filter, X, Search, Package } from "lucide-react";
+import { Filter, X, Search, Package, ArrowUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+type SortOption = "default" | "price-asc" | "price-desc" | "name-asc" | "name-desc";
 
 const ProductsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,6 +26,7 @@ const ProductsPage = () => {
   );
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
   const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState<SortOption>("default");
 
   useEffect(() => {
     const loadData = () => {
@@ -53,13 +63,28 @@ const ProductsPage = () => {
     }
   }, [searchParams]);
 
-  const filteredProducts = products.filter((p) => {
-    const matchesCategory = !selectedCategory || p.category === selectedCategory;
-    const matchesSearch = !searchQuery || 
-      p.name.includes(searchQuery) || 
-      p.description.includes(searchQuery);
-    return matchesCategory && matchesSearch;
-  });
+  const filteredProducts = products
+    .filter((p) => {
+      const matchesCategory = !selectedCategory || p.category === selectedCategory;
+      const matchesSearch = !searchQuery || 
+        p.name.includes(searchQuery) || 
+        p.description.includes(searchQuery);
+      return matchesCategory && matchesSearch;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "price-asc":
+          return a.price - b.price;
+        case "price-desc":
+          return b.price - a.price;
+        case "name-asc":
+          return a.name.localeCompare(b.name, 'ar');
+        case "name-desc":
+          return b.name.localeCompare(a.name, 'ar');
+        default:
+          return 0;
+      }
+    });
 
   const handleCategoryChange = (slug: string) => {
     setSelectedCategory(slug);
@@ -100,9 +125,9 @@ const ProductsPage = () => {
             </p>
           </div>
 
-          {/* Search Bar */}
-          <div className="mb-6">
-            <div className="relative max-w-md">
+          {/* Search and Sort Bar */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <div className="relative flex-1 max-w-md">
               <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
                 type="text"
@@ -119,6 +144,23 @@ const ProductsPage = () => {
                   <X className="w-5 h-5" />
                 </button>
               )}
+            </div>
+            
+            {/* Sort Select */}
+            <div className="flex items-center gap-2">
+              <ArrowUpDown className="w-5 h-5 text-muted-foreground" />
+              <Select value={sortBy} onValueChange={(value: SortOption) => setSortBy(value)}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="ترتيب حسب" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="default">الترتيب الافتراضي</SelectItem>
+                  <SelectItem value="price-asc">السعر: من الأقل</SelectItem>
+                  <SelectItem value="price-desc">السعر: من الأعلى</SelectItem>
+                  <SelectItem value="name-asc">الاسم: أ - ي</SelectItem>
+                  <SelectItem value="name-desc">الاسم: ي - أ</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
