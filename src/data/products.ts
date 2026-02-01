@@ -1,0 +1,73 @@
+import { Product, Category } from "@/types/store";
+
+export const categories: Category[] = [
+  { id: "1", name: "شيلان كشميري", slug: "kashmir-shawls", image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=400" },
+  { id: "2", name: "شيلان صوف", slug: "wool-shawls", image: "https://images.unsplash.com/photo-1601244005535-a48d21d951ac?w=400" },
+  { id: "3", name: "شيلان حرير", slug: "silk-shawls", image: "https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=400" },
+  { id: "4", name: "شيلان مطرزة", slug: "embroidered-shawls", image: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400" },
+];
+
+export const sampleProducts: Product[] = [
+  {
+    id: "1",
+    name: "شال كشميري فاخر - بني",
+    description: "شال كشميري فاخر مصنوع من أجود أنواع الكشمير الطبيعي، ناعم الملمس ودافئ. مثالي للمناسبات الخاصة والإطلالات الأنيقة.",
+    price: 299,
+    originalPrice: 399,
+    image: "https://images.unsplash.com/photo-1601244005535-a48d21d951ac?w=600",
+    category: "kashmir-shawls",
+    inStock: true,
+    featured: true,
+  },
+  {
+    id: "2",
+    name: "شال كشميري كلاسيك - رمادي",
+    description: "شال كشميري بتصميم كلاسيكي أنيق، مناسب لجميع المناسبات. خامة فاخرة وجودة عالية.",
+    price: 249,
+    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600",
+    category: "kashmir-shawls",
+    inStock: true,
+    featured: true,
+  },
+  {
+    id: "3",
+    name: "شال حرير طبيعي - أزرق",
+    description: "شال حرير طبيعي 100%، ناعم ولامع. يضفي لمسة من الفخامة على إطلالتك.",
+    price: 350,
+    image: "https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=600",
+    category: "silk-shawls",
+    inStock: true,
+    featured: false,
+  },
+  {
+    id: "4",
+    name: "شال مطرز يدوياً - أبيض",
+    description: "شال مطرز بتصاميم تقليدية يدوية رائعة. قطعة فنية فريدة من نوعها.",
+    price: 450,
+    originalPrice: 550,
+    image: "https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=600",
+    category: "embroidered-shawls",
+    inStock: true,
+    featured: true,
+  },
+  {
+    id: "5",
+    name: "شال صوف ميرينو - بيج",
+    description: "شال من صوف الميرينو الفاخر، دافئ وخفيف الوزن. مثالي لفصل الشتاء.",
+    price: 199,
+    image: "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=600",
+    category: "wool-shawls",
+    inStock: true,
+    featured: false,
+  },
+  {
+    id: "6",
+    name: "شال كشميري باشمينا - عودي",
+    description: "شال باشمينا أصلي بلون عودي فاخر. خامة ناعمة ودافئة مع لمسة من الأناقة.",
+    price: 320,
+    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600",
+    category: "kashmir-shawls",
+    inStock: false,
+    featured: true,
+  },
+];
