@@ -1,12 +1,45 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import CountdownTimer from "./CountdownTimer";
+import { getOfferSettings, OfferSettings } from "@/lib/storage";
 
 const OfferBanner = () => {
-  // Set offer end date (7 days from now for demo)
-  const offerEndDate = new Date();
-  offerEndDate.setDate(offerEndDate.getDate() + 7);
+  const [offerSettings, setOfferSettings] = useState<OfferSettings | null>(null);
+
+  useEffect(() => {
+    const loadSettings = () => {
+      setOfferSettings(getOfferSettings());
+    };
+    
+    loadSettings();
+    
+    // Listen for updates
+    const handleUpdate = () => {
+      loadSettings();
+    };
+    
+    window.addEventListener('productsUpdated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+    
+    return () => {
+      window.removeEventListener('productsUpdated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, []);
+
+  // Don't render if offer is not active or settings not loaded
+  if (!offerSettings || !offerSettings.isActive) {
+    return null;
+  }
+
+  const offerEndDate = new Date(offerSettings.endDate);
+  
+  // Check if offer has expired
+  if (offerEndDate <= new Date()) {
+    return null;
+  }
 
   return (
     <section className="py-20 relative overflow-hidden">
@@ -50,10 +83,10 @@ const OfferBanner = () => {
             عرض خاص
           </span>
           <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-5">
-            خصم يصل إلى <span className="gold-text">50%</span>
+            خصم يصل إلى <span className="gold-text">{offerSettings.discountPercentage}%</span>
           </h2>
           <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-            على جميع الغتر الكشميرية والشيلان الباشمينا الملكي
+            {offerSettings.subtitle}
           </p>
           
           {/* Countdown Timer */}
