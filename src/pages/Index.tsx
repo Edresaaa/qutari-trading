@@ -4,7 +4,7 @@ import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import PromoBanners from "@/components/PromoBanners";
 import OfferBanner from "@/components/OfferBanner";
-import TestimonialsSection from "@/components/TestimonialsSection";
+
 import ProductCard from "@/components/ProductCard";
 import CategoryCard from "@/components/CategoryCard";
 import { getCategories, getFeaturedProducts } from "@/lib/storage";
@@ -83,8 +83,6 @@ const Index = () => {
         {/* Offer Banner */}
         <OfferBanner />
 
-        {/* Testimonials */}
-        <TestimonialsSection />
 
         {/* CTA Section */}
         <section className="py-20 hero-gradient relative overflow-hidden">

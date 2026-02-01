@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { storeConfig } from "@/config/store";
 import { MapPin, Phone, MessageCircle, Facebook, Instagram, Twitter } from "lucide-react";
+import Logo from "./Logo";
 
 const Footer = () => {
   return (
@@ -10,26 +11,20 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* About */}
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-gold to-accent flex items-center justify-center shadow-lg">
-                <span className="text-chocolate font-bold text-2xl">ق</span>
-              </div>
-              <div>
-                <h3 className="font-bold text-xl">{storeConfig.name}</h3>
-                <p className="text-primary-foreground/70 text-sm">أناقة تعبّر عنك</p>
-              </div>
+            <div className="mb-6">
+              <Logo size="md" showText={true} />
             </div>
             <p className="text-primary-foreground/80 leading-relaxed mb-6">
               متجر متخصص في بيع أفخر أنواع الغتر والأشمغة الكشميرية والشيلان الباشمينا بجودة عالية وأسعار مناسبة.
             </p>
             <div className="flex gap-3">
-              <a href="#" className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-gold hover:text-chocolate flex items-center justify-center transition-all duration-300">
+              <a href="#" className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-gold hover:text-primary flex items-center justify-center transition-all duration-300">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-gold hover:text-chocolate flex items-center justify-center transition-all duration-300">
+              <a href="#" className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-gold hover:text-primary flex items-center justify-center transition-all duration-300">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-gold hover:text-chocolate flex items-center justify-center transition-all duration-300">
+              <a href="#" className="w-10 h-10 rounded-full bg-primary-foreground/10 hover:bg-gold hover:text-primary flex items-center justify-center transition-all duration-300">
                 <Twitter className="w-5 h-5" />
               </a>
             </div>

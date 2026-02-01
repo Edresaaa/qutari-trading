@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { storeConfig } from "@/config/store";
 import { Menu, X, Phone, Settings } from "lucide-react";
 import { NavLink } from "./NavLink";
+import Logo from "./Logo";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,14 +48,8 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-accent flex items-center justify-center shadow-lg">
-              <span className="text-chocolate font-bold text-xl">ق</span>
-            </div>
-            <div className="hidden sm:block">
-              <h1 className="font-bold text-xl text-foreground">{storeConfig.name}</h1>
-              <p className="text-xs text-muted-foreground">أناقة تعبّر عنك</p>
-            </div>
+          <Link to="/">
+            <Logo size="md" showText={true} />
           </Link>
 
           {/* Desktop Navigation */}
