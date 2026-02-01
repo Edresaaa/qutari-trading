@@ -6,7 +6,7 @@ const CATEGORIES_KEY = "alqotari_categories";
 const BANNERS_KEY = "alqotari_banners";
 const STORE_SETTINGS_KEY = "alqotari_store_settings";
 const DATA_VERSION_KEY = "alqotari_data_version";
-const CURRENT_VERSION = "2.1"; // Increment this to force data refresh
+const CURRENT_VERSION = "2.2"; // Increment this to force data refresh
 
 export interface Banner {
   id: string;
@@ -33,7 +33,7 @@ export interface StoreSettings {
 const defaultBanners: Banner[] = [
   {
     id: "1",
-    image: "https://shmaghstyle.com/cdn/shop/files/IMG_9893.webp",
+    image: "https://cdn.salla.sa/vygWG/fc857e5a-15b1-4f48-a8a0-eef08200f007-500x500-wKiTygOIxKOUotrIB2usaw4SCg0fqXsv3FHojQ3F.jpg",
     title: "غتر كشميري VIP",
     subtitle: "أجود أنواع الغتر الكشميرية الشتوية",
     link: "/products?category=kashmiri-vip",
@@ -41,7 +41,7 @@ const defaultBanners: Banner[] = [
   },
   {
     id: "2",
-    image: "https://shmaghstyle.com/cdn/shop/files/1_8.webp",
+    image: "https://cdn.salla.sa/vygWG/dd6c4672-2221-4d1f-81df-2905eb278dc4-500x500-NvuOunZPRjErJDSCu7Kn0tGmt4Rz5FdpkGaHkBjf.jpg",
     title: "شيلان باشمينا ملكي",
     subtitle: "صوف كشميري 100% بجودة استثنائية",
     link: "/products?category=pashmina-royal",
@@ -49,7 +49,7 @@ const defaultBanners: Banner[] = [
   },
   {
     id: "3",
-    image: "https://shmaghstyle.com/cdn/shop/files/IMG_9899.webp",
+    image: "https://cdn.salla.sa/vygWG/fcb6c396-c90b-4466-86d6-355e5baad27f-500x500-jIccBxG0LWqHG5iE6qnTglkEyy9P3QyeKR2VPPDz.jpg",
     title: "أشمغة شتوية دافئة",
     subtitle: "تشكيلة متنوعة من الأشمغة الشتوية",
     link: "/products?category=winter-shemagh",
