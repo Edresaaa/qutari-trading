@@ -5,21 +5,21 @@ import { motion } from "framer-motion";
 const promoBanners = [
   {
     id: "1",
-    image: "https://cdn.salla.sa/vygWG/a664a3a9-6907-48cf-925f-5de7e4fb802b-500x500-OvOjbabZREkBiRRRnQdUaqIyHGwcsl4iuqrQmcjy.jpg",
+    image: "https://cdn.salla.sa/vygWG/6bcf7bb9-a121-4d4b-aa1b-5a40129e95e9-500x500-wevXPhBBwn1GjUvkKljbTU3HZP8tTkV2aIw3IqBf.jpg",
     title: "شيلان باشمينا ملكي",
     subtitle: "خصم يصل إلى 50%",
     link: "/products?category=pashmina-royal",
   },
   {
     id: "2",
-    image: "https://cdn.salla.sa/vygWG/feb756f8-612a-4cf0-ac82-2bc3eec6dc90-500x500-ieLUnl6TxXs3UcJ2Az2uOtaxLYhNAskIbNGJmGzg.jpg",
+    image: "https://cdn.salla.sa/vygWG/ff147e25-005e-4e68-850e-70bf00312bf7-500x500-ihrbMCAvUpz6beJyTQVfU53ixW0XNHdZVF4w5Alh.jpg",
     title: "غتر كشميري VIP",
     subtitle: "تشكيلة حصرية",
     link: "/products?category=kashmiri-vip",
   },
   {
     id: "3",
-    image: "https://cdn.salla.sa/vygWG/484411d8-5c69-4dad-8be5-788a7344bc07-500x500-z1wRzrFzUeGbxT3HATxZWolfXHsvWaVRCSttso3g.jpg",
+    image: "https://cdn.salla.sa/vygWG/df611ca4-111b-4717-87ac-77d349b7f72d-500x500-GTwfF30yVRDRarWwgVis4CvunAhbpvMXIPiAL0T2.jpg",
     title: "أشمغة شتوية",
     subtitle: "دفء وأناقة",
     link: "/products?category=winter-shemagh",

@@ -14,14 +14,14 @@ const OfferBanner = () => {
         {/* Product images as decoration */}
         <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[400px] md:h-[400px] opacity-15">
           <img 
-            src="https://cdn.salla.sa/vygWG/6bcf7bb9-a121-4d4b-aa1b-5a40129e95e9-500x500-wevXPhBBwn1GjUvkKljbTU3HZP8tTkV2aIw3IqBf.jpg"
+            src="https://cdn.salla.sa/vygWG/a664a3a9-6907-48cf-925f-5de7e4fb802b-500x500-OvOjbabZREkBiRRRnQdUaqIyHGwcsl4iuqrQmcjy.jpg"
             alt=""
             className="w-full h-full object-contain"
           />
         </div>
         <div className="absolute right-0 bottom-0 w-[200px] h-[200px] md:w-[300px] md:h-[300px] opacity-10">
           <img 
-            src="https://cdn.salla.sa/vygWG/df611ca4-111b-4717-87ac-77d349b7f72d-500x500-GTwfF30yVRDRarWwgVis4CvunAhbpvMXIPiAL0T2.jpg"
+            src="https://cdn.salla.sa/vygWG/1a9d85fb-d373-4132-bf08-1851247c3009-500x500-ZaVg35qEEznJkyxOin2NHTYc3CI2YXurpyxAlryA.jpg"
             alt=""
             className="w-full h-full object-contain"
           />
