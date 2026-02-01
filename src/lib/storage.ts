@@ -3,8 +3,20 @@ import { sampleProducts, categories as defaultCategories } from "@/data/products
 
 const PRODUCTS_KEY = "alqotari_products";
 const CATEGORIES_KEY = "alqotari_categories";
+const DATA_VERSION_KEY = "alqotari_data_version";
+const CURRENT_VERSION = "2.0"; // Increment this to force data refresh
 
 export const getProducts = (): Product[] => {
+  const storedVersion = localStorage.getItem(DATA_VERSION_KEY);
+  
+  // If version mismatch, reset to sample data
+  if (storedVersion !== CURRENT_VERSION) {
+    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(sampleProducts));
+    localStorage.setItem(CATEGORIES_KEY, JSON.stringify(defaultCategories));
+    localStorage.setItem(DATA_VERSION_KEY, CURRENT_VERSION);
+    return sampleProducts;
+  }
+  
   const stored = localStorage.getItem(PRODUCTS_KEY);
   if (stored) {
     return JSON.parse(stored);
@@ -49,6 +61,15 @@ export const deleteProduct = (id: string): boolean => {
 };
 
 export const getCategories = (): Category[] => {
+  const storedVersion = localStorage.getItem(DATA_VERSION_KEY);
+  
+  // If version mismatch, reset to default categories
+  if (storedVersion !== CURRENT_VERSION) {
+    localStorage.setItem(CATEGORIES_KEY, JSON.stringify(defaultCategories));
+    localStorage.setItem(DATA_VERSION_KEY, CURRENT_VERSION);
+    return defaultCategories;
+  }
+  
   const stored = localStorage.getItem(CATEGORIES_KEY);
   if (stored) {
     return JSON.parse(stored);

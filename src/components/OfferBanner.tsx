@@ -5,13 +5,22 @@ const OfferBanner = () => {
   return (
     <section className="py-16 relative overflow-hidden">
       {/* Background */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80')"
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-l from-chocolate/95 via-chocolate/80 to-chocolate/60" />
+      <div className="absolute inset-0 bg-gradient-to-br from-chocolate via-chocolate/95 to-chocolate/90">
+        {/* Product images as decoration */}
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[400px] md:h-[400px] opacity-20">
+          <img 
+            src="https://cdn.salla.sa/vygWG/6bcf7bb9-a121-4d4b-aa1b-5a40129e95e9-500x500-wevXPhBBwn1GjUvkKljbTU3HZP8tTkV2aIw3IqBf.jpg"
+            alt=""
+            className="w-full h-full object-contain"
+          />
+        </div>
+        <div className="absolute right-0 bottom-0 w-[200px] h-[200px] md:w-[300px] md:h-[300px] opacity-15">
+          <img 
+            src="https://cdn.salla.sa/vygWG/df611ca4-111b-4717-87ac-77d349b7f72d-500x500-GTwfF30yVRDRarWwgVis4CvunAhbpvMXIPiAL0T2.jpg"
+            alt=""
+            className="w-full h-full object-contain"
+          />
+        </div>
       </div>
 
       {/* Content */}
@@ -21,10 +30,10 @@ const OfferBanner = () => {
             عرض خاص
           </span>
           <h2 className="text-3xl md:text-5xl font-bold text-primary-foreground mb-4">
-            خصم يصل إلى <span className="text-gold">40%</span>
+            خصم يصل إلى <span className="text-gold">50%</span>
           </h2>
           <p className="text-primary-foreground/80 text-lg mb-8">
-            على جميع الشيلان الكشميرية الترمه والباشمينا VIP
+            على جميع الغتر الكشميرية والشيلان الباشمينا الملكي
           </p>
           <Link
             to="/products"

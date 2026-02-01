@@ -5,24 +5,24 @@ import { Link } from "react-router-dom";
 const banners = [
   {
     id: "1",
-    image: "https://images.unsplash.com/photo-1617137968427-85924c800a22?w=1920&q=80",
-    title: "تفاصيل تعبّر عنك",
-    subtitle: "اكتشف أفخر الشيلان والبشوت بجودة استثنائية",
-    link: "/products",
+    image: "https://cdn.salla.sa/vygWG/fc857e5a-15b1-4f48-a8a0-eef08200f007-500x500-wKiTygOIxKOUotrIB2usaw4SCg0fqXsv3FHojQ3F.jpg",
+    title: "غتر كشميري VIP",
+    subtitle: "أجود أنواع الغتر الكشميرية الشتوية",
+    link: "/products?category=kashmiri-vip",
   },
   {
     id: "2",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920&q=80",
-    title: "شيلان كشميري فاخرة",
-    subtitle: "من أجود أنواع الكشمير الطبيعي",
-    link: "/products?category=termeh-shawls",
+    image: "https://cdn.salla.sa/vygWG/dd6c4672-2221-4d1f-81df-2905eb278dc4-500x500-NvuOunZPRjErJDSCu7Kn0tGmt4Rz5FdpkGaHkBjf.jpg",
+    title: "شيلان باشمينا ملكي",
+    subtitle: "صوف كشميري 100% بجودة استثنائية",
+    link: "/products?category=pashmina-royal",
   },
   {
     id: "3",
-    image: "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=1920&q=80",
-    title: "أناقة يمنية أصيلة",
-    subtitle: "تصاميم تقليدية بلمسة عصرية",
-    link: "/products?category=royal-bisht",
+    image: "https://cdn.salla.sa/vygWG/fcb6c396-c90b-4466-86d6-355e5baad27f-500x500-jIccBxG0LWqHG5iE6qnTglkEyy9P3QyeKR2VPPDz.jpg",
+    title: "أشمغة شتوية دافئة",
+    subtitle: "تشكيلة متنوعة من الأشمغة الشتوية",
+    link: "/products?category=winter-shemagh",
   },
 ];
 
@@ -57,17 +57,22 @@ const HeroSection = () => {
                 : "opacity-0 scale-105"
             }`}
           >
-            {/* Background Image */}
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${banner.image})` }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-t from-chocolate/90 via-chocolate/40 to-transparent" />
+            {/* Background with product image */}
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-chocolate via-chocolate/95 to-chocolate/90">
+              {/* Large product image */}
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] opacity-30 md:opacity-50">
+                <img 
+                  src={banner.image} 
+                  alt="" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-l from-transparent via-chocolate/60 to-chocolate" />
             </div>
 
             {/* Content */}
-            <div className="relative h-full container mx-auto px-4 flex items-center justify-center">
-              <div className="text-center max-w-3xl">
+            <div className="relative h-full container mx-auto px-4 flex items-center">
+              <div className="max-w-2xl text-right mr-auto">
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-6 animate-fade-in">
                   {banner.title.split(" ").map((word, i) => (
                     <span key={i} className={i === 0 ? "block" : ""}>
