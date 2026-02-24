@@ -7,6 +7,7 @@ import OfferBanner from "@/components/OfferBanner";
 import ProductCard from "@/components/ProductCard";
 import CategoryCard from "@/components/CategoryCard";
 import { ScrollAnimation, StaggerContainer, StaggerItem } from "@/components/ScrollAnimation";
+import TestimonialsSection from "@/components/reviews/TestimonialsSection";
 import { getCategories, getFeaturedProducts } from "@/lib/storage";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -117,6 +118,9 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        {/* Testimonials */}
+        <TestimonialsSection />
 
         {/* Offer Banner */}
         <OfferBanner />

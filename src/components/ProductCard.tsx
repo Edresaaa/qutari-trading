@@ -1,17 +1,25 @@
+import { useEffect, useState } from "react";
 import { Product } from "@/types/store";
 import { formatWhatsAppLink } from "@/config/store";
 import { MessageCircle, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import ProductRatingBadge from "./reviews/ProductRatingBadge";
+import { getProductReviews, getAverageRating, Review } from "@/lib/reviews";
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
+  const [reviews, setReviews] = useState<Review[]>([]);
   const currentUrl = typeof window !== "undefined" ? window.location.origin : "";
   const productUrl = `${currentUrl}/product/${product.id}`;
   const whatsappLink = formatWhatsAppLink(product.name, productUrl, product.price);
+
+  useEffect(() => {
+    getProductReviews(product.id).then(setReviews);
+  }, [product.id]);
 
   const hasDiscount = product.originalPrice && product.originalPrice > product.price;
   const discountPercentage = hasDiscount
@@ -67,9 +75,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {product.name}
         </h3>
         
-        <p className="text-muted-foreground text-sm mb-4 line-clamp-2 leading-relaxed">
+        <p className="text-muted-foreground text-sm mb-2 line-clamp-2 leading-relaxed">
           {product.description}
         </p>
+
+        {/* Rating */}
+        <div className="mb-3">
+          <ProductRatingBadge averageRating={getAverageRating(reviews)} reviewCount={reviews.length} />
+        </div>
 
         {/* Price */}
         <div className="flex items-center gap-3 mb-5">
