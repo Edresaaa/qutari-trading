@@ -64,10 +64,12 @@ export const submitReview = async (review: {
   return true;
 };
 
+const ADMIN_PASSWORD = "QR@X512512x";
+
 // Fetch ALL reviews (for admin - needs edge function)
 export const getAllReviews = async (): Promise<Review[]> => {
   const { data, error } = await supabase.functions.invoke("manage-reviews", {
-    body: { action: "list" },
+    body: { action: "list", adminPassword: ADMIN_PASSWORD },
   });
 
   if (error) {
@@ -80,7 +82,7 @@ export const getAllReviews = async (): Promise<Review[]> => {
 // Approve a review (admin)
 export const approveReview = async (reviewId: string): Promise<boolean> => {
   const { error } = await supabase.functions.invoke("manage-reviews", {
-    body: { action: "approve", reviewId },
+    body: { action: "approve", reviewId, adminPassword: ADMIN_PASSWORD },
   });
   return !error;
 };
@@ -88,7 +90,7 @@ export const approveReview = async (reviewId: string): Promise<boolean> => {
 // Delete a review (admin)
 export const deleteReview = async (reviewId: string): Promise<boolean> => {
   const { error } = await supabase.functions.invoke("manage-reviews", {
-    body: { action: "delete", reviewId },
+    body: { action: "delete", reviewId, adminPassword: ADMIN_PASSWORD },
   });
   return !error;
 };
