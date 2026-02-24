@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef } from "react";
 import { Product } from "@/types/store";
 import { formatWhatsAppLink } from "@/config/store";
 import { MessageCircle, Eye } from "lucide-react";
@@ -11,7 +11,7 @@ interface ProductCardProps {
   product: Product;
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product }, ref) => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const currentUrl = typeof window !== "undefined" ? window.location.origin : "";
   const productUrl = `${currentUrl}/product/${product.id}`;
@@ -26,11 +26,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
     ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
     : 0;
 
-  // Check if product is out of stock based on quantity
   const isOutOfStock = !product.inStock || (product.quantity !== undefined && product.quantity === 0);
 
   return (
     <motion.div 
+      ref={ref}
       className="group card-premium"
       whileHover={{ y: -8 }}
       transition={{ duration: 0.3 }}
@@ -43,10 +43,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
           className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${isOutOfStock ? 'opacity-60' : ''}`}
         />
         
-        {/* Overlay on hover */}
         <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
         
-        {/* Quick view button */}
         <Link
           to={`/product/${product.id}`}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full card-glass flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 text-accent hover:bg-accent hover:text-accent-foreground"
@@ -54,7 +52,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Eye className="w-6 h-6" />
         </Link>
         
-        {/* Badges */}
         <div className="absolute top-4 right-4 flex flex-col gap-2">
           {hasDiscount && !isOutOfStock && (
             <span className="bg-destructive text-destructive-foreground text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
@@ -79,12 +76,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
           {product.description}
         </p>
 
-        {/* Rating */}
         <div className="mb-3">
           <ProductRatingBadge averageRating={getAverageRating(reviews)} reviewCount={reviews.length} />
         </div>
 
-        {/* Price */}
         <div className="flex items-center gap-3 mb-5">
           <span className={`text-2xl font-bold ${isOutOfStock ? 'text-muted-foreground' : 'gold-text'}`}>{product.price}</span>
           <span className="text-sm text-muted-foreground">ر.ي</span>
@@ -95,7 +90,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
           )}
         </div>
 
-        {/* WhatsApp Button */}
         <a
           href={whatsappLink}
           target="_blank"
@@ -113,6 +107,8 @@ const ProductCard = ({ product }: ProductCardProps) => {
       </div>
     </motion.div>
   );
-};
+});
+
+ProductCard.displayName = "ProductCard";
 
 export default ProductCard;

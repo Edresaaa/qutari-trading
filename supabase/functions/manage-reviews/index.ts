@@ -6,18 +6,28 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const ADMIN_PASSWORD = "QR@X512512x";
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    const { action, reviewId, adminPassword } = await req.json();
+
+    // Verify admin password for all actions
+    if (adminPassword !== ADMIN_PASSWORD) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
-
-    const { action, reviewId } = await req.json();
 
     if (action === "list") {
       const { data, error } = await supabaseAdmin
