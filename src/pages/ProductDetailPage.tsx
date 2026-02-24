@@ -4,11 +4,15 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import ProductSizeDisplay from "@/components/product/ProductSizeDisplay";
+import ReviewForm from "@/components/reviews/ReviewForm";
+import ReviewsList from "@/components/reviews/ReviewsList";
 import { getProductById, getProductsByCategory, getCategories } from "@/lib/storage";
 import { formatWhatsAppLink } from "@/config/store";
+import { Review, getProductReviews, getAverageRating } from "@/lib/reviews";
 import { Product, Category } from "@/types/store";
 import { ArrowRight, ShoppingBag, Check, Truck, Shield, Package, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import StarRating from "@/components/reviews/StarRating";
 
 const ProductDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,6 +26,11 @@ const ProductDetailPage = () => {
   const [selectedLength, setSelectedLength] = useState("");
   const [selectedWidth, setSelectedWidth] = useState("");
   const [sizeError, setSizeError] = useState(false);
+  const [reviews, setReviews] = useState<Review[]>([]);
+
+  const loadReviews = () => {
+    if (id) getProductReviews(id).then(setReviews);
+  };
 
   useEffect(() => {
     if (id) {
@@ -43,6 +52,9 @@ const ProductDetailPage = () => {
         // Get related products
         const categoryProducts = getProductsByCategory(foundProduct.category);
         setRelatedProducts(categoryProducts.filter(p => p.id !== id).slice(0, 4));
+        
+        // Load reviews
+        getProductReviews(id).then(setReviews);
       } else {
         navigate("/products");
       }
@@ -199,8 +211,8 @@ const ProductDetailPage = () => {
                 </Link>
               )}
 
-              {/* Price */}
-              <div className="flex items-baseline gap-3 mb-6">
+              {/* Price & Rating */}
+              <div className="flex items-baseline gap-3 mb-2">
                 <span className="text-3xl md:text-4xl font-bold text-accent">
                   {product.price} ر.ي
                 </span>
@@ -210,6 +222,12 @@ const ProductDetailPage = () => {
                   </span>
                 )}
               </div>
+              {reviews.length > 0 && (
+                <div className="flex items-center gap-2 mb-6">
+                  <StarRating rating={Math.round(getAverageRating(reviews))} size="sm" />
+                  <span className="text-sm text-muted-foreground">({reviews.length} تقييم)</span>
+                </div>
+              )}
 
               {/* Description */}
               <div className="mb-6">
@@ -294,6 +312,15 @@ const ProductDetailPage = () => {
               </div>
             </div>
           </div>
+
+          {/* Reviews Section */}
+          <section className="mb-16">
+            <h2 className="text-2xl font-bold text-foreground mb-6">التقييمات</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <ReviewsList reviews={reviews} />
+              <ReviewForm productId={product.id} onSubmitted={loadReviews} />
+            </div>
+          </section>
 
           {/* Related Products */}
           {relatedProducts.length > 0 && (

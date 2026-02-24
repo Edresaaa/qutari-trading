@@ -32,8 +32,9 @@ import ProductSizesSelector from "@/components/admin/ProductSizesSelector";
 import { 
   Plus, Pencil, Trash2, ArrowRight, Package, Lock, Eye, EyeOff,
   FolderOpen, ShoppingBag, Search, Upload, Loader2, Image, 
-  Layout, Settings, X, Check, Tag, CalendarIcon, Ruler
+  Layout, Settings, X, Check, Tag, CalendarIcon, Ruler, Star
 } from "lucide-react";
+import AdminReviewsTab from "@/components/admin/AdminReviewsTab";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -575,7 +576,7 @@ const AdminPage = () => {
 
           {/* Tabs */}
           <Tabs defaultValue="products" className="space-y-6">
-            <TabsList className="grid w-full max-w-3xl grid-cols-5">
+            <TabsList className="grid w-full max-w-3xl grid-cols-6">
               <TabsTrigger value="products" className="flex items-center gap-2">
                 <ShoppingBag className="w-4 h-4" />
                 <span className="hidden sm:inline">المنتجات</span>
@@ -587,6 +588,10 @@ const AdminPage = () => {
               <TabsTrigger value="banners" className="flex items-center gap-2">
                 <Layout className="w-4 h-4" />
                 <span className="hidden sm:inline">البنرات</span>
+              </TabsTrigger>
+              <TabsTrigger value="reviews" className="flex items-center gap-2">
+                <Star className="w-4 h-4" />
+                <span className="hidden sm:inline">التقييمات</span>
               </TabsTrigger>
               <TabsTrigger value="offers" className="flex items-center gap-2">
                 <Tag className="w-4 h-4" />
@@ -750,6 +755,11 @@ const AdminPage = () => {
                   ))}
                 </div>
               </div>
+            </TabsContent>
+
+            {/* Reviews Tab */}
+            <TabsContent value="reviews">
+              <AdminReviewsTab />
             </TabsContent>
 
             {/* Offers Tab */}
