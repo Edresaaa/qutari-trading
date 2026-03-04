@@ -141,7 +141,7 @@ const ProductDetailPage = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-1 py-4 sm:py-6 md:py-8">
+      <main className="flex-1 py-4 sm:py-6 md:py-8 pb-20 lg:pb-8">
         <div className="container mx-auto px-4">
           {/* Breadcrumb */}
           <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6 flex-wrap">

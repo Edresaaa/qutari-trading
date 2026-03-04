@@ -171,12 +171,12 @@ const ProductsPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-1 py-8">
+      <main className="flex-1 py-6 pb-20 lg:pb-8">
         <div className="container mx-auto px-4">
           {/* Page Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">المنتجات</h1>
-            <p className="text-muted-foreground">اكتشف تشكيلتنا المميزة من الشيلان والأزياء التقليدية</p>
+          <div className="mb-6">
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-1">المنتجات</h1>
+            <p className="text-muted-foreground text-sm">اكتشف تشكيلتنا المميزة من المستلزمات الرجالية والولادية</p>
           </div>
 
           {/* Search and Sort Bar */}

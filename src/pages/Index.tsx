@@ -35,29 +35,27 @@ const Index = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
 
-      <main className="flex-1">
+      <main className="flex-1 pb-16 lg:pb-0">
         <HeroSection />
         <FeaturesSection />
-        <PromoBanners />
 
         {/* Categories */}
-        <section className="py-10 sm:py-14">
+        <section className="py-8 sm:py-12">
           <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground">الأقسام</h2>
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg sm:text-xl font-bold text-foreground">تسوق حسب القسم</h2>
               <Link
                 to="/categories"
-                className="flex items-center gap-1.5 text-accent text-sm font-medium hover:gap-2.5 transition-all"
+                className="flex items-center gap-1 text-accent text-xs sm:text-sm font-medium hover:gap-2 transition-all"
               >
-                عرض الكل
-                <ArrowLeft className="w-4 h-4" />
+                الكل
+                <ArrowLeft className="w-3.5 h-3.5" />
               </Link>
             </div>
 
-            {/* Horizontal scroll on mobile, grid on desktop */}
-            <div className="flex overflow-x-auto scrollbar-hide gap-3 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 sm:overflow-visible">
+            <div className="flex overflow-x-auto scrollbar-hide gap-3 -mx-4 px-4 sm:mx-0 sm:px-0 sm:grid sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-5 sm:overflow-visible sm:gap-3">
               {categories.map((category) => (
-                <div key={category.id} className="shrink-0 w-[140px] sm:w-auto">
+                <div key={category.id} className="shrink-0 w-[120px] sm:w-auto">
                   <CategoryCard category={category} />
                 </div>
               ))}
@@ -65,17 +63,19 @@ const Index = () => {
           </div>
         </section>
 
+        <PromoBanners />
+
         {/* Featured Products */}
-        <section className="py-10 sm:py-14 bg-card/50">
+        <section className="py-8 sm:py-12 bg-card/30">
           <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl sm:text-2xl font-bold text-foreground">منتجات مميزة</h2>
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg sm:text-xl font-bold text-foreground">منتجات مميزة</h2>
               <Link
                 to="/products"
-                className="flex items-center gap-1.5 text-accent text-sm font-medium hover:gap-2.5 transition-all"
+                className="flex items-center gap-1 text-accent text-xs sm:text-sm font-medium hover:gap-2 transition-all"
               >
-                عرض الكل
-                <ArrowLeft className="w-4 h-4" />
+                الكل
+                <ArrowLeft className="w-3.5 h-3.5" />
               </Link>
             </div>
 
@@ -91,23 +91,23 @@ const Index = () => {
         <OfferBanner />
 
         {/* CTA */}
-        <section className="py-12 sm:py-16 md:py-20 relative overflow-hidden">
+        <section className="py-10 sm:py-14 relative overflow-hidden">
           <div className="absolute inset-0 hero-gradient" />
           <div className="container mx-auto px-4 text-center relative z-10">
-            <h2 className="text-xl sm:text-2xl md:text-4xl font-bold text-foreground mb-3 sm:mb-4">
+            <h2 className="text-lg sm:text-2xl md:text-3xl font-bold text-foreground mb-3">
               هل تبحث عن شيء <span className="gold-text">مميز</span>؟
             </h2>
-            <p className="text-muted-foreground mb-6 max-w-md mx-auto text-sm sm:text-base">
+            <p className="text-muted-foreground mb-5 max-w-sm mx-auto text-xs sm:text-sm">
               تواصل معنا عبر الواتساب وسنساعدك في إيجاد ما تبحث عنه
             </p>
             <a
               href="https://wa.me/967736700034"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-gold inline-flex items-center gap-2 text-sm px-6 py-3"
+              className="btn-gold inline-flex items-center gap-2 text-xs sm:text-sm px-5 sm:px-6 py-2.5"
             >
               تواصل معنا
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="w-3.5 h-3.5" />
             </a>
           </div>
         </section>
