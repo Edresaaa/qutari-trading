@@ -7,7 +7,7 @@ const BANNERS_KEY = "alqotari_banners";
 const STORE_SETTINGS_KEY = "alqotari_store_settings";
 const OFFER_SETTINGS_KEY = "alqotari_offer_settings";
 const DATA_VERSION_KEY = "alqotari_data_version";
-const CURRENT_VERSION = "2.3"; // Increment this to force data refresh
+const CURRENT_VERSION = "3.0"; // Increment this to force data refresh
 
 export interface Banner {
   id: string;
