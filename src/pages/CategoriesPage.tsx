@@ -16,20 +16,14 @@ const CategoriesPage = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-1 py-8">
+      <main className="flex-1 py-6 sm:py-8 pb-20 lg:pb-8">
         <div className="container mx-auto px-4">
-          {/* Page Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-              الأقسام
-            </h1>
-            <p className="text-muted-foreground">
-              تصفح أقسامنا المتنوعة واختر ما يناسب ذوقك
-            </p>
+          <div className="mb-6">
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-1">الأقسام</h1>
+            <p className="text-muted-foreground text-sm">تصفح أقسامنا المتنوعة</p>
           </div>
 
-          {/* Categories Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {categories.map((category) => (
               <CategoryCard key={category.id} category={category} />
             ))}

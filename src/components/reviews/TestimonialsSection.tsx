@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import { Review, getApprovedReviews } from "@/lib/reviews";
 import { getProductById } from "@/lib/storage";
 import StarRating from "./StarRating";
-import { ScrollAnimation } from "@/components/ScrollAnimation";
-import { User, Quote, ChevronLeft, ChevronRight } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { User, Quote } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 const TestimonialsSection = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -24,104 +23,64 @@ const TestimonialsSection = () => {
 
   if (reviews.length === 0) return null;
 
-  return (
-    <section className="py-12 sm:py-16 md:py-20">
-      <div className="container mx-auto px-4">
-        <ScrollAnimation variant="slideRight">
-          <div className="text-center mb-8 sm:mb-10">
-            <h2 className="section-title">آراء عملائنا</h2>
-            <p className="text-muted-foreground mt-3 text-sm sm:text-base">ماذا يقول عملاؤنا عن تجربتهم</p>
+  const ReviewCard = ({ review }: { review: Review }) => {
+    const product = getProductById(review.product_id);
+    return (
+      <div className="bg-card rounded-xl p-4 border border-border/50 relative flex flex-col h-full">
+        <Quote className="w-5 h-5 text-accent/10 absolute top-3 left-3" />
+        <div className="flex items-center gap-2.5 mb-2">
+          <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
+            <User className="w-3.5 h-3.5 text-accent" />
           </div>
-        </ScrollAnimation>
+          <div>
+            <p className="font-bold text-foreground text-xs">{review.customer_name}</p>
+            {product && <p className="text-[10px] text-muted-foreground line-clamp-1">{product.name}</p>}
+          </div>
+        </div>
+        <StarRating rating={review.rating} size="sm" />
+        {review.comment && (
+          <p className="text-muted-foreground text-xs leading-relaxed mt-2 flex-1">{review.comment}</p>
+        )}
+      </div>
+    );
+  };
 
-        {/* Mobile: Carousel, Desktop: Grid */}
+  return (
+    <section className="py-8 sm:py-12">
+      <div className="container mx-auto px-4">
+        <div className="mb-6">
+          <h2 className="text-lg sm:text-xl font-bold text-foreground">آراء عملائنا</h2>
+        </div>
+
         {/* Desktop Grid */}
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reviews.slice(0, 6).map((review) => {
-            const product = getProductById(review.product_id);
-            return (
-              <div key={review.id} className="bg-card rounded-2xl p-5 sm:p-6 border border-border relative h-full flex flex-col hover:border-accent/20 transition-colors">
-                <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-accent/15 absolute top-4 left-4" />
-                
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-accent/10 flex items-center justify-center">
-                    <User className="w-4 h-4 sm:w-5 sm:h-5 text-accent" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-foreground text-sm">{review.customer_name}</p>
-                    {product && (
-                      <p className="text-xs text-muted-foreground line-clamp-1">{product.name}</p>
-                    )}
-                  </div>
-                </div>
-
-                <StarRating rating={review.rating} size="sm" />
-
-                {review.comment && (
-                  <p className="text-muted-foreground text-sm leading-relaxed mt-3 flex-1">
-                    {review.comment}
-                  </p>
-                )}
-              </div>
-            );
-          })}
+        <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-3">
+          {reviews.slice(0, 8).map((review) => (
+            <ReviewCard key={review.id} review={review} />
+          ))}
         </div>
 
         {/* Mobile Carousel */}
-        <div className="md:hidden relative">
-          <div className="overflow-hidden rounded-2xl">
-            <AnimatePresence mode="wait">
-              {reviews.length > 0 && (
-                <motion.div
-                  key={activeIndex}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -50 }}
-                  transition={{ duration: 0.3 }}
-                  className="bg-card rounded-2xl p-5 border border-border relative"
-                >
-                  <Quote className="w-6 h-6 text-accent/15 absolute top-4 left-4" />
-                  
-                  {(() => {
-                    const review = reviews[activeIndex];
-                    const product = getProductById(review.product_id);
-                    return (
-                      <>
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-9 h-9 rounded-full bg-accent/10 flex items-center justify-center">
-                            <User className="w-4 h-4 text-accent" />
-                          </div>
-                          <div>
-                            <p className="font-bold text-foreground text-sm">{review.customer_name}</p>
-                            {product && (
-                              <p className="text-xs text-muted-foreground line-clamp-1">{product.name}</p>
-                            )}
-                          </div>
-                        </div>
-
-                        <StarRating rating={review.rating} size="sm" />
-
-                        {review.comment && (
-                          <p className="text-muted-foreground text-sm leading-relaxed mt-3">
-                            {review.comment}
-                          </p>
-                        )}
-                      </>
-                    );
-                  })()}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Mobile dots */}
-          <div className="flex justify-center gap-1.5 mt-4">
-            {reviews.slice(0, 8).map((_, i) => (
+        <div className="md:hidden">
+          <AnimatePresence mode="wait">
+            {reviews.length > 0 && (
+              <motion.div
+                key={activeIndex}
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -30 }}
+                transition={{ duration: 0.25 }}
+              >
+                <ReviewCard review={reviews[activeIndex]} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <div className="flex justify-center gap-1 mt-3">
+            {reviews.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setActiveIndex(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  i === activeIndex ? "bg-accent w-6" : "bg-muted w-1.5"
+                className={`h-1 rounded-full transition-all ${
+                  i === activeIndex ? "bg-accent w-5" : "bg-muted w-1"
                 }`}
               />
             ))}
