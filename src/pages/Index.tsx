@@ -24,17 +24,10 @@ const Index = () => {
       setFeaturedProducts(getFeaturedProducts());
       setCategories(getCategories());
     };
-    
     loadData();
-    
-    // Listen for storage changes
-    const handleStorageChange = () => {
-      loadData();
-    };
-    
+    const handleStorageChange = () => { loadData(); };
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('productsUpdated', handleStorageChange);
-    
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('productsUpdated', handleStorageChange);
@@ -46,27 +39,22 @@ const Index = () => {
       <Header />
       
       <main className="flex-1">
-        {/* Hero Section */}
         <HeroSection />
-
-        {/* Features */}
         <FeaturesSection />
-
-        {/* Promo Banners */}
         <PromoBanners />
 
         {/* Categories Section */}
-        <section className="py-20">
+        <section className="py-12 sm:py-16 md:py-20">
           <div className="container mx-auto px-4">
             <ScrollAnimation variant="slideRight">
-              <div className="flex items-center justify-between mb-10">
+              <div className="flex items-center justify-between mb-6 sm:mb-8 md:mb-10">
                 <div>
                   <h2 className="section-title">الأقسام</h2>
-                  <p className="text-muted-foreground mt-3">تصفح أقسامنا المتنوعة</p>
+                  <p className="text-muted-foreground mt-2 sm:mt-3 text-sm sm:text-base">تصفح أقسامنا المتنوعة</p>
                 </div>
                 <Link 
                   to="/categories" 
-                  className="flex items-center gap-2 text-accent hover:text-gold-light font-medium transition-colors"
+                  className="flex items-center gap-2 text-accent hover:text-gold-light font-medium transition-colors text-sm sm:text-base"
                 >
                   عرض الكل
                   <ArrowLeft className="w-4 h-4" />
@@ -74,7 +62,7 @@ const Index = () => {
               </div>
             </ScrollAnimation>
 
-            <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-5">
+            <StaggerContainer className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
               {categories.map((category) => (
                 <StaggerItem key={category.id}>
                   <CategoryCard category={category} />
@@ -85,17 +73,17 @@ const Index = () => {
         </section>
 
         {/* Featured Products */}
-        <section className="py-20 bg-card">
+        <section className="py-12 sm:py-16 md:py-20 bg-card">
           <div className="container mx-auto px-4">
             <ScrollAnimation variant="slideRight">
-              <div className="flex items-center justify-between mb-10">
+              <div className="flex items-center justify-between mb-6 sm:mb-8 md:mb-10">
                 <div>
                   <h2 className="section-title">منتجات مميزة</h2>
-                  <p className="text-muted-foreground mt-3">أفضل اختياراتنا لك</p>
+                  <p className="text-muted-foreground mt-2 sm:mt-3 text-sm sm:text-base">أفضل اختياراتنا لك</p>
                 </div>
                 <Link 
                   to="/products" 
-                  className="flex items-center gap-2 text-accent hover:text-gold-light font-medium transition-colors"
+                  className="flex items-center gap-2 text-accent hover:text-gold-light font-medium transition-colors text-sm sm:text-base"
                 >
                   عرض الكل
                   <ArrowLeft className="w-4 h-4" />
@@ -103,14 +91,14 @@ const Index = () => {
               </div>
             </ScrollAnimation>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
               {featuredProducts.slice(0, 8).map((product, index) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  transition={{ duration: 0.5, delay: index * 0.08 }}
                 >
                   <ProductCard product={product} />
                 </motion.div>
@@ -119,17 +107,12 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Testimonials */}
         <TestimonialsSection />
-
-        {/* Offer Banner */}
         <OfferBanner />
 
         {/* CTA Section */}
-        <section className="py-24 relative overflow-hidden">
+        <section className="py-12 sm:py-16 md:py-24 relative overflow-hidden">
           <div className="absolute inset-0 hero-gradient leather-texture" />
-          
-          {/* Decorative elements */}
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
             <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-accent/5 rounded-full blur-3xl" />
@@ -142,22 +125,22 @@ const Index = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-5">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-foreground mb-4 sm:mb-5">
               هل تبحث عن شيء <span className="gold-text">مميز</span>؟
             </h2>
-            <p className="text-muted-foreground mb-10 max-w-xl mx-auto text-lg leading-relaxed">
+            <p className="text-muted-foreground mb-6 sm:mb-8 md:mb-10 max-w-xl mx-auto text-sm sm:text-base md:text-lg leading-relaxed">
               تواصل معنا عبر الواتساب وسنساعدك في إيجاد ما تبحث عنه
             </p>
             <motion.a
               href="https://wa.me/967736700034"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-gold inline-flex items-center gap-3 text-lg px-10 py-4"
+              className="btn-gold inline-flex items-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg px-6 sm:px-8 md:px-10 py-3 sm:py-4"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
               تواصل معنا
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
             </motion.a>
           </motion.div>
         </section>
