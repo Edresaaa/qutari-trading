@@ -11,10 +11,15 @@ import {
   ProductSizeType,
   SIZE_TYPE_LABELS,
   SHAWL_SIZES,
+  GHUTRA_SIZES,
   THOBE_LENGTH_SIZES,
   THOBE_WIDTH_SIZES,
   KUFI_SIZES,
   UNDERWEAR_SIZES,
+  FUTAH_SIZES,
+  MAAWIZ_SIZES,
+  RING_SIZES,
+  JACKET_SIZES,
 } from "@/types/sizes";
 
 interface ProductSizesSelectorProps {
@@ -41,7 +46,6 @@ const ProductSizesSelector = ({
   
   const handleSizeTypeChange = (value: ProductSizeType) => {
     onSizeTypeChange(value);
-    // Reset sizes when type changes
     onAvailableSizesChange([]);
     onAvailableLengthsChange([]);
     onAvailableWidthsChange([]);
@@ -102,6 +106,22 @@ const ProductSizesSelector = ({
     </div>
   );
 
+  const getSizesConfig = (): { sizes: readonly string[]; label: string } | null => {
+    switch (sizeType) {
+      case "shawl": return { sizes: SHAWL_SIZES, label: "مقاسات الشيلان" };
+      case "ghutra": return { sizes: GHUTRA_SIZES, label: "مقاسات الغتر" };
+      case "kufi": return { sizes: KUFI_SIZES, label: "مقاسات الكوافي" };
+      case "underwear": return { sizes: UNDERWEAR_SIZES, label: "مقاسات الملابس الداخلية" };
+      case "futah": return { sizes: FUTAH_SIZES, label: "مقاسات الفوط" };
+      case "maawiz": return { sizes: MAAWIZ_SIZES, label: "مقاسات المعاوز" };
+      case "ring": return { sizes: RING_SIZES, label: "مقاسات الخواتم" };
+      case "jacket": return { sizes: JACKET_SIZES, label: "مقاسات الاكوات" };
+      default: return null;
+    }
+  };
+
+  const sizesConfig = getSizesConfig();
+
   return (
     <div className="space-y-4 p-4 bg-muted/50 rounded-xl border border-border">
       <div>
@@ -120,42 +140,15 @@ const ProductSizesSelector = ({
         </Select>
       </div>
 
-      {sizeType === "shawl" && renderSizeCheckboxes(
-        SHAWL_SIZES,
-        availableSizes,
-        onAvailableSizesChange,
-        "مقاسات الشيلات / الغتر"
-      )}
-
       {sizeType === "thobe" && (
         <div className="space-y-4">
-          {renderSizeCheckboxes(
-            THOBE_LENGTH_SIZES,
-            availableLengths,
-            onAvailableLengthsChange,
-            "الطول (بالانش)"
-          )}
-          {renderSizeCheckboxes(
-            THOBE_WIDTH_SIZES,
-            availableWidths,
-            onAvailableWidthsChange,
-            "العرض"
-          )}
+          {renderSizeCheckboxes(THOBE_LENGTH_SIZES, availableLengths, onAvailableLengthsChange, "الطول (بالانش)")}
+          {renderSizeCheckboxes(THOBE_WIDTH_SIZES, availableWidths, onAvailableWidthsChange, "العرض")}
         </div>
       )}
 
-      {sizeType === "kufi" && renderSizeCheckboxes(
-        KUFI_SIZES,
-        availableSizes,
-        onAvailableSizesChange,
-        "مقاسات الكوافي"
-      )}
-
-      {sizeType === "underwear" && renderSizeCheckboxes(
-        UNDERWEAR_SIZES,
-        availableSizes,
-        onAvailableSizesChange,
-        "مقاسات الملابس الداخلية"
+      {sizeType !== "thobe" && sizeType !== "none" && sizesConfig && (
+        renderSizeCheckboxes(sizesConfig.sizes, availableSizes, onAvailableSizesChange, sizesConfig.label)
       )}
 
       {sizeType === "none" && (

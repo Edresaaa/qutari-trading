@@ -2,10 +2,15 @@ import { useState, useMemo } from "react";
 import { Product } from "@/types/store";
 import { 
   SHAWL_SIZES, 
+  GHUTRA_SIZES,
   THOBE_LENGTH_SIZES, 
   THOBE_WIDTH_SIZES, 
   KUFI_SIZES, 
   UNDERWEAR_SIZES,
+  FUTAH_SIZES,
+  MAAWIZ_SIZES,
+  RING_SIZES,
+  JACKET_SIZES,
   ProductSizeType,
   SIZE_TYPE_LABELS
 } from "@/types/sizes";

@@ -1,14 +1,23 @@
 // نوع المقاسات المختلفة لكل نوع منتج
 export type ProductSizeType = 
-  | "shawl"      // شيلات
-  | "thobe"      // أثواب
+  | "shawl"      // شيلان
+  | "ghutra"     // غتر
+  | "thobe"      // ثياب
   | "kufi"       // كوافي
   | "underwear"  // ملابس داخلية
+  | "futah"      // فوط
+  | "maawiz"     // معاوز
+  | "ring"       // خواتم
+  | "jacket"     // اكوات
   | "none";      // بدون مقاسات
 
-// مقاسات الشيلات
+// مقاسات الشيلان
 export const SHAWL_SIZES = ["50", "52", "54", "56", "58", "60", "62"] as const;
 export type ShawlSize = typeof SHAWL_SIZES[number];
+
+// مقاسات الغتر
+export const GHUTRA_SIZES = ["50", "52", "54", "56", "58", "60", "62"] as const;
+export type GhutraSize = typeof GHUTRA_SIZES[number];
 
 // مقاسات الأثواب - الطول بالانش
 export const THOBE_LENGTH_SIZES = [
@@ -30,21 +39,41 @@ export type KufiSize = typeof KUFI_SIZES[number];
 export const UNDERWEAR_SIZES = ["S", "M", "L", "XL", "XXL", "3XL"] as const;
 export type UnderwearSize = typeof UNDERWEAR_SIZES[number];
 
+// مقاسات الفوط
+export const FUTAH_SIZES = ["S", "M", "L", "XL", "XXL"] as const;
+export type FutahSize = typeof FUTAH_SIZES[number];
+
+// مقاسات المعاوز
+export const MAAWIZ_SIZES = ["S", "M", "L", "XL", "XXL", "3XL"] as const;
+export type MaawizSize = typeof MAAWIZ_SIZES[number];
+
+// مقاسات الخواتم
+export const RING_SIZES = ["6", "7", "8", "9", "10", "11", "12", "13"] as const;
+export type RingSize = typeof RING_SIZES[number];
+
+// مقاسات الاكوات
+export const JACKET_SIZES = ["S", "M", "L", "XL", "XXL", "3XL"] as const;
+export type JacketSize = typeof JACKET_SIZES[number];
+
 // واجهة مقاسات المنتج
 export interface ProductSizes {
   type: ProductSizeType;
-  availableSizes?: string[];  // المقاسات المتاحة
-  // للأثواب فقط
+  availableSizes?: string[];
   availableLengths?: string[];
   availableWidths?: string[];
 }
 
 // خريطة أنواع المقاسات مع العرض
 export const SIZE_TYPE_LABELS: Record<ProductSizeType, string> = {
-  shawl: "شيلات / غتر",
-  thobe: "أثواب",
+  shawl: "شيلان",
+  ghutra: "غتر",
+  thobe: "ثياب",
   kufi: "كوافي",
   underwear: "ملابس داخلية",
+  futah: "فوط",
+  maawiz: "معاوز",
+  ring: "خواتم",
+  jacket: "اكوات",
   none: "بدون مقاسات",
 };
 
@@ -53,6 +82,8 @@ export const getDefaultSizesForType = (type: ProductSizeType): Partial<ProductSi
   switch (type) {
     case "shawl":
       return { type, availableSizes: [...SHAWL_SIZES] };
+    case "ghutra":
+      return { type, availableSizes: [...GHUTRA_SIZES] };
     case "thobe":
       return { 
         type, 
@@ -63,6 +94,14 @@ export const getDefaultSizesForType = (type: ProductSizeType): Partial<ProductSi
       return { type, availableSizes: [...KUFI_SIZES] };
     case "underwear":
       return { type, availableSizes: [...UNDERWEAR_SIZES] };
+    case "futah":
+      return { type, availableSizes: [...FUTAH_SIZES] };
+    case "maawiz":
+      return { type, availableSizes: [...MAAWIZ_SIZES] };
+    case "ring":
+      return { type, availableSizes: [...RING_SIZES] };
+    case "jacket":
+      return { type, availableSizes: [...JACKET_SIZES] };
     default:
       return { type: "none" };
   }
