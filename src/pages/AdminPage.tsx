@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminMobileNav from "@/components/admin/AdminMobileNav";
+import AdminDashboard from "@/components/admin/AdminDashboard";
+import AdminReviewsTab from "@/components/admin/AdminReviewsTab";
 import {
   getProducts,
   getCategories,
@@ -29,12 +31,12 @@ import { uploadProductImage, uploadCategoryImage, uploadBannerImage } from "@/li
 import { Product, Category } from "@/types/store";
 import { ProductSizeType } from "@/types/sizes";
 import ProductSizesSelector from "@/components/admin/ProductSizesSelector";
-import { 
-  Plus, Pencil, Trash2, ArrowRight, Package, Lock, Eye, EyeOff,
-  FolderOpen, ShoppingBag, Search, Upload, Loader2, Image, 
-  Layout, Settings, X, Check, Tag, CalendarIcon, Ruler, Star
+import {
+  Plus, Pencil, Trash2, Package, Lock, Eye, EyeOff,
+  Search, Upload, Loader2,
+  Settings, X, Check, Tag, CalendarIcon, Ruler, Star,
+  ShoppingBag, FolderOpen, Layout,
 } from "lucide-react";
-import AdminReviewsTab from "@/components/admin/AdminReviewsTab";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -64,7 +66,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -72,6 +73,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import Logo from "@/components/Logo";
 
 const ADMIN_PASSWORD = "QR@X512512x";
 
@@ -145,6 +147,7 @@ const AdminPage = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [activeTab, setActiveTab] = useState("dashboard");
 
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -461,509 +464,497 @@ const AdminPage = () => {
   // Login screen
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex flex-col bg-cream">
-        <Header />
-        <main className="flex-1 flex items-center justify-center py-16">
-          <div className="w-full max-w-md px-4">
-            <div className="bg-card rounded-2xl shadow-card p-8">
-              <div className="text-center mb-8">
-                <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-gold to-accent flex items-center justify-center mb-4">
-                  <Lock className="w-10 h-10 text-primary" />
-                </div>
-                <h1 className="text-2xl font-bold text-foreground">لوحة التحكم</h1>
-                <p className="text-muted-foreground mt-2">أدخل كلمة المرور للوصول</p>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="w-full max-w-md px-4">
+          <div className="bg-card rounded-2xl shadow-elegant p-8 border border-border">
+            <div className="text-center mb-8">
+              <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-gold to-accent flex items-center justify-center mb-4 shadow-gold">
+                <Lock className="w-10 h-10 text-accent-foreground" />
               </div>
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="relative">
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="كلمة المرور"
-                    className="pl-12"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
-                {loginError && <p className="text-destructive text-sm text-center">{loginError}</p>}
-                <Button type="submit" className="btn-gold w-full">دخول</Button>
-              </form>
+              <h1 className="text-2xl font-bold text-foreground">لوحة التحكم</h1>
+              <p className="text-muted-foreground mt-2">أدخل كلمة المرور للوصول</p>
             </div>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="كلمة المرور"
+                  className="pl-12 h-12"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+              {loginError && <p className="text-destructive text-sm text-center">{loginError}</p>}
+              <Button type="submit" className="btn-gold w-full h-12 text-base">دخول</Button>
+            </form>
+            <Link to="/" className="block text-center mt-4 text-sm text-muted-foreground hover:text-accent transition-colors">
+              العودة للمتجر
+            </Link>
           </div>
-        </main>
-        <Footer />
+        </div>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen flex flex-col bg-cream">
-      <Header />
-      <main className="flex-1 py-8">
-        <div className="container mx-auto px-4">
-          {/* Page Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-            <div>
-              <div className="flex items-center gap-2 text-muted-foreground text-sm mb-2">
-                <Link to="/" className="hover:text-accent">الرئيسية</Link>
-                <ArrowRight className="w-4 h-4" />
-                <span>لوحة التحكم</span>
-              </div>
-              <h1 className="text-3xl font-bold text-foreground">لوحة التحكم</h1>
-            </div>
-            <Button 
-              variant="outline" 
-              onClick={handleLogout}
-              className="text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground"
-            >
-              تسجيل الخروج
-            </Button>
-          </div>
+  const renderContent = () => {
+    switch (activeTab) {
+      case "dashboard":
+        return (
+          <AdminDashboard
+            products={products}
+            categories={categories}
+            banners={banners}
+            onNavigate={setActiveTab}
+          />
+        );
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <div className="bg-card rounded-xl p-4 shadow-card">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center">
-                  <ShoppingBag className="w-6 h-6 text-accent" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-foreground">{products.length}</p>
-                  <p className="text-sm text-muted-foreground">منتج</p>
-                </div>
+      case "products":
+        return (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">المنتجات</h2>
+                <p className="text-sm text-muted-foreground">{products.length} منتج</p>
               </div>
+              <Button onClick={() => handleOpenProductForm()} className="btn-gold">
+                <Plus className="w-5 h-5 ml-2" />
+                إضافة منتج
+              </Button>
             </div>
-            <div className="bg-card rounded-xl p-4 shadow-card">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <FolderOpen className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-foreground">{categories.length}</p>
-                  <p className="text-sm text-muted-foreground">قسم</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-card rounded-xl p-4 shadow-card">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg bg-gold/10 flex items-center justify-center">
-                  <Layout className="w-6 h-6 text-gold" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-foreground">{banners.length}</p>
-                  <p className="text-sm text-muted-foreground">بنر</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-card rounded-xl p-4 shadow-card">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-lg bg-green-500/10 flex items-center justify-center">
-                  <Package className="w-6 h-6 text-green-500" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-foreground">{products.filter(p => p.featured).length}</p>
-                  <p className="text-sm text-muted-foreground">مميز</p>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          {/* Tabs */}
-          <Tabs defaultValue="products" className="space-y-6">
-            <TabsList className="grid w-full max-w-3xl grid-cols-6">
-              <TabsTrigger value="products" className="flex items-center gap-2">
-                <ShoppingBag className="w-4 h-4" />
-                <span className="hidden sm:inline">المنتجات</span>
-              </TabsTrigger>
-              <TabsTrigger value="categories" className="flex items-center gap-2">
-                <FolderOpen className="w-4 h-4" />
-                <span className="hidden sm:inline">الأقسام</span>
-              </TabsTrigger>
-              <TabsTrigger value="banners" className="flex items-center gap-2">
-                <Layout className="w-4 h-4" />
-                <span className="hidden sm:inline">البنرات</span>
-              </TabsTrigger>
-              <TabsTrigger value="reviews" className="flex items-center gap-2">
-                <Star className="w-4 h-4" />
-                <span className="hidden sm:inline">التقييمات</span>
-              </TabsTrigger>
-              <TabsTrigger value="offers" className="flex items-center gap-2">
-                <Tag className="w-4 h-4" />
-                <span className="hidden sm:inline">العروض</span>
-              </TabsTrigger>
-              <TabsTrigger value="settings" className="flex items-center gap-2">
-                <Settings className="w-4 h-4" />
-                <span className="hidden sm:inline">الإعدادات</span>
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Products Tab */}
-            <TabsContent value="products">
-              <div className="bg-card rounded-xl shadow-card overflow-hidden">
-                <div className="p-4 border-b border-border flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                  <div className="relative w-full sm:w-64">
-                    <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      placeholder="بحث في المنتجات..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="pr-10"
-                    />
-                  </div>
-                  <Button onClick={() => handleOpenProductForm()} className="btn-gold">
-                    <Plus className="w-5 h-5 ml-2" />
-                    إضافة منتج
-                  </Button>
+            <div className="bg-card rounded-2xl border border-border overflow-hidden">
+              <div className="p-4 border-b border-border">
+                <div className="relative w-full sm:w-80">
+                  <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    placeholder="بحث في المنتجات..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pr-10"
+                  />
                 </div>
+              </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-muted">
-                      <tr>
-                        <th className="text-right px-4 py-3 font-bold text-foreground">المنتج</th>
-                        <th className="text-right px-4 py-3 font-bold text-foreground hidden md:table-cell">القسم</th>
-                        <th className="text-right px-4 py-3 font-bold text-foreground">السعر</th>
-                        <th className="text-right px-4 py-3 font-bold text-foreground hidden sm:table-cell">الحالة</th>
-                        <th className="text-right px-4 py-3 font-bold text-foreground">إجراءات</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-border">
-                      {filteredProducts.map((product) => (
-                        <tr key={product.id} className="hover:bg-muted/50">
-                          <td className="px-4 py-3">
-                            <div className="flex items-center gap-3">
-                              <img src={product.image} alt={product.name} className="w-10 h-10 rounded-lg object-cover" />
-                              <div>
-                                <p className="font-medium text-foreground line-clamp-1">{product.name}</p>
-                                {product.featured && <span className="text-xs text-gold">مميز</span>}
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-muted/50">
+                    <tr>
+                      <th className="text-right px-4 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">المنتج</th>
+                      <th className="text-right px-4 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider hidden md:table-cell">القسم</th>
+                      <th className="text-right px-4 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">السعر</th>
+                      <th className="text-right px-4 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider hidden sm:table-cell">الحالة</th>
+                      <th className="text-right px-4 py-3 text-xs font-bold text-muted-foreground uppercase tracking-wider">إجراءات</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {filteredProducts.map((product) => (
+                      <tr key={product.id} className="hover:bg-muted/30 transition-colors">
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-3">
+                            <img src={product.image} alt={product.name} className="w-12 h-12 rounded-xl object-cover border border-border" />
+                            <div>
+                              <p className="font-medium text-foreground line-clamp-1">{product.name}</p>
+                              <div className="flex items-center gap-2 mt-0.5">
+                                {product.featured && <span className="text-[10px] bg-gold/10 text-gold px-1.5 py-0.5 rounded-full font-medium">مميز</span>}
+                                {product.isVisible === false && <span className="text-[10px] bg-muted text-muted-foreground px-1.5 py-0.5 rounded-full">مخفي</span>}
                               </div>
                             </div>
-                          </td>
-                          <td className="px-4 py-3 hidden md:table-cell">
-                            <span className="text-sm text-muted-foreground">
-                              {categories.find(c => c.slug === product.category)?.name || product.category}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3">
-                            <span className="font-bold text-accent">{product.price} ر.ي</span>
-                          </td>
-                          <td className="px-4 py-3 hidden sm:table-cell">
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${product.inStock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                              {product.inStock ? 'متوفر' : 'نفذ'}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3">
-                            <div className="flex gap-2">
-                              <Button size="sm" variant="ghost" onClick={() => handleOpenProductForm(product)}>
-                                <Pencil className="w-4 h-4" />
-                              </Button>
-                              <Button size="sm" variant="ghost" className="text-destructive" onClick={() => setDeleteProductConfirm(product.id)}>
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </TabsContent>
-
-            {/* Categories Tab */}
-            <TabsContent value="categories">
-              <div className="bg-card rounded-xl shadow-card overflow-hidden">
-                <div className="p-4 border-b border-border flex justify-between items-center">
-                  <h3 className="font-bold text-lg">الأقسام ({categories.length})</h3>
-                  <Button onClick={() => handleOpenCategoryForm()} className="btn-gold">
-                    <Plus className="w-5 h-5 ml-2" />
-                    إضافة قسم
-                  </Button>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                  {categories.map((category) => (
-                    <div key={category.id} className="bg-muted rounded-xl overflow-hidden">
-                      <div className="aspect-video relative">
-                        <img src={category.image} alt={category.name} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                        <h4 className="absolute bottom-3 right-3 text-white font-bold text-lg">{category.name}</h4>
-                      </div>
-                      <div className="p-3 flex justify-between items-center">
-                        <span className="text-sm text-muted-foreground">{category.slug}</span>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="ghost" onClick={() => handleOpenCategoryForm(category)}>
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button size="sm" variant="ghost" className="text-destructive" onClick={() => setDeleteCategoryConfirm(category.id)}>
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </TabsContent>
-
-            {/* Banners Tab */}
-            <TabsContent value="banners">
-              <div className="bg-card rounded-xl shadow-card overflow-hidden">
-                <div className="p-4 border-b border-border flex justify-between items-center">
-                  <h3 className="font-bold text-lg">البنرات ({banners.length})</h3>
-                  <Button onClick={() => handleOpenBannerForm()} className="btn-gold">
-                    <Plus className="w-5 h-5 ml-2" />
-                    إضافة بنر
-                  </Button>
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 p-4">
-                  {banners.map((banner) => (
-                    <div key={banner.id} className={`bg-muted rounded-xl overflow-hidden ${!banner.isActive ? 'opacity-60' : ''}`}>
-                      <div className="aspect-[21/9] relative">
-                        <img src={banner.image} alt={banner.title} className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent" />
-                        <div className="absolute bottom-4 right-4 text-white">
-                          <h4 className="font-bold text-xl">{banner.title}</h4>
-                          <p className="text-sm opacity-80">{banner.subtitle}</p>
-                        </div>
-                        {!banner.isActive && (
-                          <div className="absolute top-3 left-3 bg-red-500 text-white px-2 py-1 rounded text-xs">
-                            مخفي
                           </div>
-                        )}
-                      </div>
-                      <div className="p-3 flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                          <Switch checked={banner.isActive} onCheckedChange={() => handleToggleBannerActive(banner)} />
-                          <span className="text-sm text-muted-foreground">{banner.isActive ? 'مفعّل' : 'معطّل'}</span>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="ghost" onClick={() => handleOpenBannerForm(banner)}>
-                            <Pencil className="w-4 h-4" />
-                          </Button>
-                          <Button size="sm" variant="ghost" className="text-destructive" onClick={() => setDeleteBannerConfirm(banner.id)}>
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
+                        </td>
+                        <td className="px-4 py-3 hidden md:table-cell">
+                          <span className="text-sm text-muted-foreground bg-muted px-2 py-1 rounded-lg">
+                            {categories.find(c => c.slug === product.category)?.name || product.category}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div>
+                            <span className="font-bold text-accent">{product.price} ر.ي</span>
+                            {product.originalPrice && product.originalPrice > product.price && (
+                              <span className="text-xs text-muted-foreground line-through block">{product.originalPrice} ر.ي</span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 hidden sm:table-cell">
+                          <span className={cn(
+                            "px-2.5 py-1 rounded-full text-xs font-medium",
+                            product.inStock && (product.quantity === undefined || product.quantity > 0)
+                              ? 'bg-green-500/10 text-green-400'
+                              : 'bg-destructive/10 text-destructive'
+                          )}>
+                            {product.inStock && (product.quantity === undefined || product.quantity > 0) ? 'متوفر' : 'نفذ'}
+                          </span>
+                          {product.quantity !== undefined && (
+                            <span className="text-xs text-muted-foreground block mt-0.5">الكمية: {product.quantity}</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex gap-1">
+                            <Button size="sm" variant="ghost" onClick={() => handleOpenProductForm(product)} className="h-8 w-8 p-0">
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                            <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-destructive hover:text-destructive" onClick={() => setDeleteProductConfirm(product.id)}>
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        );
+
+      case "categories":
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">الأقسام</h2>
+                <p className="text-sm text-muted-foreground">{categories.length} قسم</p>
+              </div>
+              <Button onClick={() => handleOpenCategoryForm()} className="btn-gold">
+                <Plus className="w-5 h-5 ml-2" />
+                إضافة قسم
+              </Button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {categories.map((category) => (
+                <div key={category.id} className="bg-card rounded-2xl overflow-hidden border border-border hover:border-accent/30 transition-all">
+                  <div className="aspect-video relative">
+                    <img src={category.image} alt={category.name} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                    <h4 className="absolute bottom-3 right-3 text-foreground font-bold text-lg">{category.name}</h4>
+                  </div>
+                  <div className="p-3 flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">{category.slug}</span>
+                    <div className="flex gap-1">
+                      <Button size="sm" variant="ghost" onClick={() => handleOpenCategoryForm(category)} className="h-8 w-8 p-0">
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-destructive hover:text-destructive" onClick={() => setDeleteCategoryConfirm(category.id)}>
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </div>
-                  ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case "banners":
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">البنرات</h2>
+                <p className="text-sm text-muted-foreground">{banners.length} بنر</p>
+              </div>
+              <Button onClick={() => handleOpenBannerForm()} className="btn-gold">
+                <Plus className="w-5 h-5 ml-2" />
+                إضافة بنر
+              </Button>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {banners.map((banner) => (
+                <div key={banner.id} className={cn(
+                  "bg-card rounded-2xl overflow-hidden border border-border transition-all",
+                  !banner.isActive && "opacity-60"
+                )}>
+                  <div className="aspect-[21/9] relative">
+                    <img src={banner.image} alt={banner.title} className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-background/70 to-transparent" />
+                    <div className="absolute bottom-4 right-4">
+                      <h4 className="font-bold text-xl text-foreground">{banner.title}</h4>
+                      <p className="text-sm text-muted-foreground">{banner.subtitle}</p>
+                    </div>
+                    {!banner.isActive && (
+                      <div className="absolute top-3 left-3 bg-destructive text-destructive-foreground px-2 py-1 rounded-lg text-xs font-medium">
+                        مخفي
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-3 flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Switch checked={banner.isActive} onCheckedChange={() => handleToggleBannerActive(banner)} />
+                      <span className="text-sm text-muted-foreground">{banner.isActive ? 'مفعّل' : 'معطّل'}</span>
+                    </div>
+                    <div className="flex gap-1">
+                      <Button size="sm" variant="ghost" onClick={() => handleOpenBannerForm(banner)} className="h-8 w-8 p-0">
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-destructive hover:text-destructive" onClick={() => setDeleteBannerConfirm(banner.id)}>
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case "reviews":
+        return (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-foreground">إدارة التقييمات</h2>
+              <p className="text-sm text-muted-foreground">مراجعة وإدارة تقييمات العملاء</p>
+            </div>
+            <AdminReviewsTab />
+          </div>
+        );
+
+      case "offers":
+        return offerSettings ? (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-foreground">العروض الخاصة</h2>
+                <p className="text-sm text-muted-foreground">إدارة العروض والخصومات</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  checked={offerSettings.isActive}
+                  onCheckedChange={(c) => setOfferSettings({ ...offerSettings, isActive: c })}
+                />
+                <Label>{offerSettings.isActive ? 'مفعّل' : 'معطّل'}</Label>
+              </div>
+            </div>
+
+            <div className="bg-card rounded-2xl border border-border p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label>نسبة الخصم (%)</Label>
+                    <Input
+                      type="number"
+                      min="1"
+                      max="100"
+                      value={offerSettings.discountPercentage}
+                      onChange={(e) => setOfferSettings({ ...offerSettings, discountPercentage: parseInt(e.target.value) || 0 })}
+                    />
+                  </div>
+                  <div>
+                    <Label>وصف العرض</Label>
+                    <Textarea
+                      value={offerSettings.subtitle}
+                      onChange={(e) => setOfferSettings({ ...offerSettings, subtitle: e.target.value })}
+                      rows={3}
+                      placeholder="على جميع الغتر الكشميرية..."
+                    />
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <Label>تاريخ انتهاء العرض</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !offerSettings.endDate && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="ml-2 h-4 w-4" />
+                          {offerSettings.endDate ? (
+                            format(new Date(offerSettings.endDate), "PPP", { locale: ar })
+                          ) : (
+                            <span>اختر تاريخ</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={offerSettings.endDate ? new Date(offerSettings.endDate) : undefined}
+                          onSelect={(date) => {
+                            if (date) {
+                              setOfferSettings({ ...offerSettings, endDate: date.toISOString() });
+                            }
+                          }}
+                          disabled={(date) => date < new Date()}
+                          initialFocus
+                          className={cn("p-3 pointer-events-auto")}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <p className="text-xs text-muted-foreground mt-1">العرض سينتهي تلقائياً في هذا التاريخ</p>
+                  </div>
+
+                  {offerSettings.endDate && (
+                    <div className="p-4 rounded-xl bg-muted/50 border border-border">
+                      <p className="text-sm text-muted-foreground">الوقت المتبقي للعرض:</p>
+                      <p className="text-lg font-bold text-accent mt-1">
+                        {(() => {
+                          const diff = new Date(offerSettings.endDate).getTime() - new Date().getTime();
+                          if (diff <= 0) return "انتهى العرض";
+                          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                          const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                          return `${days} يوم و ${hours} ساعة`;
+                        })()}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
-            </TabsContent>
 
-            {/* Reviews Tab */}
-            <TabsContent value="reviews">
-              <AdminReviewsTab />
-            </TabsContent>
+              <div className="mt-6 pt-4 border-t border-border">
+                <Button
+                  onClick={() => {
+                    saveOfferSettings(offerSettings);
+                    toast({ title: "تم الحفظ", description: "تم حفظ إعدادات العرض بنجاح" });
+                  }}
+                  className="btn-gold"
+                >
+                  <Check className="w-5 h-5 ml-2" />
+                  حفظ إعدادات العرض
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : null;
 
-            {/* Offers Tab */}
-            <TabsContent value="offers">
-              {offerSettings && (
-                <div className="bg-card rounded-xl shadow-card p-6">
-                  <div className="flex items-center justify-between mb-6 border-b border-border pb-4">
-                    <h3 className="font-bold text-xl">إعدادات العرض الخاص</h3>
-                    <div className="flex items-center gap-2">
-                      <Switch 
-                        checked={offerSettings.isActive} 
-                        onCheckedChange={(c) => setOfferSettings({ ...offerSettings, isActive: c })} 
-                      />
-                      <Label>{offerSettings.isActive ? 'مفعّل' : 'معطّل'}</Label>
-                    </div>
+      case "settings":
+        return storeSettings ? (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-2xl font-bold text-foreground">إعدادات المتجر</h2>
+              <p className="text-sm text-muted-foreground">تخصيص إعدادات متجرك</p>
+            </div>
+
+            <div className="bg-card rounded-2xl border border-border p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label>اسم المتجر</Label>
+                    <Input
+                      value={storeSettings.storeName}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, storeName: e.target.value })}
+                    />
                   </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div>
-                        <Label>نسبة الخصم (%)</Label>
-                        <Input
-                          type="number"
-                          min="1"
-                          max="100"
-                          value={offerSettings.discountPercentage}
-                          onChange={(e) => setOfferSettings({ ...offerSettings, discountPercentage: parseInt(e.target.value) || 0 })}
-                        />
-                      </div>
-                      <div>
-                        <Label>وصف العرض</Label>
-                        <Textarea
-                          value={offerSettings.subtitle}
-                          onChange={(e) => setOfferSettings({ ...offerSettings, subtitle: e.target.value })}
-                          rows={3}
-                          placeholder="على جميع الغتر الكشميرية..."
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-4">
-                      <div>
-                        <Label>تاريخ انتهاء العرض</Label>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full justify-start text-left font-normal",
-                                !offerSettings.endDate && "text-muted-foreground"
-                              )}
-                            >
-                              <CalendarIcon className="ml-2 h-4 w-4" />
-                              {offerSettings.endDate ? (
-                                format(new Date(offerSettings.endDate), "PPP", { locale: ar })
-                              ) : (
-                                <span>اختر تاريخ</span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={offerSettings.endDate ? new Date(offerSettings.endDate) : undefined}
-                              onSelect={(date) => {
-                                if (date) {
-                                  setOfferSettings({ ...offerSettings, endDate: date.toISOString() });
-                                }
-                              }}
-                              disabled={(date) => date < new Date()}
-                              initialFocus
-                              className={cn("p-3 pointer-events-auto")}
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          العرض سينتهي تلقائياً في هذا التاريخ
-                        </p>
-                      </div>
-                      
-                      {offerSettings.endDate && (
-                        <div className="p-4 rounded-lg bg-muted">
-                          <p className="text-sm text-muted-foreground">
-                            الوقت المتبقي للعرض:
-                          </p>
-                          <p className="text-lg font-bold text-accent mt-1">
-                            {(() => {
-                              const diff = new Date(offerSettings.endDate).getTime() - new Date().getTime();
-                              if (diff <= 0) return "انتهى العرض";
-                              const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                              const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                              return `${days} يوم و ${hours} ساعة`;
-                            })()}
-                          </p>
-                        </div>
-                      )}
-                    </div>
+                  <div>
+                    <Label>رقم الواتساب</Label>
+                    <Input
+                      value={storeSettings.whatsappNumber}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, whatsappNumber: e.target.value })}
+                      dir="ltr"
+                    />
                   </div>
-                  
-                  <div className="mt-6 pt-4 border-t border-border">
-                    <Button 
-                      onClick={() => {
-                        saveOfferSettings(offerSettings);
-                        toast({ title: "تم الحفظ", description: "تم حفظ إعدادات العرض بنجاح" });
-                      }} 
-                      className="btn-gold"
-                    >
-                      <Check className="w-5 h-5 ml-2" />
-                      حفظ إعدادات العرض
-                    </Button>
+                  <div>
+                    <Label>العنوان</Label>
+                    <Input
+                      value={storeSettings.address}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, address: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label>الوصف</Label>
+                    <Textarea
+                      value={storeSettings.description}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, description: e.target.value })}
+                      rows={3}
+                    />
                   </div>
                 </div>
-              )}
-            </TabsContent>
-
-            {/* Settings Tab */}
-            <TabsContent value="settings">
-              {storeSettings && (
-                <div className="bg-card rounded-xl shadow-card p-6">
-                  <h3 className="font-bold text-xl mb-6 border-b border-border pb-4">إعدادات المتجر</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div>
-                        <Label>اسم المتجر</Label>
-                        <Input
-                          value={storeSettings.storeName}
-                          onChange={(e) => setStoreSettings({ ...storeSettings, storeName: e.target.value })}
-                        />
-                      </div>
-                      <div>
-                        <Label>رقم الواتساب</Label>
-                        <Input
-                          value={storeSettings.whatsappNumber}
-                          onChange={(e) => setStoreSettings({ ...storeSettings, whatsappNumber: e.target.value })}
-                          dir="ltr"
-                        />
-                      </div>
-                      <div>
-                        <Label>العنوان</Label>
-                        <Input
-                          value={storeSettings.address}
-                          onChange={(e) => setStoreSettings({ ...storeSettings, address: e.target.value })}
-                        />
-                      </div>
-                      <div>
-                        <Label>الوصف</Label>
-                        <Textarea
-                          value={storeSettings.description}
-                          onChange={(e) => setStoreSettings({ ...storeSettings, description: e.target.value })}
-                          rows={3}
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-4">
-                      <div>
-                        <Label>أرقام الهواتف (واحد في كل سطر)</Label>
-                        <Textarea
-                          value={storeSettings.phones.join('\n')}
-                          onChange={(e) => setStoreSettings({ ...storeSettings, phones: e.target.value.split('\n').filter(p => p.trim()) })}
-                          rows={3}
-                          dir="ltr"
-                        />
-                      </div>
-                      <div>
-                        <Label>رابط فيسبوك</Label>
-                        <Input
-                          value={storeSettings.socialLinks.facebook || ''}
-                          onChange={(e) => setStoreSettings({ ...storeSettings, socialLinks: { ...storeSettings.socialLinks, facebook: e.target.value } })}
-                          dir="ltr"
-                          placeholder="https://facebook.com/..."
-                        />
-                      </div>
-                      <div>
-                        <Label>رابط انستجرام</Label>
-                        <Input
-                          value={storeSettings.socialLinks.instagram || ''}
-                          onChange={(e) => setStoreSettings({ ...storeSettings, socialLinks: { ...storeSettings.socialLinks, instagram: e.target.value } })}
-                          dir="ltr"
-                          placeholder="https://instagram.com/..."
-                        />
-                      </div>
-                      <div>
-                        <Label>رابط تويتر</Label>
-                        <Input
-                          value={storeSettings.socialLinks.twitter || ''}
-                          onChange={(e) => setStoreSettings({ ...storeSettings, socialLinks: { ...storeSettings.socialLinks, twitter: e.target.value } })}
-                          dir="ltr"
-                          placeholder="https://twitter.com/..."
-                        />
-                      </div>
-                    </div>
+                <div className="space-y-4">
+                  <div>
+                    <Label>أرقام الهواتف (واحد في كل سطر)</Label>
+                    <Textarea
+                      value={storeSettings.phones.join('\n')}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, phones: e.target.value.split('\n').filter(p => p.trim()) })}
+                      rows={3}
+                      dir="ltr"
+                    />
                   </div>
-                  <div className="mt-6 pt-4 border-t border-border">
-                    <Button onClick={handleSaveSettings} className="btn-gold">
-                      <Check className="w-5 h-5 ml-2" />
-                      حفظ الإعدادات
-                    </Button>
+                  <div>
+                    <Label>رابط فيسبوك</Label>
+                    <Input
+                      value={storeSettings.socialLinks.facebook || ''}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, socialLinks: { ...storeSettings.socialLinks, facebook: e.target.value } })}
+                      dir="ltr"
+                      placeholder="https://facebook.com/..."
+                    />
+                  </div>
+                  <div>
+                    <Label>رابط انستجرام</Label>
+                    <Input
+                      value={storeSettings.socialLinks.instagram || ''}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, socialLinks: { ...storeSettings.socialLinks, instagram: e.target.value } })}
+                      dir="ltr"
+                      placeholder="https://instagram.com/..."
+                    />
+                  </div>
+                  <div>
+                    <Label>رابط تويتر</Label>
+                    <Input
+                      value={storeSettings.socialLinks.twitter || ''}
+                      onChange={(e) => setStoreSettings({ ...storeSettings, socialLinks: { ...storeSettings.socialLinks, twitter: e.target.value } })}
+                      dir="ltr"
+                      placeholder="https://twitter.com/..."
+                    />
                   </div>
                 </div>
-              )}
-            </TabsContent>
-          </Tabs>
-        </div>
-      </main>
-      <Footer />
+              </div>
+              <div className="mt-6 pt-4 border-t border-border">
+                <Button onClick={handleSaveSettings} className="btn-gold">
+                  <Check className="w-5 h-5 ml-2" />
+                  حفظ الإعدادات
+                </Button>
+              </div>
+            </div>
+          </div>
+        ) : null;
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex bg-background">
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block">
+        <AdminSidebar
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onLogout={handleLogout}
+          stats={{
+            products: products.length,
+            categories: categories.length,
+            banners: banners.length,
+            featured: products.filter(p => p.featured).length,
+          }}
+        />
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Mobile Nav */}
+        <AdminMobileNav
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onLogout={handleLogout}
+        />
+
+        {/* Content Area */}
+        <main className="flex-1 p-4 lg:p-8 overflow-y-auto">
+          <div className="max-w-6xl mx-auto">
+            {renderContent()}
+          </div>
+        </main>
+      </div>
 
       {/* Product Form Dialog */}
       <Dialog open={isProductFormOpen} onOpenChange={setIsProductFormOpen}>
@@ -1011,16 +1002,16 @@ const AdminPage = () => {
               </div>
               <div>
                 <Label>الكمية</Label>
-                <Input 
-                  type="number" 
+                <Input
+                  type="number"
                   min="0"
-                  value={productFormData.quantity} 
-                  onChange={(e) => setProductFormData({ ...productFormData, quantity: e.target.value })} 
+                  value={productFormData.quantity}
+                  onChange={(e) => setProductFormData({ ...productFormData, quantity: e.target.value })}
                   placeholder="اتركه فارغاً للكمية غير المحدودة"
                 />
                 <p className="text-xs text-muted-foreground mt-1">عند الكمية = 0 سيظهر "غير متوفر" للعميل</p>
               </div>
-              
+
               {/* قسم المقاسات */}
               <div className="md:col-span-2">
                 <div className="flex items-center gap-2 mb-2">
