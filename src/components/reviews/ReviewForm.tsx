@@ -56,12 +56,14 @@ const ReviewForm = ({ productId, onSubmitted }: ReviewFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-card rounded-xl p-6 border border-border">
-      <h3 className="font-bold text-foreground text-lg">أضف تقييمك</h3>
+    <form onSubmit={handleSubmit} className="space-y-4 bg-card rounded-2xl p-5 sm:p-6 border border-border">
+      <h3 className="font-bold text-foreground text-base sm:text-lg">أضف تقييمك</h3>
 
       <div>
         <label className="text-sm text-muted-foreground mb-2 block">التقييم</label>
-        <StarRating rating={rating} size="lg" interactive onRate={setRating} />
+        <div className="py-1">
+          <StarRating rating={rating} size="lg" interactive onRate={setRating} />
+        </div>
       </div>
 
       <div>
@@ -72,6 +74,7 @@ const ReviewForm = ({ productId, onSubmitted }: ReviewFormProps) => {
           placeholder="اكتب اسمك"
           maxLength={50}
           required
+          className="h-11"
         />
       </div>
 
@@ -86,7 +89,7 @@ const ReviewForm = ({ productId, onSubmitted }: ReviewFormProps) => {
         />
       </div>
 
-      <Button type="submit" disabled={isSubmitting} className="btn-gold w-full">
+      <Button type="submit" disabled={isSubmitting} className="btn-gold w-full h-11 sm:h-12 text-sm sm:text-base">
         {isSubmitting ? (
           <Loader2 className="w-4 h-4 animate-spin" />
         ) : (
