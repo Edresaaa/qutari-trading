@@ -33,7 +33,7 @@ import { ProductSizeType } from "@/types/sizes";
 import ProductSizesSelector from "@/components/admin/ProductSizesSelector";
 import {
   Plus, Pencil, Trash2, Package, Lock, Eye, EyeOff,
-  Search, Upload, Loader2,
+  Search, Upload, Loader2, MessageCircle,
   Settings, X, Check, Tag, CalendarIcon, Ruler, Star,
   ShoppingBag, FolderOpen, Layout,
 } from "lucide-react";
