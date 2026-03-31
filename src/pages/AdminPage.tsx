@@ -83,6 +83,7 @@ interface ProductFormData {
   price: string;
   originalPrice: string;
   image: string;
+  images: string[];
   category: string;
   inStock: boolean;
   featured: boolean;
