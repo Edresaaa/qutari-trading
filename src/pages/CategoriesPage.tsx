@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CategoryCard from "@/components/CategoryCard";
+import SEOHead from "@/components/SEOHead";
 import { getCategories } from "@/lib/storage";
 import { useEffect, useState } from "react";
 import { Category } from "@/types/store";
@@ -14,6 +15,11 @@ const CategoriesPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead
+        title="الأقسام"
+        description="تصفح جميع أقسام متجر القوطاري للتجاره – ثياب، شيلان، غتر، كوافي، معاوز، فوط، خواتم وأكثر. اطلب عبر واتساب."
+        path="/categories"
+      />
       <Header />
 
       <main className="flex-1 py-6 sm:py-8 pb-20 lg:pb-8">

@@ -9,6 +9,7 @@ import OfferBanner from "@/components/OfferBanner";
 import ProductCard from "@/components/ProductCard";
 import CategoryCard from "@/components/CategoryCard";
 import TestimonialsSection from "@/components/reviews/TestimonialsSection";
+import SEOHead from "@/components/SEOHead";
 import { getCategories, getFeaturedProducts } from "@/lib/storage";
 import { ArrowLeft, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -38,6 +39,33 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      <SEOHead
+        path="/"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Store",
+          "name": "القوطاري للتجاره",
+          "description": "متجر متخصص في الأزياء الرجالية اليمنية – ثياب، شيلان، غتر، كوافي، معاوز وأكثر. شحن لجميع المحافظات والدفع عند الاستلام.",
+          "url": "https://qutari-trading.lovable.app",
+          "telephone": "+967770475574",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "باب اليمن - سوق النظارة",
+            "addressLocality": "صنعاء",
+            "addressCountry": "YE"
+          },
+          "areaServed": {
+            "@type": "Country",
+            "name": "Yemen"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+967770475574",
+            "contactType": "sales",
+            "availableLanguage": "Arabic"
+          }
+        }}
+      />
       <Header />
 
       <main className="flex-1 pb-16 lg:pb-0">

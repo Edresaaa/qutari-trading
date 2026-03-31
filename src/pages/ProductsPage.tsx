@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import SizeFilter from "@/components/filters/SizeFilter";
+import SEOHead from "@/components/SEOHead";
 import { getProducts, getCategories } from "@/lib/storage";
 import { Product, Category } from "@/types/store";
 import { ProductSizeType } from "@/types/sizes";
@@ -168,8 +169,15 @@ const ProductsPage = () => {
     });
   }, [products, selectedCategory]);
 
+  const categoryName = categories.find(c => c.slug === selectedCategory)?.name;
+
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead
+        title={categoryName ? `${categoryName} - المنتجات` : "المنتجات"}
+        description={categoryName ? `تصفح ${categoryName} من متجر القوطاري للتجاره – أسعار مناسبة وشحن لجميع المحافظات اليمنية. اطلب عبر واتساب.` : "تصفح جميع منتجات القوطاري للتجاره – ثياب، شيلان، غتر، كوافي وأكثر. أسعار مناسبة وشحن داخل اليمن."}
+        path={`/products${selectedCategory ? `?category=${selectedCategory}` : ""}`}
+      />
       <Header />
       <main className="flex-1 py-6 pb-20 lg:pb-8">
         <div className="container mx-auto px-4">
