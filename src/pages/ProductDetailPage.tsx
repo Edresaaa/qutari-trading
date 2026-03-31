@@ -140,6 +140,30 @@ const ProductDetailPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead
+        title={product.name}
+        description={`${product.name} – ${product.description}. السعر: ${product.price} ر.ي. اطلب الآن عبر واتساب من القوطاري للتجاره.`}
+        path={`/product/${product.id}`}
+        image={product.image}
+        type="product"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          "name": product.name,
+          "description": product.description,
+          "image": product.image,
+          "offers": {
+            "@type": "Offer",
+            "price": product.price,
+            "priceCurrency": "YER",
+            "availability": product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            "seller": {
+              "@type": "Organization",
+              "name": "القوطاري للتجاره"
+            }
+          }
+        }}
+      />
       <Header />
 
       <main className="flex-1 py-4 sm:py-6 md:py-8 pb-20 lg:pb-8">
