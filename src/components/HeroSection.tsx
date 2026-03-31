@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getActiveBanners, getBanners, Banner } from "@/lib/storage";
-import { storeConfig } from "@/config/store";
+import { useStoreSettings } from "@/hooks/useStoreSettings";
 import { motion, AnimatePresence } from "framer-motion";
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [banners, setBanners] = useState<Banner[]>([]);
+  const settings = useStoreSettings();
 
   useEffect(() => {
     const load = () => {
@@ -27,12 +28,11 @@ const HeroSection = () => {
     return () => clearInterval(timer);
   }, [banners.length]);
 
-  const waLink = `https://wa.me/${storeConfig.whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent("مرحباً، معكم من القوطاري للتجارة\nأرغب في الاستفسار عن المنتجات المتوفرة لديكم")}`;
+  const waLink = `https://wa.me/${settings.whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent("مرحباً، معكم من " + settings.storeName + "\nأرغب في الاستفسار عن المنتجات المتوفرة لديكم")}`;
 
   return (
     <section className="relative overflow-hidden">
       <div className="relative h-[320px] sm:h-[380px] md:h-[480px] lg:h-[540px]">
-        {/* Background slider */}
         <AnimatePresence mode="wait">
           {banners.map(
             (banner, index) =>
@@ -56,10 +56,8 @@ const HeroSection = () => {
           )}
         </AnimatePresence>
 
-        {/* Overlay */}
         <div className="absolute inset-0 bg-gradient-to-l from-transparent via-background/80 to-background/95" />
 
-        {/* Content */}
         <div className="relative h-full container mx-auto px-4 flex items-center">
           <motion.div
             className="max-w-lg text-right mr-auto"
@@ -97,7 +95,6 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* Dots */}
         {banners.length > 1 && (
           <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
             {banners.map((_, index) => (

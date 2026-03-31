@@ -7,16 +7,16 @@ export interface Product {
   price: number;
   originalPrice?: number;
   image: string;
+  images?: string[];
   category: string;
   inStock: boolean;
   featured?: boolean;
   quantity?: number;
   isVisible?: boolean;
-  // حقول المقاسات الجديدة
   sizeType?: ProductSizeType;
   availableSizes?: string[];
-  availableLengths?: string[];  // للأثواب فقط
-  availableWidths?: string[];   // للأثواب فقط
+  availableLengths?: string[];
+  availableWidths?: string[];
 }
 
 export interface Category {

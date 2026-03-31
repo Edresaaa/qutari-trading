@@ -33,7 +33,7 @@ import { ProductSizeType } from "@/types/sizes";
 import ProductSizesSelector from "@/components/admin/ProductSizesSelector";
 import {
   Plus, Pencil, Trash2, Package, Lock, Eye, EyeOff,
-  Search, Upload, Loader2,
+  Search, Upload, Loader2, MessageCircle,
   Settings, X, Check, Tag, CalendarIcon, Ruler, Star,
   ShoppingBag, FolderOpen, Layout,
 } from "lucide-react";
@@ -83,6 +83,7 @@ interface ProductFormData {
   price: string;
   originalPrice: string;
   image: string;
+  images: string[];
   category: string;
   inStock: boolean;
   featured: boolean;
@@ -115,6 +116,7 @@ const initialProductFormData: ProductFormData = {
   price: "",
   originalPrice: "",
   image: "",
+  images: [],
   category: "",
   inStock: true,
   featured: false,
@@ -276,6 +278,7 @@ const AdminPage = () => {
         price: product.price.toString(),
         originalPrice: product.originalPrice?.toString() || "",
         image: product.image,
+        images: product.images || [],
         category: product.category,
         inStock: product.inStock,
         featured: product.featured || false,
@@ -308,6 +311,7 @@ const AdminPage = () => {
       price: parseFloat(productFormData.price),
       originalPrice: productFormData.originalPrice ? parseFloat(productFormData.originalPrice) : undefined,
       image: productFormData.image,
+      images: productFormData.images.length > 0 ? productFormData.images : undefined,
       category: productFormData.category,
       inStock: quantity !== undefined ? quantity > 0 : productFormData.inStock,
       featured: productFormData.featured,
@@ -831,88 +835,181 @@ const AdminPage = () => {
           <div className="space-y-6">
             <div>
               <h2 className="text-2xl font-bold text-foreground">إعدادات المتجر</h2>
-              <p className="text-sm text-muted-foreground">تخصيص إعدادات متجرك</p>
+              <p className="text-sm text-muted-foreground">تخصيص جميع إعدادات متجرك</p>
             </div>
 
+            {/* Basic Info */}
             <div className="bg-card rounded-2xl border border-border p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <Label>اسم المتجر</Label>
-                    <Input
-                      value={storeSettings.storeName}
-                      onChange={(e) => setStoreSettings({ ...storeSettings, storeName: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label>رقم الواتساب</Label>
-                    <Input
-                      value={storeSettings.whatsappNumber}
-                      onChange={(e) => setStoreSettings({ ...storeSettings, whatsappNumber: e.target.value })}
-                      dir="ltr"
-                    />
-                  </div>
-                  <div>
-                    <Label>العنوان</Label>
-                    <Input
-                      value={storeSettings.address}
-                      onChange={(e) => setStoreSettings({ ...storeSettings, address: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <Label>الوصف</Label>
-                    <Textarea
-                      value={storeSettings.description}
-                      onChange={(e) => setStoreSettings({ ...storeSettings, description: e.target.value })}
-                      rows={3}
-                    />
-                  </div>
+              <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
+                <ShoppingBag className="w-5 h-5 text-accent" />
+                المعلومات الأساسية
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label>اسم المتجر</Label>
+                  <Input
+                    value={storeSettings.storeName}
+                    onChange={(e) => setStoreSettings({ ...storeSettings, storeName: e.target.value })}
+                  />
                 </div>
-                <div className="space-y-4">
+                <div>
+                  <Label>رقم الواتساب الرئيسي</Label>
+                  <Input
+                    value={storeSettings.whatsappNumber}
+                    onChange={(e) => setStoreSettings({ ...storeSettings, whatsappNumber: e.target.value })}
+                    dir="ltr"
+                    placeholder="+967..."
+                  />
+                </div>
+                <div>
+                  <Label>العنوان</Label>
+                  <Input
+                    value={storeSettings.address}
+                    onChange={(e) => setStoreSettings({ ...storeSettings, address: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>الوصف</Label>
+                  <Textarea
+                    value={storeSettings.description}
+                    onChange={(e) => setStoreSettings({ ...storeSettings, description: e.target.value })}
+                    rows={2}
+                  />
+                </div>
+                <div>
+                  <Label>أرقام الهواتف (واحد في كل سطر)</Label>
+                  <Textarea
+                    value={storeSettings.phones.join('\n')}
+                    onChange={(e) => setStoreSettings({ ...storeSettings, phones: e.target.value.split('\n').filter(p => p.trim()) })}
+                    rows={3}
+                    dir="ltr"
+                  />
+                </div>
+                <div>
+                  <Label>رمز العملة</Label>
+                  <Input
+                    value={storeSettings.currencySymbol || "ر.ي"}
+                    onChange={(e) => setStoreSettings({ ...storeSettings, currencySymbol: e.target.value })}
+                    placeholder="ر.ي"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Delivery & Shipping */}
+            <div className="bg-card rounded-2xl border border-border p-6">
+              <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
+                <Package className="w-5 h-5 text-accent" />
+                الشحن والتوصيل
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label>مناطق الشحن</Label>
+                  <Input
+                    value={storeSettings.deliveryAreas || ""}
+                    onChange={(e) => setStoreSettings({ ...storeSettings, deliveryAreas: e.target.value })}
+                    placeholder="صنعاء – عدن – تعز – إب..."
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">تظهر في قسم الثقة بالصفحة الرئيسية</p>
+                </div>
+                <div>
+                  <Label>ملاحظة التوصيل</Label>
+                  <Input
+                    value={storeSettings.deliveryNote || ""}
+                    onChange={(e) => setStoreSettings({ ...storeSettings, deliveryNote: e.target.value })}
+                    placeholder="نوفر شحن داخل اليمن..."
+                  />
+                </div>
+                <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-xl">
+                  <Switch
+                    checked={storeSettings.codEnabled !== false}
+                    onCheckedChange={(c) => setStoreSettings({ ...storeSettings, codEnabled: c })}
+                  />
                   <div>
-                    <Label>أرقام الهواتف (واحد في كل سطر)</Label>
-                    <Textarea
-                      value={storeSettings.phones.join('\n')}
-                      onChange={(e) => setStoreSettings({ ...storeSettings, phones: e.target.value.split('\n').filter(p => p.trim()) })}
-                      rows={3}
-                      dir="ltr"
-                    />
-                  </div>
-                  <div>
-                    <Label>رابط فيسبوك</Label>
-                    <Input
-                      value={storeSettings.socialLinks.facebook || ''}
-                      onChange={(e) => setStoreSettings({ ...storeSettings, socialLinks: { ...storeSettings.socialLinks, facebook: e.target.value } })}
-                      dir="ltr"
-                      placeholder="https://facebook.com/..."
-                    />
-                  </div>
-                  <div>
-                    <Label>رابط انستجرام</Label>
-                    <Input
-                      value={storeSettings.socialLinks.instagram || ''}
-                      onChange={(e) => setStoreSettings({ ...storeSettings, socialLinks: { ...storeSettings.socialLinks, instagram: e.target.value } })}
-                      dir="ltr"
-                      placeholder="https://instagram.com/..."
-                    />
-                  </div>
-                  <div>
-                    <Label>رابط تويتر</Label>
-                    <Input
-                      value={storeSettings.socialLinks.twitter || ''}
-                      onChange={(e) => setStoreSettings({ ...storeSettings, socialLinks: { ...storeSettings.socialLinks, twitter: e.target.value } })}
-                      dir="ltr"
-                      placeholder="https://twitter.com/..."
-                    />
+                    <Label className="font-bold">الدفع عند الاستلام</Label>
+                    <p className="text-xs text-muted-foreground">تفعيل خيار الدفع عند الاستلام</p>
                   </div>
                 </div>
               </div>
-              <div className="mt-6 pt-4 border-t border-border">
-                <Button onClick={handleSaveSettings} className="btn-gold">
-                  <Check className="w-5 h-5 ml-2" />
-                  حفظ الإعدادات
-                </Button>
+            </div>
+
+            {/* WhatsApp Message Template */}
+            <div className="bg-card rounded-2xl border border-border p-6">
+              <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
+                <MessageCircle className="w-5 h-5 text-[#25D366]" />
+                قالب رسالة الواتساب
+              </h3>
+              <div>
+                <Label>رسالة الطلب التلقائية</Label>
+                <Textarea
+                  value={storeSettings.whatsappMessage || ""}
+                  onChange={(e) => setStoreSettings({ ...storeSettings, whatsappMessage: e.target.value })}
+                  rows={6}
+                  className="font-mono text-sm"
+                  dir="rtl"
+                />
+                <div className="mt-2 p-3 bg-muted/30 rounded-lg">
+                  <p className="text-xs text-muted-foreground font-bold mb-1">المتغيرات المتاحة:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {["{product}", "{price}", "{size}", "{url}"].map(v => (
+                      <code key={v} className="text-xs bg-muted px-2 py-1 rounded text-accent">{v}</code>
+                    ))}
+                  </div>
+                </div>
               </div>
+            </div>
+
+            {/* Social Links */}
+            <div className="bg-card rounded-2xl border border-border p-6">
+              <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
+                <Settings className="w-5 h-5 text-accent" />
+                روابط التواصل الاجتماعي
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label>فيسبوك</Label>
+                  <Input
+                    value={storeSettings.socialLinks?.facebook || ''}
+                    onChange={(e) => setStoreSettings({ ...storeSettings, socialLinks: { ...storeSettings.socialLinks, facebook: e.target.value } })}
+                    dir="ltr"
+                    placeholder="https://facebook.com/..."
+                  />
+                </div>
+                <div>
+                  <Label>انستجرام</Label>
+                  <Input
+                    value={storeSettings.socialLinks?.instagram || ''}
+                    onChange={(e) => setStoreSettings({ ...storeSettings, socialLinks: { ...storeSettings.socialLinks, instagram: e.target.value } })}
+                    dir="ltr"
+                    placeholder="https://instagram.com/..."
+                  />
+                </div>
+                <div>
+                  <Label>تويتر / X</Label>
+                  <Input
+                    value={storeSettings.socialLinks?.twitter || ''}
+                    onChange={(e) => setStoreSettings({ ...storeSettings, socialLinks: { ...storeSettings.socialLinks, twitter: e.target.value } })}
+                    dir="ltr"
+                    placeholder="https://twitter.com/..."
+                  />
+                </div>
+                <div>
+                  <Label>تيك توك</Label>
+                  <Input
+                    value={storeSettings.socialLinks?.tiktok || ''}
+                    onChange={(e) => setStoreSettings({ ...storeSettings, socialLinks: { ...storeSettings.socialLinks, tiktok: e.target.value } })}
+                    dir="ltr"
+                    placeholder="https://tiktok.com/..."
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="sticky bottom-4">
+              <Button onClick={handleSaveSettings} className="btn-gold w-full sm:w-auto" size="lg">
+                <Check className="w-5 h-5 ml-2" />
+                حفظ جميع الإعدادات
+              </Button>
             </div>
           </div>
         ) : null;
@@ -970,7 +1067,16 @@ const AdminPage = () => {
               </div>
               <div className="md:col-span-2">
                 <Label>الوصف *</Label>
-                <Textarea value={productFormData.description} onChange={(e) => setProductFormData({ ...productFormData, description: e.target.value })} required />
+                <Textarea
+                  value={productFormData.description}
+                  onChange={(e) => setProductFormData({ ...productFormData, description: e.target.value })}
+                  required
+                  rows={5}
+                  placeholder={"اكتب وصفاً جذاباً للمنتج...\n\nنصائح:\n• ابدأ بجملة تبرز فائدة المنتج\n• أضف نقاط بعلامة • لكل ميزة\n• اذكر الخامة والجودة\n• اختم بسبب للشراء الآن"}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  استخدم • في بداية السطر لإنشاء نقاط تعداد. كل سطر جديد يظهر كفقرة منفصلة.
+                </p>
               </div>
               <div>
                 <Label>السعر *</Label>
@@ -980,8 +1086,10 @@ const AdminPage = () => {
                 <Label>السعر الأصلي (اختياري)</Label>
                 <Input type="number" value={productFormData.originalPrice} onChange={(e) => setProductFormData({ ...productFormData, originalPrice: e.target.value })} />
               </div>
+
+              {/* Main Image */}
               <div className="md:col-span-2">
-                <Label>صورة المنتج</Label>
+                <Label>الصورة الرئيسية *</Label>
                 <div className="flex gap-2">
                   <Input value={productFormData.image} onChange={(e) => setProductFormData({ ...productFormData, image: e.target.value })} placeholder="رابط الصورة أو ارفع صورة" />
                   <input type="file" ref={productImageInputRef} onChange={handleProductImageUpload} accept="image/*" className="hidden" />
@@ -991,6 +1099,68 @@ const AdminPage = () => {
                 </div>
                 {productFormData.image && <img src={productFormData.image} alt="preview" className="mt-2 h-20 rounded" />}
               </div>
+
+              {/* Additional Images */}
+              <div className="md:col-span-2">
+                <Label>صور إضافية</Label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {productFormData.images.map((img, idx) => (
+                    <div key={idx} className="relative group">
+                      <img src={img} alt={`صورة ${idx + 1}`} className="w-16 h-16 rounded-lg object-cover border border-border" />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = [...productFormData.images];
+                          updated.splice(idx, 1);
+                          setProductFormData({ ...productFormData, images: updated });
+                        }}
+                        className="absolute -top-1 -left-1 w-5 h-5 bg-destructive text-destructive-foreground rounded-full text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="أضف رابط صورة إضافية"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const value = (e.target as HTMLInputElement).value.trim();
+                        if (value) {
+                          setProductFormData({ ...productFormData, images: [...productFormData.images, value] });
+                          (e.target as HTMLInputElement).value = '';
+                        }
+                      }
+                    }}
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    id="additional-image-upload"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      try {
+                        const url = await uploadProductImage(file);
+                        if (url) {
+                          setProductFormData(prev => ({ ...prev, images: [...prev.images, url] }));
+                          toast({ title: "تم الرفع", description: "تم رفع الصورة الإضافية" });
+                        }
+                      } catch {
+                        toast({ title: "خطأ", description: "حدث خطأ أثناء رفع الصورة", variant: "destructive" });
+                      }
+                    }}
+                  />
+                  <Button type="button" variant="outline" onClick={() => document.getElementById('additional-image-upload')?.click()}>
+                    <Upload className="w-4 h-4" />
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">اضغط Enter لإضافة رابط أو ارفع صورة. يمكن إضافة عدة صور.</p>
+              </div>
+
               <div>
                 <Label>القسم *</Label>
                 <Select value={productFormData.category} onValueChange={(v) => setProductFormData({ ...productFormData, category: v })}>
