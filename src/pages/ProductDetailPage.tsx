@@ -43,6 +43,7 @@ const ProductDetailPage = () => {
         setSelectedLength("");
         setSelectedWidth("");
         setSizeError(false);
+        setActiveImage(0);
         
         const categories = getCategories();
         const foundCategory = categories.find(c => c.slug === foundProduct.category);
