@@ -189,47 +189,71 @@ const ProductDetailPage = () => {
 
           {/* Product Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 mb-12 sm:mb-16">
-            {/* Product Image */}
+            {/* Product Image Gallery */}
             <motion.div 
               className="relative"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4 }}
             >
-              <div className="aspect-square sm:aspect-[4/5] lg:aspect-square rounded-2xl overflow-hidden bg-muted sticky top-20">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
-                
-                {/* Badges */}
-                <div className="absolute top-3 sm:top-4 right-3 sm:right-4 flex flex-col gap-1.5 sm:gap-2">
-                  {discountPercentage > 0 && (
-                    <span className="bg-destructive text-destructive-foreground text-xs sm:text-sm font-bold px-2.5 sm:px-3 py-1 rounded-full">
-                      خصم {discountPercentage}%
-                    </span>
-                  )}
-                  {product.featured && (
-                    <span className="bg-gold text-accent-foreground text-xs sm:text-sm font-bold px-2.5 sm:px-3 py-1 rounded-full">
-                      مميز
-                    </span>
+              <div className="sticky top-20 space-y-3">
+                <div className="aspect-square sm:aspect-[4/5] lg:aspect-square rounded-2xl overflow-hidden bg-muted">
+                  {(() => {
+                    const allImages = [product.image, ...(product.images || [])];
+                    return (
+                      <img
+                        src={allImages[activeImage] || product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    );
+                  })()}
+                  
+                  {/* Badges */}
+                  <div className="absolute top-3 sm:top-4 right-3 sm:right-4 flex flex-col gap-1.5 sm:gap-2">
+                    {discountPercentage > 0 && (
+                      <span className="bg-destructive text-destructive-foreground text-xs sm:text-sm font-bold px-2.5 sm:px-3 py-1 rounded-full">
+                        خصم {discountPercentage}%
+                      </span>
+                    )}
+                    {product.featured && (
+                      <span className="bg-gold text-accent-foreground text-xs sm:text-sm font-bold px-2.5 sm:px-3 py-1 rounded-full">
+                        مميز
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Share button */}
+                  <button
+                    onClick={handleShare}
+                    className="absolute top-3 sm:top-4 left-3 sm:left-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                  >
+                    <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </button>
+
+                  {isOutOfStock && (
+                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center rounded-2xl">
+                      <span className="bg-muted text-muted-foreground font-bold px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base">
+                        نفذت الكمية
+                      </span>
+                    </div>
                   )}
                 </div>
 
-                {/* Share button */}
-                <button
-                  onClick={handleShare}
-                  className="absolute top-3 sm:top-4 left-3 sm:left-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-                >
-                  <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                </button>
-
-                {isOutOfStock && (
-                  <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center rounded-2xl">
-                    <span className="bg-muted text-muted-foreground font-bold px-4 sm:px-6 py-2 sm:py-3 rounded-full text-sm sm:text-base">
-                      نفذت الكمية
-                    </span>
+                {/* Thumbnails */}
+                {product.images && product.images.length > 0 && (
+                  <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+                    {[product.image, ...product.images].map((img, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setActiveImage(idx)}
+                        className={`shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all ${
+                          activeImage === idx ? 'border-accent' : 'border-border hover:border-accent/50'
+                        }`}
+                      >
+                        <img src={img} alt={`${product.name} ${idx + 1}`} className="w-full h-full object-cover" />
+                      </button>
+                    ))}
                   </div>
                 )}
               </div>
