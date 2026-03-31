@@ -1067,7 +1067,16 @@ const AdminPage = () => {
               </div>
               <div className="md:col-span-2">
                 <Label>الوصف *</Label>
-                <Textarea value={productFormData.description} onChange={(e) => setProductFormData({ ...productFormData, description: e.target.value })} required />
+                <Textarea
+                  value={productFormData.description}
+                  onChange={(e) => setProductFormData({ ...productFormData, description: e.target.value })}
+                  required
+                  rows={5}
+                  placeholder={"اكتب وصفاً جذاباً للمنتج...\n\nنصائح:\n• ابدأ بجملة تبرز فائدة المنتج\n• أضف نقاط بعلامة • لكل ميزة\n• اذكر الخامة والجودة\n• اختم بسبب للشراء الآن"}
+                />
+                <p className="text-xs text-muted-foreground mt-1">
+                  استخدم • في بداية السطر لإنشاء نقاط تعداد. كل سطر جديد يظهر كفقرة منفصلة.
+                </p>
               </div>
               <div>
                 <Label>السعر *</Label>
@@ -1077,8 +1086,10 @@ const AdminPage = () => {
                 <Label>السعر الأصلي (اختياري)</Label>
                 <Input type="number" value={productFormData.originalPrice} onChange={(e) => setProductFormData({ ...productFormData, originalPrice: e.target.value })} />
               </div>
+
+              {/* Main Image */}
               <div className="md:col-span-2">
-                <Label>صورة المنتج</Label>
+                <Label>الصورة الرئيسية *</Label>
                 <div className="flex gap-2">
                   <Input value={productFormData.image} onChange={(e) => setProductFormData({ ...productFormData, image: e.target.value })} placeholder="رابط الصورة أو ارفع صورة" />
                   <input type="file" ref={productImageInputRef} onChange={handleProductImageUpload} accept="image/*" className="hidden" />
@@ -1088,6 +1099,68 @@ const AdminPage = () => {
                 </div>
                 {productFormData.image && <img src={productFormData.image} alt="preview" className="mt-2 h-20 rounded" />}
               </div>
+
+              {/* Additional Images */}
+              <div className="md:col-span-2">
+                <Label>صور إضافية</Label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {productFormData.images.map((img, idx) => (
+                    <div key={idx} className="relative group">
+                      <img src={img} alt={`صورة ${idx + 1}`} className="w-16 h-16 rounded-lg object-cover border border-border" />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = [...productFormData.images];
+                          updated.splice(idx, 1);
+                          setProductFormData({ ...productFormData, images: updated });
+                        }}
+                        className="absolute -top-1 -left-1 w-5 h-5 bg-destructive text-destructive-foreground rounded-full text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="أضف رابط صورة إضافية"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const value = (e.target as HTMLInputElement).value.trim();
+                        if (value) {
+                          setProductFormData({ ...productFormData, images: [...productFormData.images, value] });
+                          (e.target as HTMLInputElement).value = '';
+                        }
+                      }
+                    }}
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    id="additional-image-upload"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      try {
+                        const url = await uploadProductImage(file);
+                        if (url) {
+                          setProductFormData(prev => ({ ...prev, images: [...prev.images, url] }));
+                          toast({ title: "تم الرفع", description: "تم رفع الصورة الإضافية" });
+                        }
+                      } catch {
+                        toast({ title: "خطأ", description: "حدث خطأ أثناء رفع الصورة", variant: "destructive" });
+                      }
+                    }}
+                  />
+                  <Button type="button" variant="outline" onClick={() => document.getElementById('additional-image-upload')?.click()}>
+                    <Upload className="w-4 h-4" />
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1">اضغط Enter لإضافة رابط أو ارفع صورة. يمكن إضافة عدة صور.</p>
+              </div>
+
               <div>
                 <Label>القسم *</Label>
                 <Select value={productFormData.category} onValueChange={(v) => setProductFormData({ ...productFormData, category: v })}>
