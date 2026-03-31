@@ -301,9 +301,21 @@ const ProductDetailPage = () => {
               {/* Description */}
               <div className="mb-4 sm:mb-6">
                 <h3 className="font-bold text-foreground mb-2 text-sm sm:text-base">الوصف</h3>
-                <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
-                  {product.description}
-                </p>
+                <div className="text-muted-foreground leading-relaxed text-sm sm:text-base space-y-1.5">
+                  {product.description.split('\n').map((line, i) => {
+                    const trimmed = line.trim();
+                    if (!trimmed) return null;
+                    if (trimmed.startsWith('•') || trimmed.startsWith('-') || trimmed.startsWith('*')) {
+                      return (
+                        <div key={i} className="flex items-start gap-2 pr-2">
+                          <span className="text-accent mt-0.5">•</span>
+                          <span>{trimmed.replace(/^[•\-*]\s*/, '')}</span>
+                        </div>
+                      );
+                    }
+                    return <p key={i}>{trimmed}</p>;
+                  })}
+                </div>
               </div>
 
               {/* Size Selection */}
