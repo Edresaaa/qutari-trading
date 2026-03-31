@@ -75,15 +75,22 @@ const defaultBanners: Banner[] = [
 ];
 
 const defaultStoreSettings: StoreSettings = {
-  storeName: "القوطاري للتجارة",
-  whatsappNumber: "+967736700034",
+  storeName: "القوطاري للتجاره",
+  whatsappNumber: "+967770475574",
   address: "صنعاء - باب اليمن - سوق النظارة",
   phones: ["+967736700034", "+967770475574"],
-  description: "متجر متخصص في الشيلان والأزياء التقليدية الفاخرة",
+  description: "متجر متخصص في المستلزمات الرجالية والولادية اليمنية والخليجية الفاخرة",
+  currency: "YER",
+  currencySymbol: "ر.ي",
+  whatsappMessage: "مرحباً، معكم من القوطاري للتجاره\nأرغب في طلب هذا المنتج:\n\n📦 {product}\n💰 السعر: {price}\n{size}\n🔗 {url}\n\nهل هو متوفر حالياً؟",
+  deliveryAreas: "صنعاء – عدن – تعز – إب – الحديدة وجميع المحافظات",
+  codEnabled: true,
+  deliveryNote: "نوفر شحن داخل اليمن – الدفع عند الاستلام متوفر",
   socialLinks: {
     facebook: "",
     instagram: "",
     twitter: "",
+    tiktok: "",
   },
 };
 
