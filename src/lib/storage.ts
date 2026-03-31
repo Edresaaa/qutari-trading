@@ -24,10 +24,18 @@ export interface StoreSettings {
   address: string;
   phones: string[];
   description: string;
+  logo?: string;
+  currency: string;
+  currencySymbol: string;
+  whatsappMessage: string;
+  deliveryAreas: string;
+  codEnabled: boolean;
+  deliveryNote: string;
   socialLinks: {
     facebook?: string;
     instagram?: string;
     twitter?: string;
+    tiktok?: string;
   };
 }
 
