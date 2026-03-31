@@ -296,13 +296,21 @@ const ProductDetailPage = () => {
               </div>
 
               {/* CTA Button */}
+              {/* Reassurance before CTA */}
+              {!isOutOfStock && (
+                <div className="mb-4 space-y-1.5">
+                  <p className="text-xs text-muted-foreground">✅ يمكنك السؤال قبل الشراء</p>
+                  <p className="text-xs text-muted-foreground">✅ نوضح لك كل التفاصيل قبل الطلب</p>
+                </div>
+              )}
+
               {!isOutOfStock && (
                 <a
                   href={whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={handleOrderClick}
-                  className={`btn-gold flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-lg py-3.5 sm:py-4 mb-6 sm:mb-8 ${
+                  className={`flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-lg py-3.5 sm:py-4 mb-6 sm:mb-8 rounded-xl font-bold transition-all active:scale-[0.97] shadow-lg bg-[#25D366] hover:bg-[#20bd5a] text-white ${
                     requiresSize && !isSizeSelected() ? "opacity-80" : ""
                   }`}
                 >
