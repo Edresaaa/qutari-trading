@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
-import { storeConfig } from "@/config/store";
 import { MapPin, Phone, MessageCircle, Settings } from "lucide-react";
+import { useStoreSettings } from "@/hooks/useStoreSettings";
 import Logo from "./Logo";
 
 const Footer = () => {
+  const settings = useStoreSettings();
+
   return (
     <footer className="bg-primary border-t border-border/50 pb-20 lg:pb-0">
       <div className="container mx-auto px-4 py-10 md:py-14">
@@ -14,7 +16,7 @@ const Footer = () => {
               <Logo size="md" variant="full" />
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-              متجر متخصص في المستلزمات الرجالية والولادية اليمنية والخليجية الفاخرة.
+              {settings.description}
             </p>
           </div>
 
@@ -66,7 +68,7 @@ const Footer = () => {
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-accent shrink-0" />
                 <div className="flex flex-col">
-                  {storeConfig.phones?.map((phone, i) => (
+                  {settings.phones?.map((phone, i) => (
                     <a key={i} href={`tel:${phone}`} className="text-sm text-muted-foreground hover:text-accent transition-colors" dir="ltr">
                       {phone}
                     </a>
@@ -76,7 +78,7 @@ const Footer = () => {
               <li className="flex items-center gap-2.5">
                 <MessageCircle className="w-4 h-4 text-accent shrink-0" />
                 <a
-                  href={`https://wa.me/${storeConfig.whatsappNumber.replace(/\D/g, "")}`}
+                  href={`https://wa.me/${settings.whatsappNumber.replace(/\D/g, "")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-muted-foreground hover:text-accent transition-colors"
@@ -86,7 +88,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-2.5">
                 <MapPin className="w-4 h-4 text-accent shrink-0" />
-                <span className="text-sm text-muted-foreground">{storeConfig.address}</span>
+                <span className="text-sm text-muted-foreground">{settings.address}</span>
               </li>
             </ul>
           </div>
@@ -97,7 +99,7 @@ const Footer = () => {
       <div className="border-t border-border/30">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <p className="text-muted-foreground text-xs">
-            © {new Date().getFullYear()} {storeConfig.name}
+            © {new Date().getFullYear()} {settings.storeName}
           </p>
           <Link
             to="/admin"
