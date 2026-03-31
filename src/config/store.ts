@@ -14,18 +14,19 @@ export const formatWhatsAppLink = (
   productPrice: number,
   sizeText?: string
 ): string => {
-  let message = 
-    `مرحباً، أرغب في الاستفسار عن المنتج التالي:\n\n` +
-    `📦 المنتج: ${productName}\n` +
+  let message =
+    `مرحباً، معكم من القوطاري للتجارة\n` +
+    `أرغب في طلب هذا المنتج:\n\n` +
+    `📦 ${productName}\n` +
     `💰 السعر: ${productPrice} ر.ي\n`;
-  
+
   if (sizeText) {
     message += `📏 ${sizeText}\n`;
   }
-  
-  message += 
-    `🔗 رابط المنتج: ${productUrl}\n` +
-    `\nأرجو التواصل معي لإتمام الطلب. شكراً لكم.`;
-  
+
+  message +=
+    `🔗 ${productUrl}\n\n` +
+    `هل هو متوفر حالياً؟`;
+
   return `https://wa.me/${storeConfig.whatsappNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(message)}`;
 };
