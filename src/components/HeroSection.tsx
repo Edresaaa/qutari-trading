@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getActiveBanners, getBanners, Banner } from "@/lib/storage";
+import { storeConfig } from "@/config/store";
 import { motion, AnimatePresence } from "framer-motion";
 
 const HeroSection = () => {
@@ -26,11 +27,12 @@ const HeroSection = () => {
     return () => clearInterval(timer);
   }, [banners.length]);
 
-  if (banners.length === 0) return null;
+  const waLink = `https://wa.me/${storeConfig.whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent("مرحباً، معكم من القوطاري للتجارة\nأرغب في الاستفسار عن المنتجات المتوفرة لديكم")}`;
 
   return (
     <section className="relative overflow-hidden">
-      <div className="relative h-[280px] sm:h-[380px] md:h-[480px] lg:h-[560px]">
+      <div className="relative h-[320px] sm:h-[380px] md:h-[480px] lg:h-[540px]">
+        {/* Background slider */}
         <AnimatePresence mode="wait">
           {banners.map(
             (banner, index) =>
@@ -49,37 +51,51 @@ const HeroSection = () => {
                     className="w-full h-full object-cover"
                     loading="eager"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-l from-transparent via-background/75 to-background/95" />
-
-                  <div className="relative h-full container mx-auto px-4 flex items-center">
-                    <motion.div
-                      className="max-w-lg text-right mr-auto"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: 0.15 }}
-                    >
-                      <span className="inline-block text-[10px] sm:text-xs font-semibold text-accent mb-2 tracking-wide uppercase">
-                        مجموعة حصرية
-                      </span>
-                      <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4 leading-tight text-foreground">
-                        {banner.title}
-                      </h1>
-                      <p className="text-xs sm:text-sm md:text-base text-muted-foreground mb-4 md:mb-6 line-clamp-2 max-w-md">
-                        {banner.subtitle}
-                      </p>
-                      <Link
-                        to={banner.link}
-                        className="btn-gold inline-flex items-center gap-2 text-xs sm:text-sm px-5 sm:px-7 py-2.5 sm:py-3"
-                      >
-                        تسوق الآن
-                        <ArrowLeft className="w-4 h-4" />
-                      </Link>
-                    </motion.div>
-                  </div>
                 </motion.div>
               )
           )}
         </AnimatePresence>
+
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-l from-transparent via-background/80 to-background/95" />
+
+        {/* Content */}
+        <div className="relative h-full container mx-auto px-4 flex items-center">
+          <motion.div
+            className="max-w-lg text-right mr-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
+          >
+            <h1 className="text-lg sm:text-xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4 leading-tight text-foreground">
+              منتجات مضمونة وبأسعار مناسبة
+              <br />
+              <span className="text-[#25D366]">اطلبها بسهولة عبر واتساب</span>
+            </h1>
+            <p className="text-xs sm:text-sm md:text-base text-muted-foreground mb-5 md:mb-6 leading-relaxed max-w-md">
+              تصفح المنتجات واطلب مباشرة – تعامل موثوق وشحن متوفر
+            </p>
+
+            <div className="flex flex-wrap gap-3">
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] text-white text-xs sm:text-sm px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-bold transition-all active:scale-95 shadow-lg"
+              >
+                <MessageCircle className="w-4 h-4" />
+                اطلب الآن عبر واتساب
+              </a>
+              <Link
+                to="/products"
+                className="inline-flex items-center gap-2 bg-muted/60 hover:bg-muted text-foreground text-xs sm:text-sm px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl font-bold transition-all"
+              >
+                تصفح المنتجات
+                <ArrowLeft className="w-4 h-4" />
+              </Link>
+            </div>
+          </motion.div>
+        </div>
 
         {/* Dots */}
         {banners.length > 1 && (
@@ -90,7 +106,7 @@ const HeroSection = () => {
                 onClick={() => setCurrentSlide(index)}
                 className={`h-1.5 rounded-full transition-all duration-300 ${
                   index === currentSlide
-                    ? "bg-accent w-6"
+                    ? "bg-[#25D366] w-6"
                     : "bg-foreground/20 w-1.5 hover:bg-foreground/40"
                 }`}
               />

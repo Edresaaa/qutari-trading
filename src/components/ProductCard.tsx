@@ -1,7 +1,7 @@
 import { useEffect, useState, forwardRef } from "react";
 import { Product } from "@/types/store";
 import { formatWhatsAppLink } from "@/config/store";
-import { MessageCircle, Star } from "lucide-react";
+import { MessageCircle, Star, Flame, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getProductReviews, getAverageRating, Review } from "@/lib/reviews";
 
@@ -26,10 +26,14 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product }, r
   const isOutOfStock = !product.inStock || (product.quantity !== undefined && product.quantity === 0);
   const avgRating = getAverageRating(reviews);
 
+  // Urgency logic
+  const isFeatured = product.featured;
+  const isLowStock = product.quantity !== undefined && product.quantity > 0 && product.quantity <= 5;
+
   return (
     <div
       ref={ref}
-      className="group bg-card rounded-2xl overflow-hidden border border-border/50 hover:border-accent/30 transition-all duration-300 hover:shadow-lg flex flex-col"
+      className="group bg-card rounded-2xl overflow-hidden border border-border/50 hover:border-[#25D366]/30 transition-all duration-300 hover:shadow-lg flex flex-col"
     >
       {/* Image */}
       <Link to={`/product/${product.id}`} className="relative aspect-square overflow-hidden bg-muted/30">
@@ -44,7 +48,19 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product }, r
         <div className="absolute top-2 right-2 flex flex-col gap-1">
           {hasDiscount && !isOutOfStock && (
             <span className="bg-destructive text-destructive-foreground text-[10px] font-bold px-2 py-0.5 rounded-md">
-              -{discountPercentage}%
+              خصم {discountPercentage}%
+            </span>
+          )}
+          {isFeatured && !isOutOfStock && (
+            <span className="bg-[#25D366] text-white text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-0.5">
+              <Flame className="w-3 h-3" />
+              الأكثر طلباً
+            </span>
+          )}
+          {isLowStock && !isOutOfStock && (
+            <span className="bg-accent text-accent-foreground text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-0.5">
+              <Clock className="w-3 h-3" />
+              كمية محدودة
             </span>
           )}
           {isOutOfStock && (
@@ -66,14 +82,14 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product }, r
       {/* Content */}
       <div className="p-3 sm:p-4 flex flex-col flex-1">
         <Link to={`/product/${product.id}`} className="block flex-1 mb-2">
-          <h3 className="font-bold text-foreground text-sm leading-snug line-clamp-2 hover:text-accent transition-colors">
+          <h3 className="font-bold text-foreground text-sm leading-snug line-clamp-2 hover:text-[#25D366] transition-colors">
             {product.name}
           </h3>
         </Link>
 
         {/* Price row */}
-        <div className="flex items-baseline gap-1.5 mb-3">
-          <span className={`text-lg font-bold ${isOutOfStock ? "text-muted-foreground" : "gold-text"}`}>
+        <div className="flex items-baseline gap-1.5 mb-1">
+          <span className={`text-lg font-bold ${isOutOfStock ? "text-muted-foreground" : "text-[#25D366]"}`}>
             {product.price}
           </span>
           <span className="text-[10px] text-muted-foreground">ر.ي</span>
@@ -84,6 +100,13 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product }, r
           )}
         </div>
 
+        {/* Availability hint */}
+        {!isOutOfStock && (
+          <p className="text-[10px] text-[#25D366]/80 mb-2 font-medium">
+            ✓ متوفر حالياً
+          </p>
+        )}
+
         {/* CTA */}
         <a
           href={whatsappLink}
@@ -91,13 +114,13 @@ const ProductCard = forwardRef<HTMLDivElement, ProductCardProps>(({ product }, r
           rel="noopener noreferrer"
           className={`w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl font-bold text-xs transition-all ${
             !isOutOfStock
-              ? "bg-accent/10 text-accent hover:bg-accent hover:text-accent-foreground active:scale-[0.97]"
+              ? "bg-[#25D366] text-white hover:bg-[#20bd5a] active:scale-[0.97] shadow-sm"
               : "bg-muted text-muted-foreground cursor-not-allowed"
           }`}
           onClick={(e) => isOutOfStock && e.preventDefault()}
         >
           <MessageCircle className="w-4 h-4" />
-          <span>{!isOutOfStock ? "اطلب الآن" : "غير متوفر"}</span>
+          <span>{!isOutOfStock ? "اطلب عبر واتساب" : "غير متوفر"}</span>
         </a>
       </div>
     </div>
