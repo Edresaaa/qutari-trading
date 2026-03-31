@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import SizeFilter from "@/components/filters/SizeFilter";
+import SEOHead from "@/components/SEOHead";
 import { getProducts, getCategories } from "@/lib/storage";
 import { Product, Category } from "@/types/store";
 import { ProductSizeType } from "@/types/sizes";
