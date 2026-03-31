@@ -116,6 +116,7 @@ const initialProductFormData: ProductFormData = {
   price: "",
   originalPrice: "",
   image: "",
+  images: [],
   category: "",
   inStock: true,
   featured: false,
