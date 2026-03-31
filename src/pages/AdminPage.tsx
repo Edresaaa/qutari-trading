@@ -278,6 +278,7 @@ const AdminPage = () => {
         price: product.price.toString(),
         originalPrice: product.originalPrice?.toString() || "",
         image: product.image,
+        images: product.images || [],
         category: product.category,
         inStock: product.inStock,
         featured: product.featured || false,
