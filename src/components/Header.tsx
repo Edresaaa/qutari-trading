@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { storeConfig } from "@/config/store";
-import { Search, X, Phone } from "lucide-react";
+import { Search, X, Phone, MessageCircle } from "lucide-react";
 import Logo from "./Logo";
 import { getCategories } from "@/lib/storage";
 import { Category } from "@/types/store";
