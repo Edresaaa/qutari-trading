@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
+import SEOHead from "@/components/SEOHead";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import ProductSizeDisplay from "@/components/product/ProductSizeDisplay";
