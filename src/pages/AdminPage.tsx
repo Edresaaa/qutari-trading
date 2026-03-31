@@ -311,6 +311,7 @@ const AdminPage = () => {
       price: parseFloat(productFormData.price),
       originalPrice: productFormData.originalPrice ? parseFloat(productFormData.originalPrice) : undefined,
       image: productFormData.image,
+      images: productFormData.images.length > 0 ? productFormData.images : undefined,
       category: productFormData.category,
       inStock: quantity !== undefined ? quantity > 0 : productFormData.inStock,
       featured: productFormData.featured,
