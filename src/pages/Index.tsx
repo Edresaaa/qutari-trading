@@ -9,6 +9,7 @@ import OfferBanner from "@/components/OfferBanner";
 import ProductCard from "@/components/ProductCard";
 import CategoryCard from "@/components/CategoryCard";
 import TestimonialsSection from "@/components/reviews/TestimonialsSection";
+import SEOHead from "@/components/SEOHead";
 import { getCategories, getFeaturedProducts } from "@/lib/storage";
 import { ArrowLeft, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
